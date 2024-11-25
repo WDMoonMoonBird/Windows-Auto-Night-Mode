@@ -139,7 +139,7 @@
     <value>Anwendungen</value>
   </data>
   <data name="lblCustomStart" xml:space="preserve">
-    <value>Aktivierungszeit</value>
+    <value>Benutzerdefinierte Startzeit</value>
   </data>
   <data name="lblDark" xml:space="preserve">
     <value>Dunkel</value>
@@ -169,7 +169,7 @@
     <value>Enthält Drittanbieter-Software</value>
   </data>
   <data name="lblUpdates" xml:space="preserve">
-    <value>Updates</value>
+    <value>Aktualisierungen</value>
   </data>
   <data name="locationCheckBox" xml:space="preserve">
     <value>Standort-Dienste verwenden</value>
@@ -363,7 +363,7 @@ Jedoch senkt diese Option auch die Akkulaufzeit! Aktiviere sie deshalb nur, wenn
 Du kannst sie individuell in deinem Windows Design ändern.</value>
   </data>
   <data name="NavbarApps" xml:space="preserve">
-    <value>Apps</value>
+    <value>Anwendungen</value>
   </data>
   <data name="NavbarSettings" xml:space="preserve">
     <value>Einstellungen</value>
@@ -420,13 +420,13 @@ Du kannst sie individuell in deinem Windows Design ändern.</value>
     <value>Benutzerdefinierte Uhrzeit</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>Von Sonnenuntergang bis Sonnenaufgang</value>
+    <value>Von Sonnenaufgang bis Sonnenuntergang (Ortungsdienst)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Schritt</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Farbfilter nutzen (sendet Win + Strg + C)</value>
+    <value>Color filter (sends Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Login-Task statt Autostart-Eintrag</value>
@@ -500,7 +500,7 @@ Hinweis: bitte starte Auto Dark Mode niemals manuell als Administrator!</value>
     <value>Zurücksetzen</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Dunkles Design aktivieren, wenn Gerät im Batteriemodus läuft</value>
+    <value>Switch to dark mode when device is unplugged</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Stromsparmodus aktivieren bei folgendem Akkustand</value>
@@ -563,16 +563,13 @@ Hinweis: bitte starte Auto Dark Mode niemals manuell als Administrator!</value>
     <value>System Tray-Icon verstecken (nicht empfohlen)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>Diese Funktion ist deaktiviert während der Windows Theme Modus aktiv ist.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>Diese Funktion ist deaktiviert während der Hintergrundbild Modus aktiv ist.</value>
+    <value>Diese Funktion ist nicht verfügbar wenn Windows das Theme verwaltet.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Mehr Funktionen, aber es ist erforderlich eine Windows .theme Datei anzulegen. Lege Hintergrundbilder pro Monitor fest, oder eine Diashow, ändere dein Mauszeiger, wähle eine Akzentfarbe und benutzerdefinierte Systemsounds.</value>
+    <value>Konfiguriere unterschiedliche Windows Themes für das dunkle und helle Design. Dies erlaubt vollständige Anpassbarkeit, erfordert allerdings, ein Theme File vorher selbst zu erstellen.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Weniger Funktionen, aber einfacher zu konfigurieren. Personalisiere dein Hintergrundbild pro Monitor, einzeln, oder setze eine Hintergrundfarbe.</value>
+    <value>Passe das Hintergrundbild für alle oder einzelne Monitore an, setze eine Hintergrundfarbe oder aktiviere Spotlight.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>Wir suchen im Hintergrund nach Updates. Sobald eine neue Version verfügbar ist, senden wir eine Toast Benachrichtigung</value>
@@ -819,13 +816,13 @@ Hinweis: bitte starte Auto Dark Mode niemals manuell als Administrator!</value>
     <value>Design erzwingen beenden</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
-    <value>Tastatur-Hotkeys aktivieren</value>
+    <value>Tastatur-Hotkeys systemweit aktivieren</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
-    <value>Erzwinge dunkles Design</value>
+    <value>Erzwinge &amp;dunkles Design</value>
   </data>
   <data name="TrayMenuItemForceLightTheme" xml:space="preserve">
-    <value>Erzwinge helles Design</value>
+    <value>Erzwinge &amp;helles Design</value>
   </data>
   <data name="SettingsPageTrayDisableMessageBoxContent" xml:space="preserve">
     <value>Das Icon zu verstecken ist nicht empfohlen.
@@ -835,7 +832,7 @@ Möchten Sie wirklich fortfahren?</value>
     <value>Systemtray-Icon verstecken</value>
   </data>
   <data name="TrayMenuItemOpenConfigDir" xml:space="preserve">
-    <value>&amp;Open Config Directory</value>
+    <value>Konfigurationsordner öffnen</value>
   </data>
   <data name="LabelFollowSystemTheme" xml:space="preserve">
     <value>Lass die App entscheiden</value>
@@ -847,7 +844,7 @@ Möchten Sie wirklich fortfahren?</value>
     <value>Minuten, bis das System als nicht beschäftigt angesehen wird</value>
   </data>
   <data name="AppsCheckBoxDWMPrevalence" xml:space="preserve">
-    <value>Accent Color for title bars and window borders only during</value>
+    <value>Akzentfarbe für Titelleisten und Fensterrahmen nur während</value>
   </data>
   <data name="AboutVersionInfoCopied" xml:space="preserve">
     <value>Versionsinfo wurde kopiert</value>
@@ -892,7 +889,7 @@ Möchten Sie wirklich fortfahren?</value>
     <value>Rückgängig</value>
   </data>
   <data name="TrayMenuItemThemeSwitchPause" xml:space="preserve">
-    <value>Auto-Wechsel pausieren</value>
+    <value>&amp;Auto-Wechsel pausieren</value>
   </data>
   <data name="ThemeSwitchPauseActionDisableQuestion" xml:space="preserve">
     <value>Möchtest du stattdessen den Auto-Wechsel deaktivieren?</value>
@@ -1021,7 +1018,7 @@ Möchten Sie wirklich fortfahren?</value>
     <value>Trace Modus</value>
   </data>
   <data name="SpecialThanks" xml:space="preserve">
-    <value>Besonderer Dank</value>
+    <value>Besonderer Dank gebührt</value>
   </data>
   <data name="ThemeCheckBoxIgnoreBackground" xml:space="preserve">
     <value>Hintergrundbild ignorieren</value>
@@ -1082,7 +1079,7 @@ Möchten Sie wirklich fortfahren?</value>
     <value>Aktualisieren auf</value>
   </data>
   <data name="UpdateToastButtonDowngrade" xml:space="preserve">
-    <value>Downgrade</value>
+    <value>Vorherige Version</value>
   </data>
   <data name="UpdateToastButtonOpenLogDirectory" xml:space="preserve">
     <value>Log-Verzeichnis öffnen</value>
@@ -1122,18 +1119,147 @@ Möchten Sie wirklich fortfahren?</value>
     <value>Dateipfad</value>
   </data>
   <data name="TrayMenuItemClose" xml:space="preserve">
-    <value>Schließen</value>
+    <value>&amp;Schließen</value>
   </data>
   <data name="TrayMenuItemAutomaticThemeSwitch" xml:space="preserve">
-    <value>Automatischer Designwechsel</value>
+    <value>&amp;Automatischer Designwechsel</value>
   </data>
   <data name="TrayMenuItemToggleTheme" xml:space="preserve">
-    <value>Design umschalten</value>
+    <value>&amp;Design umschalten</value>
   </data>
   <data name="ThemePickerTheme11Spotlight" xml:space="preserve">
-    <value>Spotlight</value>
+    <value>Blickpunkt</value>
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
-    <value>Windows spotlight</value>
+    <value>Windows-Blickpunkt</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Akzentfarbe</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Wähle eine Akzent Farbe</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Passe die Windows Akzentfarbe nach Präferenz an.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Farbwahl aktualisieren</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Diese Funktion ist nicht verfügbar wenn Auto Dark Mode das Theme verwaltet.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Dokumentation für benutzerdefinierte Skripte</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Sammlung für Benutzerskripte</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Füllen</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Anpassen</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Strecken</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Wähle eine Anpassung für das Hintergrundbild</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Nicht verbunden</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Immer DWM bei Farbwechsel aktualisieren</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Versucht das Auftreten falscher Benutzeroberflächenfarben im Explorer, der Taskleiste und dem Startmenü zu reduzieren. Wenn dies oft auftritt und stört, bitte diese Einstellung ausprobieren.
+
+Beim Themenwechsel kann es hierbei zu leichtem Stocken kommen, ähnlich wie dies bei Windows 10 schon der Fall war. 
+In einigen Fällen kann ein Piepston auftauchen, wenn die Maus während der DWM Aktualisierung bewegt wird.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Erzwinge DWM Aktualisierung?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Mauszeiger Designwechsel aktivieren</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Windows Mauseinstellungen öffnen</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Zeiger für dunkles Design</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Zeiger für helles Design</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Mauszeiger</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Setze unterschiedliche Mauszeiger für dunkle und helle Designs.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Wähle Mauszeiger Designs aus</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Auto Dark Mode verwaltet das Theme</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Windows verwaltet das Theme</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Mauszeiger Schemas können in den Windows Einstellungen erstellt, angepasst und dann hier ausgewählt werden.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Eingabeaufforderung öffnen</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Updater-Log öffnen</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Akzentfarbenwechsel aktivieren</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Bildschirmtastatur und Eingabe</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Manuell</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Anwendungen</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Wechsle nicht das Design während manche Anwendungen ausgeführt werden</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Durchsuche Apps mit Unterstützung für Auto Dark Mode</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Nicht jede App unterstützt standardmäßig Auto Dark Mode. Auf unserer Wiki-Seite pflegen wir eine Liste mit unterstützten Anwendungen.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Empfohlene Apps</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Als Alternative steht GitHub Sponsors zur Verfügung. Außerdem erlaubt dieser Dienst wiederkehrende, monatliche Spenden.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Versuche das Design zu reparieren</value>
   </data>
 </root>

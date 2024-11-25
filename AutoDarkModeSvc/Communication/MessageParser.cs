@@ -25,6 +25,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoDarkModeSvc.Handlers.ThemeFiles;
+using AutoDarkModeLib.ComponentSettings.Base;
+using AutoDarkModeSvc.Handlers.IThemeManager2;
 
 namespace AutoDarkModeSvc.Communication
 {
@@ -294,7 +296,7 @@ namespace AutoDarkModeSvc.Communication
                         Logger.Info("signal received: force light theme");
                         state.ForcedTheme = Theme.Light;
                         ThemeHandler.EnforceNoMonitorUpdates(builder, state, Theme.Light);
-                        ThemeManager.UpdateTheme(Theme.Light, new(SwitchSource.Api));
+                        ThemeManager.UpdateTheme(new(SwitchSource.Api, Theme.Light));
                         SendResponse(new ApiResponse()
                         {
                             StatusCode = StatusCode.Ok
@@ -307,7 +309,7 @@ namespace AutoDarkModeSvc.Communication
                         Logger.Info("signal received: force dark theme");
                         state.ForcedTheme = Theme.Dark;
                         ThemeHandler.EnforceNoMonitorUpdates(builder, state, Theme.Dark);
-                        ThemeManager.UpdateTheme(Theme.Dark, new(SwitchSource.Api));
+                        ThemeManager.UpdateTheme(new(SwitchSource.Api, Theme.Dark));
                         SendResponse(StatusCode.Ok);
                         break;
                     #endregion
@@ -342,7 +344,7 @@ namespace AutoDarkModeSvc.Communication
                         {
                             StatusCode = StatusCode.Ok,
                             Message = state.PostponeManager.IsPostponed.ToString(),
-                            Details = state.PostponeManager.MakeDto().Serialize()
+                            Details = state.PostponeManager.MakeQueueDto().Serialize()
                         }.ToString());
                         break;
                     #endregion
@@ -375,6 +377,43 @@ namespace AutoDarkModeSvc.Communication
                         {
                             StatusCode = statusCode
                         }.ToString());
+                        break;
+                    #endregion
+
+                    #region RequestedTheme
+                    case Command.GetRequestedTheme:
+                        Logger.Info("signal received: get requested theme");
+                        SendResponse(new ApiResponse()
+                        {
+                            StatusCode = StatusCode.Ok,
+                            Message = Enum.GetName(typeof(Theme), state.InternalTheme)
+                        }.ToString());
+                        break;
+                    #endregion
+
+                    #region CurrentColorization
+                    case Command.GetCurrentColorization:
+                        Logger.Info("signal received: current colorization");
+                        try
+                        {
+                            string colCol = RegistryHandler.GetAccentColor();
+                            SendResponse(new ApiResponse()
+                            {
+                                StatusCode = StatusCode.Ok,
+                                Message = colCol.Replace("0x", "#"),
+                                Details = Enum.GetName(state.InternalTheme)
+                            }.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "error while retrieving colorizatoin color:");
+                            SendResponse(new ApiResponse()
+                            {
+                                StatusCode = StatusCode.Err,
+                                Message = ex.Message,
+                                Details = ex.Source
+                            }.ToString());
+                        }                        
                         break;
                     #endregion
 
@@ -459,10 +498,16 @@ namespace AutoDarkModeSvc.Communication
 
                     #region Test2
                     case Command.Test2:
-                        ToastHandler.InvokeDelayAutoSwitchNotifyToast();
+                        //ToastHandler.InvokeDelayAutoSwitchNotifyToast();
+                        //Cursors current = RegistryHandler.GetCursors();
+                        //Cursors byName = RegistryHandler.GetCursorScheme("Posy's Cursor");
+                        // state.PostponeManager.SyncExpiryTimesWithSystemClock();
+                        WallpaperHandler.AdvanceSlideshow(WallpaperHandler.DesktopSlideshowDirection.Forward);
+                        //UpdateHandler.EndBlockingProcesses(out bool shellRestart, out bool appRestart);
                         SendResponse(new ApiResponse()
                         {
                             StatusCode = StatusCode.Ok,
+                            //Message = $"shellRestart: {shellRestart}, appRestart: {appRestart}"
                         }.ToString());
                         break;
                     #endregion

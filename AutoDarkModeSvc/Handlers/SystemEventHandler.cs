@@ -18,6 +18,8 @@ using AutoDarkModeLib;
 using AutoDarkModeSvc.Core;
 using Microsoft.Win32;
 using System;
+using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Windows.System.Power;
@@ -29,16 +31,22 @@ namespace AutoDarkModeSvc.Handlers
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static bool darkThemeOnBatteryEnabled;
         private static bool resumeEventEnabled;
+        private static DateTime lastSystemTimeChange;
         private static GlobalState state = GlobalState.Instance();
-        private static AdmConfigBuilder builder = AdmConfigBuilder.Instance();
+        private static readonly AdmConfigBuilder builder = AdmConfigBuilder.Instance();
 
         public static void RegisterThemeEvent()
         {
+            if (PowerManager.BatteryStatus == BatteryStatus.NotPresent)
+            {
+                return;
+            }
             if (!darkThemeOnBatteryEnabled)
             {
                 Logger.Info("enabling event handler for dark mode on battery state discharging");
                 PowerManager.PowerSupplyStatusChanged += PowerManager_BatteryStatusChanged;
                 darkThemeOnBatteryEnabled = true;
+                PowerManager_BatteryStatusChanged(null, null);
             }
         }
 
@@ -47,7 +55,7 @@ namespace AutoDarkModeSvc.Handlers
             if (PowerManager.PowerSupplyStatus == PowerSupplyStatus.NotPresent)
             {
                 Logger.Info("battery discharging, enabling dark mode");
-                ThemeManager.UpdateTheme(Theme.Dark, new(SwitchSource.BatteryStatusChanged));
+                ThemeManager.UpdateTheme(new(SwitchSource.BatteryStatusChanged, Theme.Dark));
             }
             else
             {
@@ -86,13 +94,14 @@ namespace AutoDarkModeSvc.Handlers
                 {
                     Logger.Info("enabling theme refresh at system resume (win 10)");
                     SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-                    SystemEvents.SessionSwitch += SystemEvents_Windows10_SessionSwitch;
                 }
                 else
                 {
                     Logger.Info("enabling theme refresh at system unlock (win 10)");
                     SystemEvents.SessionSwitch += SystemEvents_Windows11_SessionSwitch;
                 }
+                // allow postpone timers to sync with system time after resume from sleep
+                SystemEvents.PowerModeChanged += SystemEvents_RefreshPostponeTimers;
 
                 resumeEventEnabled = true;
             }
@@ -109,6 +118,7 @@ namespace AutoDarkModeSvc.Handlers
                     SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
                     SystemEvents.SessionSwitch -= SystemEvents_Windows10_SessionSwitch;
                     SystemEvents.SessionSwitch -= SystemEvents_Windows11_SessionSwitch;
+                    SystemEvents.PowerModeChanged -= SystemEvents_RefreshPostponeTimers;
                     resumeEventEnabled = false;
                 }
             }
@@ -118,8 +128,30 @@ namespace AutoDarkModeSvc.Handlers
             }
         }
 
+        private static void SystemEvents_RefreshPostponeTimers(object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == PowerModes.Resume)
+            {
+                try
+                {
+                    Logger.Debug("resynchronizing postpone timers with system clock after resume");
+                    state.PostponeManager.SyncExpiryTimesWithSystemClock();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "error while synchronizing postpone timers with system clock: ");
+                }
+            }
+        }
+
         private static void SystemEvents_Windows11_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
+            if (e.Reason == SessionSwitchReason.SessionUnlock && !builder.Config.AutoThemeSwitchingEnabled)
+            {
+                Logger.Info("system unlocked, auto switching disabled, no action");
+                state.PostponeManager.Remove(new(Helper.PostponeItemSessionLock));
+                return;
+            }
             if (e.Reason == SessionSwitchReason.SessionUnlock)
             {                
                 if (builder.Config.AutoSwitchNotify.Enabled)
@@ -132,7 +164,7 @@ namespace AutoDarkModeSvc.Handlers
                     if (!state.PostponeManager.IsSkipNextSwitch && !state.PostponeManager.IsUserDelayed)
                     {
                         Logger.Info("system unlocked, refreshing theme");
-                        ThemeManager.RequestSwitch(new(SwitchSource.SystemUnlock));
+                        ThemeManager.RequestSwitch(new(SwitchSource.SystemUnlock, refreshDwm: true));
                     }
                     else
                     {
@@ -148,6 +180,12 @@ namespace AutoDarkModeSvc.Handlers
 
         private static void SystemEvents_Windows10_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
+            if (e.Reason == SessionSwitchReason.SessionUnlock && !builder.Config.AutoThemeSwitchingEnabled)
+            {
+                Logger.Info("system unlocked, auto switching disabled, no action");
+                state.PostponeManager.Remove(new(Helper.PostponeItemSessionLock));
+                return;
+            }
             if (e.Reason == SessionSwitchReason.SessionUnlock)
             {
                 if (builder.Config.AutoSwitchNotify.Enabled)
@@ -187,12 +225,12 @@ namespace AutoDarkModeSvc.Handlers
             bool shouldNotify = false;
             if (builder.Config.Governor == Governor.NightLight)
             {
-                if (state.NightLight.Requested != state.RequestedTheme) shouldNotify = true;
+                if (state.NightLight.Requested != state.InternalTheme) shouldNotify = true;
             }
             else if (builder.Config.Governor == Governor.Default)
             {
                 TimedThemeState ts = new();
-                if (ts.TargetTheme != state.RequestedTheme) shouldNotify = true;
+                if (ts.TargetTheme != state.InternalTheme) shouldNotify = true;
             }
 
             if (shouldNotify)
@@ -208,6 +246,64 @@ namespace AutoDarkModeSvc.Handlers
             {
                 Logger.Info("system unlocked, theme state valid, not sending notification");
                 state.PostponeManager.Remove(new(Helper.PostponeItemSessionLock));
+            }
+        }
+
+        public static void RegisterTimeChangedEvent()
+        {
+            SystemEvents.TimeChanged += new EventHandler(TimeChangedEvent);
+        }
+
+        public static void DeregisterTimeChangedEvent()
+        {
+            SystemEvents.TimeChanged -= new EventHandler(TimeChangedEvent);
+        }
+
+        private static void TimeChangedEvent(object sender, EventArgs e)
+        {
+            // Ignore system time events when we're in a session lock state
+            // as that will involuntarily trigger system time switch changes for ADM
+            if (state.PostponeManager.Get(Helper.PostponeItemSessionLock) != null) return;
+
+            TimeZoneInfo oldTz = TimeZoneInfo.Local;
+            DateTime old = DateTime.Now;
+            bool oldIsDst = DateTime.Now.IsDaylightSavingTime();
+            TimeZoneInfo.ClearCachedData();
+            TimeZoneInfo newTz = TimeZoneInfo.Local;
+            if (!oldTz.Equals(newTz))
+            {
+                Logger.Info($"system time zone changed from {oldTz.ToUtcOffsetString()} dst={oldIsDst.ToString().ToLower()} " +
+                    $"to {newTz.ToUtcOffsetString()} dst={DateTime.Now.IsDaylightSavingTime().ToString().ToLower()} ");
+
+                // geolocator needs to be updated in case it retrieves data from the windows location service as most likely the geolocation has changed as well
+                if (builder.LocationData.DataSourceIsGeolocator != builder.Config.Location.UseGeolocatorService)
+                {
+                    LocationHandler.UpdateGeoposition(builder).Wait();
+
+                    if (builder.Config.AutoThemeSwitchingEnabled) ThemeManager.RequestSwitch(new(SwitchSource.SystemTimeChanged));
+                }
+            }
+            else
+            {
+                HandleTimeChangedEvent(old);
+            }
+        }
+
+        /// <summary>
+        /// ensure that themee change requests are only executed once because the Windows event is bugged and fires twice
+        /// </summary>
+        /// <param name="oldTime">the previous system time</param>
+        private static void HandleTimeChangedEvent(DateTime oldTime)
+        {
+            DateTime nowUtc = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+            TimeSpan delta = nowUtc - lastSystemTimeChange;
+            lastSystemTimeChange = nowUtc;
+            // 1000 ms by default
+            if (delta > new TimeSpan(10000 * 1000) || delta < new TimeSpan(10000 * 1000))
+            {
+                Logger.Info($"system time changed from {oldTime}");
+                if (builder.Config.AutoThemeSwitchingEnabled) ThemeManager.RequestSwitch(new(SwitchSource.SystemTimeChanged));
+                state.PostponeManager.SyncExpiryTimesWithSystemClock();
             }
         }
     }

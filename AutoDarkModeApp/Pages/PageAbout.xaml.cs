@@ -1,5 +1,4 @@
 ﻿#region copyright
-
 //  Copyright (C) 2022 Auto Dark Mode
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -14,12 +13,11 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
-
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,7 +26,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AutoDarkModeApp.Handlers;
+using AutoDarkModeLib;
 using SourceChord.FluentWPF;
+
 using AdmExtensions = AutoDarkModeLib.Helper;
 
 namespace AutoDarkModeApp.Pages;
@@ -49,6 +49,13 @@ public partial class PageAbout : Page
 
         SystemTheme.ThemeChanged += SystemTheme_ThemeChanged;
         SystemTheme_ThemeChanged(this, null);
+
+        if (Environment.OSVersion.Version.Build >= (int)WindowsBuilds.Win11_RC)
+        {
+            FontIconOpenLog.FontFamily = new("Segoe Fluent Icons");
+            FontIconOpenUpdaterLog.FontFamily = new("Segoe Fluent Icons");
+            FontIconOpenShell.FontFamily = new("Segoe Fluent Icons");
+        }
     }
 
     private void UpdateVersionNumbers()
@@ -59,17 +66,18 @@ public partial class PageAbout : Page
         TextBlockShellVersion.Text = versionInfo.Shell;
         TextBlockNetCoreVersion.Text = versionInfo.NetCore;
         TextBlockWindowsVersion.Text = versionInfo.WindowsVersion;
+        TextBlockArch.Text = versionInfo.Arch;
     }
 
     private void SystemTheme_ThemeChanged(object sender, EventArgs e)
     {
         if (SystemTheme.AppTheme.Equals(ApplicationTheme.Dark))
-        {     
+        {
             gitHubImage.Source = new BitmapImage(new Uri(@"/Resources/GitHub_Logo_White.png", UriKind.Relative));
             telegramImage.Source = new BitmapImage(new Uri(@"/Resources/telegram-light.png", UriKind.Relative));
         }
         else
-        { 
+        {
             gitHubImage.Source = new BitmapImage(new Uri(@"/Resources/GitHub_Logo_Black.png", UriKind.Relative));
             telegramImage.Source = new BitmapImage(new Uri(@"/Resources/telegram.png", UriKind.Relative));
         }
@@ -390,6 +398,20 @@ public partial class PageAbout : Page
         _ = msg.ShowDialog();
     }
 
+    private void ColorPicker_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var text = "Copyright(c) 2017 zubetto \n\n";
+        text += File.ReadAllText(Path.Combine(AdmExtensions.ExecutionDir, "Licenses", "apache-2.0.txt"));
+        MsgBox msg = new(text, "ColorPicker License Information", "info", "close");
+        msg.Owner = Window.GetWindow(this);
+        _ = msg.ShowDialog();
+    }
+
+    private void ColorPicker_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter) ColorPicker_MouseDown(this, null);
+    }
+
     private async void ButtonCopyVersionInfo_Click(object sender, RoutedEventArgs e)
     {
         // most likely use case is to paste in an issue, so
@@ -413,6 +435,9 @@ public partial class PageAbout : Page
                 .AppendLine("`")
                 .Append("- Windows: `")
                 .Append(versionInfo.WindowsVersion)
+                .AppendLine("`")
+                .Append("- Arch: `")
+                .Append(versionInfo.Arch)
                 .AppendLine("`");
         for (int i = 0; i < 10; i++)
         {
@@ -427,7 +452,7 @@ public partial class PageAbout : Page
                 ShowErrorMessage(ex, "About_CopyButton");
                 await Task.Delay(200);
             }
-        }        
+        }
     }
 
     private void HyperlinkOpenLogFile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -449,6 +474,47 @@ public partial class PageAbout : Page
             HyperlinkOpenLogFile_PreviewMouseDown(this, null);
         }
     }
+    
+    private void HyperlinkOpenUpdaterLogFile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AutoDarkMode", "updater.log");
+        new Process
+        {
+            StartInfo = new ProcessStartInfo(filepath)
+            {
+                UseShellExecute = true
+            }
+        }.Start();
+    }
+
+    private void HyperlinkOpenUpdaterLogFile_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter | e.Key == Key.Space)
+        {
+            HyperlinkOpenUpdaterLogFile_PreviewMouseDown(this, null);
+        }
+    }
+
+    private void HyperlinkOpenShell_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter | e.Key == Key.Space)
+        {
+            HyperlinkOpenLogFile_PreviewMouseDown(this, null);
+        }
+    }
+
+    private void HyperlinkOpenShell_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var filepath = AdmExtensions.ExectuionPathShell;
+        new Process
+        {
+            StartInfo = new ProcessStartInfo(filepath)
+            {
+                UseShellExecute = true
+            }
+        }.Start();
+    }
+
 
     private void ShowErrorMessage(Exception ex, string v)
     {
@@ -482,11 +548,12 @@ public partial class PageAbout : Page
             Svc = ValueOrNotFound(() =>
                 FileVersionInfo.GetVersionInfo(currentDirectory + @"\AutoDarkModeSvc.exe").FileVersion);
             Updater = ValueOrNotFound(() =>
-                FileVersionInfo.GetVersionInfo(currentDirectory + @"\Updater\AutoDarkModeUpdater.exe").FileVersion);
+                FileVersionInfo.GetVersionInfo(AdmExtensions.ExecutionPathUpdater).FileVersion);
             Shell = ValueOrNotFound(() =>
                 FileVersionInfo.GetVersionInfo(currentDirectory + @"\AutoDarkModeShell.exe").FileVersion);
             NetCore = ValueOrNotFound(() => Environment.Version.ToString());
-            WindowsVersion = ValueOrNotFound(() => $"{ Environment.OSVersion.Version.Build}.{RegistryHandler.GetUbr()}");
+            WindowsVersion = ValueOrNotFound(() => $"{Environment.OSVersion.Version.Build}.{RegistryHandler.GetUbr()}");
+            Arch = RuntimeInformation.ProcessArchitecture.ToString();
 
             static string ValueOrNotFound(Func<string> value)
             {
@@ -508,5 +575,11 @@ public partial class PageAbout : Page
         public string Shell { get; }
         public string NetCore { get; }
         public string WindowsVersion { get; }
+        public string Arch { get; }
+    }
+
+    private void Card_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+
     }
 }

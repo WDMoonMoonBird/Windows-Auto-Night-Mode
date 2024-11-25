@@ -18,11 +18,15 @@ using AutoDarkModeLib;
 using AutoDarkModeSvc.Events;
 using AutoDarkModeSvc.Handlers;
 using AutoDarkModeSvc.Interfaces;
+using AutoDarkModeSvc.SwitchComponents.Base;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.System.Power;
+using static AutoDarkModeLib.IThemeManager2.Flags;
+using static AutoDarkModeSvc.Handlers.WallpaperHandler;
 
 namespace AutoDarkModeSvc.Core
 {
@@ -33,72 +37,76 @@ namespace AutoDarkModeSvc.Core
         private static readonly GlobalState state = GlobalState.Instance();
         private static readonly AdmConfigBuilder builder = AdmConfigBuilder.Instance();
 
-        public static void RequestSwitch(SwitchEventArgs switchArgs)
+        public static void RequestSwitch(SwitchEventArgs e)
         {
+            // process force switches
             if (state.ForcedTheme == Theme.Dark)
             {
-                UpdateTheme(Theme.Dark, switchArgs);
+                e.OverrideTheme(Theme.Dark, ThemeOverrideSource.ForceFlag);
+                UpdateTheme(e);
                 return;
             }
             else if (state.ForcedTheme == Theme.Light)
             {
-                UpdateTheme(Theme.Light, switchArgs);
+                e.OverrideTheme(Theme.Light, ThemeOverrideSource.ForceFlag);
+                UpdateTheme(e);
                 return;
             }
 
+            // apply last requested theme if switch is postponed
+            if (state.PostponeManager.IsPostponed)
+            {
+                e.OverrideTheme(state.InternalTheme, ThemeOverrideSource.PostponeManager);
+                UpdateTheme(e);
+                return;
+            }
+
+            // battery switch if the initial event was missed
             if (builder.Config.Events.DarkThemeOnBattery)
             {
-                if (PowerManager.BatteryStatus == BatteryStatus.Discharging)
+                if (PowerManager.PowerSupplyStatus == PowerSupplyStatus.NotPresent)
                 {
-                    UpdateTheme(Theme.Dark, switchArgs);
+                    // guard against auto switch triggering this event
+                    if (e.Source == SwitchSource.TimeSwitchModule) return;
+                    e.OverrideTheme(Theme.Dark, ThemeOverrideSource.BatteryStatus);
+                    UpdateTheme(e);
                     return;
                 }
                 if (!builder.Config.AutoThemeSwitchingEnabled)
                 {
-                    UpdateTheme(Theme.Light, switchArgs);
+                    e.OverrideTheme(Theme.Light, ThemeOverrideSource.BatteryStatus);
+                    UpdateTheme(e);
                     return;
                 }
             }
 
-            // apply last requested theme if switch is user-postponed
-            if (state.PostponeManager.IsUserDelayed || state.PostponeManager.IsSkipNextSwitch)
+            // process switches with a requested theme set before automatic ones
+            if (e.Theme != Theme.Automatic)
             {
-                UpdateTheme(state.RequestedTheme, switchArgs);
+                UpdateTheme(e);
                 return;
             }
 
-            if (switchArgs.Theme.HasValue && switchArgs.Source != SwitchSource.NightLightTrackerModule)
-            {
-                UpdateTheme(switchArgs.Theme.Value, switchArgs);
-                return;
-            }
-
+            // recalculate timed theme state on every call
             if (builder.Config.AutoThemeSwitchingEnabled)
             {
                 if (builder.Config.Governor == Governor.Default)
                 {
                     TimedThemeState ts = new();
-                    UpdateTheme(ts.TargetTheme, switchArgs, ts.CurrentSwitchTime);
+                    e.OverrideTheme(ts.TargetTheme, ThemeOverrideSource.TimedThemeState);
+                    e.UpdateSwitchTime(ts.CurrentSwitchTime);
+                    UpdateTheme(e);
                 }
                 else if (builder.Config.Governor == Governor.NightLight)
                 {
-                    if (switchArgs.Theme.HasValue)
-                    {
-                        if (switchArgs.Time.HasValue)
-                        {
-                            UpdateTheme(switchArgs.Theme.Value, switchArgs, switchArgs.Time.Value);
-                        }
-                        else
-                        {
-                            UpdateTheme(switchArgs.Theme.Value, switchArgs);
-                        }
-                    }
-                    else UpdateTheme(state.NightLight.Requested, switchArgs);
+                    e.OverrideTheme(state.NightLight.Requested, ThemeOverrideSource.NightLight);
+                    UpdateTheme(e);
                 }
             }
             else
             {
-                UpdateTheme(state.RequestedTheme, switchArgs);
+                e.OverrideTheme(state.InternalTheme, ThemeOverrideSource.Default);
+                UpdateTheme(e);
             }
         }
 
@@ -118,7 +126,7 @@ namespace AutoDarkModeSvc.Core
         {
             Theme newTheme = PrepareSwitchAutoPause();
 
-            ThemeHandler.EnforceNoMonitorUpdates(builder, state, Theme.Light);
+            ThemeHandler.EnforceNoMonitorUpdates(builder, state, newTheme);
             if (builder.Config.AutoThemeSwitchingEnabled)
             {
                 if (state.PostponeManager.IsSkipNextSwitch)
@@ -139,11 +147,11 @@ namespace AutoDarkModeSvc.Core
         {
             Theme newTheme;
             if (target != Theme.Unknown) newTheme = target;
-            else if (state.RequestedTheme == Theme.Light) newTheme = Theme.Dark;
+            else if (state.InternalTheme == Theme.Light) newTheme = Theme.Dark;
             else newTheme = Theme.Light;
 
             // pre-set requested theme to set skip times correctly
-            state.RequestedTheme = newTheme;
+            state.InternalTheme = newTheme;
 
             if (builder.Config.AutoThemeSwitchingEnabled)
             {
@@ -153,20 +161,26 @@ namespace AutoDarkModeSvc.Core
                     TimedThemeState ts = new();
                     if (ts.TargetTheme != newTheme)
                     {
-                        if (state.PostponeManager.IsSkipNextSwitch) state.PostponeManager.UpdateSkipNextSwitchExpiry();
-                        else state.PostponeManager.AddSkipNextSwitch();
+                        if (!state.PostponeManager.IsUserDelayed)
+                        {
+                            if (state.PostponeManager.IsSkipNextSwitch) state.PostponeManager.UpdateSkipNextSwitchExpiry();
+                            else state.PostponeManager.AddSkipNextSwitch();
+                        }
                     }
                     else
                     {
-                        state.PostponeManager.RemoveUserClearablePostpones();
+                        state.PostponeManager.RemoveSkipNextSwitch();
                     }
                 }
                 else if (builder.Config.Governor == Governor.NightLight)
                 {
-                    if (state.NightLight.Requested != newTheme)
-                        state.PostponeManager.AddSkipNextSwitch();
-                    else
-                        state.PostponeManager.RemoveUserClearablePostpones();
+                    if (!state.PostponeManager.IsUserDelayed)
+                    {
+                        if (state.NightLight.Requested != newTheme)
+                            state.PostponeManager.AddSkipNextSwitch();
+                        else
+                            state.PostponeManager.RemoveSkipNextSwitch();
+                    }
                 }
             }
             return newTheme;
@@ -174,9 +188,18 @@ namespace AutoDarkModeSvc.Core
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void UpdateTheme(Theme newTheme, SwitchEventArgs e, DateTime switchTime = new())
+        public static void UpdateTheme(SwitchEventArgs e)
         {
-            state.RequestedTheme = newTheme;
+            if (e.Theme == Theme.Unknown || e.Theme == Theme.Automatic)
+            {
+                Logger.Info("theme switch requested with no target theme");
+                return;
+            }
+            Theme newTheme = e.Theme;
+            state.InternalTheme = newTheme;
+
+            DateTime switchTime = new();
+            if (e.SwitchTime.HasValue) switchTime = e.SwitchTime.Value;
 
             // this is possibly necessary in the future if the config is internally updated and switchtheme is called before it is saved
             //cm.UpdateSettings();
@@ -186,12 +209,21 @@ namespace AutoDarkModeSvc.Core
             if (builder.Config.WindowsThemeMode.Enabled)
             {
 
-                if (e.Source == SwitchSource.SystemUnlock) themeModeNeedsUpdate = ThemeHandler.ThemeModeNeedsUpdate(newTheme, skipCheck: true);
+                if (e.Source == SwitchSource.SystemUnlock || e.Source == SwitchSource.SystemResume)
+                {
+                    // check for theem changes on system unlock or resume
+                    GlobalState.Instance().RefreshThemes(AdmConfigBuilder.Instance().Config);
+                    themeModeNeedsUpdate = ThemeHandler.ThemeModeNeedsUpdate(newTheme);
+                }
                 else themeModeNeedsUpdate = ThemeHandler.ThemeModeNeedsUpdate(newTheme);
             }
 
-            (List<ISwitchComponent> componentsToUpdate, bool dwmRefreshRequired) = cm.GetComponentsToUpdate(newTheme);
+            (List<ISwitchComponent> componentsToUpdate, DwmRefreshType neededDwmRefresh, DwmRefreshType providedDwmRefresh) = cm.GetComponentsToUpdate(e);
+            if (e.RefreshDwm) neededDwmRefresh = DwmRefreshType.Full;
 
+            #endregion
+
+            #region logic for adm startup
             // when the app ist launched for the first time, ask for notification
             if (!state.InitSyncSwitchPerformed)
             {
@@ -203,7 +235,8 @@ namespace AutoDarkModeSvc.Core
                     // this is necessary such that postpones have the correct requestedtheme!
                     try
                     {
-                        state.RequestedTheme = RegistryHandler.AppsUseLightTheme() ? Theme.Light : Theme.Dark;
+                        if (builder.PostponeData.InternalThemeAtExit == Theme.Unknown) 
+                            state.InternalTheme = RegistryHandler.AppsUseLightTheme() ? Theme.Light : Theme.Dark;
                     }
                     catch (Exception ex)
                     {
@@ -212,17 +245,17 @@ namespace AutoDarkModeSvc.Core
                     return;
                 }
             }
-
             #endregion
 
+            bool themeSwitched = false;
+
             #region apply themes and run components
-            if (componentsToUpdate.Count > 0)
+            if (e.RefreshDwm || componentsToUpdate.Count > 0 || themeModeNeedsUpdate)
             {
-                // if theme mode is disabled, we need to disable energy saver for the modules
                 PowerHandler.RequestDisableEnergySaver(builder.Config);
 
                 // run modules that require their data to be re-synced with auto dark mode after running because they modify the active theme file
-                cm.RunPreSync(componentsToUpdate, newTheme, e);
+                cm.RunPreSync(componentsToUpdate, e);
 
                 //logic for our classic mode 2.0, gets the currently active theme for modification
                 if (builder.Config.WindowsThemeMode.Enabled == false && Environment.OSVersion.Version.Build >= (int)WindowsBuilds.MinBuildForNewFeatures)
@@ -232,32 +265,67 @@ namespace AutoDarkModeSvc.Core
                 }
 
                 // regular modules that do not need to modify the active theme
-                cm.RunPostSync(componentsToUpdate, newTheme, e);
+                cm.RunPostSync(componentsToUpdate, e);
 
-                if (dwmRefreshRequired && !themeModeNeedsUpdate)
+                #region dwm refresh
+                // force refresh should only happen if there are actually operations that switch parts of windows that require dwm refreshes
+                if (builder.Config.Tunable.AlwaysFullDwmRefresh && 
+                   (providedDwmRefresh != DwmRefreshType.Full && neededDwmRefresh != DwmRefreshType.None || themeModeNeedsUpdate))
                 {
-                    if (builder.Config.WindowsThemeMode.Enabled) ThemeHandler.RefreshDwm(managed: false);
-                    else ThemeHandler.RefreshDwm(managed: true);
+                    Logger.Info("dwm management: full refresh requested by user");
+                    if (builder.Config.WindowsThemeMode.Enabled)
+                    {
+                        ThemeHandler.RefreshDwmFull(managed: false, e);
+                        themeModeNeedsUpdate = true;
+                    }
+                    else ThemeHandler.RefreshDwmFull(managed: true, e);
                 }
-            }
+                // on managed mode if the dwm refresh is insufficient, queue a full refresh
+                else if (builder.Config.WindowsThemeMode.Enabled == false && (providedDwmRefresh < neededDwmRefresh))
+                {
+                    Logger.Info($"dwm management: provided refresh type {Enum.GetName(providedDwmRefresh).ToLower()} insufficent, minimum: {Enum.GetName(neededDwmRefresh).ToLower()}");
+                    ThemeHandler.RefreshDwmFull(managed: true, e);
+                }
+                // on managed mode, if the dwm refresh is provided by the components, no refresh is required
+                else if ((providedDwmRefresh >= neededDwmRefresh) && (neededDwmRefresh != DwmRefreshType.None))
+                {
+                    Logger.Info($"dwm management: requested {Enum.GetName(providedDwmRefresh).ToLower()} refresh will be performed by component(s) in queue");
+                }
+                // if windows theme mode is enabled the user needs to ensure that the selected themes refresh properly
+                else if (themeModeNeedsUpdate)
+                {
+                    Logger.Info($"dwm management: refresh is expected to be handled by user");
+                }
+                else
+                {
+                    Logger.Info("dwm management: no refresh required");
+                }
+                #endregion
 
-
-            // windows theme mode apply theme
-            if (themeModeNeedsUpdate) {
-                ThemeHandler.ApplyTheme(newTheme);
-            }
-
-
-            // non theme mode switches & cleanup
-            if (componentsToUpdate.Count > 0 || themeModeNeedsUpdate)
-            {
-                // Logic for our classic mode 2.0
+                // Logic for managed mode
                 if (builder.Config.WindowsThemeMode.Enabled == false && Environment.OSVersion.Version.Build >= (int)WindowsBuilds.MinBuildForNewFeatures)
                 {
                     try
                     {
                         state.ManagedThemeFile.Save();
-                        ThemeHandler.ApplyManagedTheme(builder.Config, state.ManagedThemeFile);
+                        List<ThemeApplyFlags> flagList = null;
+
+                        // if we are using the wallpaper switcher that requires theme files then we cannot ignore the wallpaper settings anymore
+                        // This means that this type of wallpaper switch cannot be used for builds older than 22621.1105 because they do not natively support spotlight
+                        // Using this with a build that doesn't support spotlight would cause solid color or invalid wallpapers to appear whenever spotlight is enabled.
+                        // In addition, a colorization switch always needs a wallpaper refresh
+                        bool needsWallpaperRefresh = false;
+                        if (componentsToUpdate.Any(c => c is ColorizationSwitch))
+                        {
+                            if (newTheme == Theme.Light && builder.Config.ColorizationSwitch.Component.LightAutoColorization) needsWallpaperRefresh = true;
+                            else if (newTheme == Theme.Dark && builder.Config.ColorizationSwitch.Component.DarkAutoColorization) needsWallpaperRefresh = true;
+                        }
+                        if (!componentsToUpdate.Any(c => c is WallpaperSwitchThemeFile) && !needsWallpaperRefresh)
+                        {
+                            flagList = new() { ThemeApplyFlags.IgnoreBackground };
+                        }
+
+                        ThemeHandler.ApplyManagedTheme(state.ManagedThemeFile, flagList);
                     }
                     catch (Exception ex)
                     {
@@ -266,6 +334,48 @@ namespace AutoDarkModeSvc.Core
                     }
                 }
 
+                // windows theme mode apply theme
+                if (themeModeNeedsUpdate)
+                {
+                    PowerHandler.RequestDisableEnergySaver(builder.Config);
+                    ThemeHandler.ApplyUnmanagedTheme(newTheme);
+                    themeSwitched = true;
+                }
+
+                //todo change to switcheventargs
+                cm.RunCallbacks(componentsToUpdate, newTheme, e);
+
+                bool shuffleCondition = false;
+                if (builder.Config.WindowsThemeMode.Enabled == false)
+                {
+                    shuffleCondition = state.ManagedThemeFile.Slideshow.Enabled && (state.ManagedThemeFile.Slideshow.Shuffle == 1);
+                }
+                if (shuffleCondition)
+                {
+                    Logger.Debug("advancing slideshow in shuffled mode");
+                    AdvanceSlideshow(DesktopSlideshowDirection.Forward);
+
+                    /*
+                    // randomize slideshow forwarding when shuffle is enabled
+                    Logger.Debug("slideshow and shuffling enabled, rolling the dice...");
+                    Random rng = new();
+                    // 80% chance to advance slideshow
+                    if (rng.Next(0, 100) < 80)
+                    {
+                        Logger.Debug("dice rolled, advancing slideshow...");
+                    }
+                    */
+                }
+
+                themeSwitched = true;
+
+                PowerHandler.RequestRestoreEnergySaver(builder.Config);
+
+            }
+            #endregion
+
+            if (themeSwitched)
+            {
                 if (e.Source == SwitchSource.TimeSwitchModule)
                 {
                     Logger.Info($"{Enum.GetName(typeof(Theme), newTheme).ToLower()} theme switch performed, source: {Enum.GetName(typeof(SwitchSource), e.Source)}, " +
@@ -284,10 +394,7 @@ namespace AutoDarkModeSvc.Core
                 {
                     Logger.Info($"{Enum.GetName(typeof(Theme), newTheme).ToLower()} theme switch performed, source: {Enum.GetName(typeof(SwitchSource), e.Source)}");
                 }
-                // disable mitigation after all components and theme switch have been executed
-                PowerHandler.RequestRestoreEnergySaver(builder.Config);
-            }
-            #endregion
+            }                             
 
             if (!state.InitSyncSwitchPerformed)
             {
@@ -365,11 +472,6 @@ namespace AutoDarkModeSvc.Core
             if (builder.Config.Location.Enabled)
             {
                 LocationHandler.GetSunTimes(builder, out _adjustedSunrise, out _adjustedSunset);
-            }
-            else
-            {
-                _adjustedSunrise = _adjustedSunrise.AddMinutes(builder.Config.Location.SunriseOffsetMin);
-                _adjustedSunset = _adjustedSunset.AddMinutes(builder.Config.Location.SunsetOffsetMin);
             }
             //the time bewteen sunrise and sunset, aka "day"
             if (Helper.NowIsBetweenTimes(_adjustedSunrise.TimeOfDay, _adjustedSunset.TimeOfDay))

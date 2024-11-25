@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoDarkModeLib;
 using AutoDarkModeLib.Configs;
@@ -53,7 +54,7 @@ namespace AutoDarkModeSvc.Core
         /// The theme that was last requested to be set. This either reflects the already applied theme, 
         /// or the pending theme shortly before a switch will be performed
         /// </summary>
-        public Theme RequestedTheme
+        public Theme InternalTheme
         {
             get { return _requestedTheme; }
             set
@@ -74,9 +75,36 @@ namespace AutoDarkModeSvc.Core
         public ThemeFile ManagedThemeFile { get; } = new(Helper.PathManagedTheme);
         public PostponeManager PostponeManager { get; }
         public NightLight NightLight { get; } = new();
+        public SystemIdleModuleState SystemIdleModuleState { get; } = new();
         public bool InitSyncSwitchPerformed { get; set; } = false;
         private NotifyIcon NotifyIcon { get; set; }
         public Dictionary<string, string> LearnedThemeNames { get; } = new();
+        public EventWaitHandle ConfigIsUpdatingWaitHandle { get; } = new ManualResetEvent(true);
+        public SwitchApproach SwitchApproach { get; } = new();
+        private bool configIsUpdating;
+        public bool ConfigIsUpdating
+        {
+            get { return configIsUpdating; }
+
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized)]
+            set { configIsUpdating = value; }
+        }
+
+        private bool geolocatorIsUpdating;
+        public bool GeolocatorIsUpdating
+        {
+            get { return geolocatorIsUpdating; }
+
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized)]
+            set { geolocatorIsUpdating = value; }
+        }
+
+        /// <summary>
+        /// Setting this value to true will skip the next config reload event when it has been saved
+        /// The setting will return to false after the first save
+        /// </summary>
+        public bool SkipConfigFileReload { get; set; }
+        public string CurrentWallpaperPath { get; set; }
 
         /// <summary>
         /// This method is responsible for updating the internal UnmanagedActiveThemePath variable. <br/>
@@ -105,8 +133,8 @@ namespace AutoDarkModeSvc.Core
                         {
                             UnmanagedActiveThemePath = "";
                             // retrieve theme names from configuration file and then compare them to the custom path
-                            (_, string displayNameLight) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.LightThemePath);
-                            (_, string displayNameDark) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.DarkThemePath);
+                            (_, _, string displayNameLight) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.LightThemePath);
+                            (_, _, string displayNameDark) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.DarkThemePath);
                             string sourceThemeNameCustom = ThemeFile.GetOriginalNameFromRaw(customPath);
                             if (sourceThemeNameCustom == displayNameDark)
                             {
@@ -130,7 +158,7 @@ namespace AutoDarkModeSvc.Core
                         if (unmanagedLight)
                         {
                             string displayNameUnmanaged = ThemeFile.GetOriginalNameFromRaw(Helper.PathUnmanagedLightTheme);
-                            (_, string displayNameSource) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.LightThemePath);
+                            (_, _, string displayNameSource) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.LightThemePath);
                             if (displayNameUnmanaged != displayNameSource)
                             {
                                 Logger.Debug($"detected change in unmanaged light theme, new origin: {config.WindowsThemeMode.LightThemePath}");
@@ -140,7 +168,7 @@ namespace AutoDarkModeSvc.Core
                         if (unmanagedDark)
                         {
                             string displayNameUnmanaged = ThemeFile.GetOriginalNameFromRaw(Helper.PathUnmanagedDarkTheme);
-                            (_, string displayNameSource) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.DarkThemePath);
+                            (_, _, string displayNameSource) = ThemeFile.GetDisplayNameFromRaw(config.WindowsThemeMode.DarkThemePath);
                             if (displayNameUnmanaged != displayNameSource)
                             {
                                 Logger.Debug($"detected change in unmanaged light theme, new origin: {config.WindowsThemeMode.DarkThemePath}");
@@ -161,34 +189,6 @@ namespace AutoDarkModeSvc.Core
             }
         }
 
-        public EventWaitHandle ConfigIsUpdatingWaitHandle { get; } = new ManualResetEvent(true);
-
-        private bool configIsUpdating;
-        public bool ConfigIsUpdating
-        {
-            get { return configIsUpdating; }
-
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized)]
-            set { configIsUpdating = value; }
-        }
-
-        private bool geolocatorIsUpdating;
-        public bool GeolocatorIsUpdating
-        {
-            get { return geolocatorIsUpdating; }
-
-            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized)]
-            set { geolocatorIsUpdating = value; }
-        }
-
-
-        /// <summary>
-        /// Setting this value to true will skip the next config reload event when it has been saved
-        /// The setting will return to false after the first save
-        /// </summary>
-        public bool SkipConfigFileReload { get; set; }
-        public string CurrentWallpaperPath { get; set; }
-
         public void SetWarden(WardenModule warden)
         {
             Warden = warden;
@@ -204,9 +204,9 @@ namespace AutoDarkModeSvc.Core
             if (NotifyIcon == null) return;
 
             string themeState = "";
-            if (RequestedTheme != Theme.Unknown)
+            if (InternalTheme != Theme.Unknown)
             {
-                if (RequestedTheme == Theme.Light)
+                if (InternalTheme == Theme.Light)
                 {
                     themeState = AdmProperties.Resources.lblLight;
                 }
@@ -218,7 +218,7 @@ namespace AutoDarkModeSvc.Core
 
             if (builder.Config.AutoThemeSwitchingEnabled)
             {
-                if (PostponeManager.IsPostponed || PostponeManager.IsUserDelayed)
+                if (PostponeManager.IsUserDelayed || PostponeManager.IsSkipNextSwitch || PostponeManager.IsGracePeriod)
                 {
                     NotifyIcon.Icon = Properties.Resources.AutoDarkModeIconPausedTray;
                     NotifyIcon.Text = $"Auto Dark Mode\n{themeState} - {AdmProperties.Resources.lblPaused}";
@@ -240,6 +240,41 @@ namespace AutoDarkModeSvc.Core
 
     public class NightLight
     {
+        /// <summary>
+        /// The theme that Windows night light is currently requesting to bet set
+        /// </summary>
         public Theme Requested { get; set; } = Theme.Unknown;
+    }
+
+    public class SystemIdleModuleState
+    {
+        public bool SystemIsIdle { get; set; } = false;
+    }
+
+    public class SwitchApproach
+    {
+        public bool ThemeSwitchApproaching { get; set; }
+        private List<IAutoDarkModeModule> Dependencies { get; set; } = new();
+        public bool DependenciesPresent { get { return Dependencies.Count > 0; } }
+        public void AddDependency(IAutoDarkModeModule module)
+        {
+            if (!Dependencies.Contains(module))
+            {
+                Dependencies.Add(module);
+            }
+        }
+        public void RemoveDependency(IAutoDarkModeModule module)
+        {
+            Dependencies.Remove(module);
+        }
+
+        public async Task TriggerDependencyModules()
+        {
+            foreach (var module in Dependencies)
+            {
+                await module.Fire();
+            }
+        }
+
     }
 }

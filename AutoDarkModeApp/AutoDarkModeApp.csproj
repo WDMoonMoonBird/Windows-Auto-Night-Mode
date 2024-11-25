@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <OutputType>WinExe</OutputType>
     <RootNamespace>AutoDarkModeApp</RootNamespace>
@@ -29,6 +29,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>FF582FA313E61B77B0FD3885AB6473A39A74DBA9</ManifestCertificateThumbprint>
@@ -58,15 +59,25 @@
     <ManifestTimestampUrl>http://tsa.startssl.com/rfc3161</ManifestTimestampUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\adm-app</OutputPath>
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <OutputPath>..\bin\Debug\adm-app</OutputPath>
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\adm-app</OutputPath>
+    <WarningLevel>0</WarningLevel>
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <OutputPath>..\bin\Release\adm-app</OutputPath>
     <WarningLevel>0</WarningLevel>
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Resource Include="Resources\Kofi_Logo.png" />
     <Resource Include="Resources\telegram.png" />
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +114,7 @@
     <PackageReference Include="ModernWpfUI" Version="0.9.6" />
     <PackageReference Include="ModernWpfUI.MahApps" Version="0.9.5" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Management" Version="4.7.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Office_Logo.png" />
@@ -121,6 +132,7 @@
     <Compile Remove="AboutWindow.xaml.cs" />
     <None Remove="Pages\PageScripts.xaml~RFacb2461.TMP" />
     <None Remove="Pages\telegram.png" />
+    <None Remove="Resources\Kofi_Logo.png" />
     <Page Remove="AboutWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +149,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SourceChord.GridExtra\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>

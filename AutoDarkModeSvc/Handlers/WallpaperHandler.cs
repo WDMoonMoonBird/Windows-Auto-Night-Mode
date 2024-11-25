@@ -40,15 +40,22 @@ namespace AutoDarkModeSvc.Handlers
             if (newTheme == Theme.Dark)
             {
                 Color dark = HexToColor(colors.Dark);
-                handler.SetBackgroundColor(ToUint(dark));
+                int res = handler.SetBackgroundColor(ToUint(dark));
+                if (res != 0)
+                {
+                    Logger.Warn($"set background color exit code was {res}");
+                }
                 //Thread.Sleep(500);
                 handler.Enable(false);
-
             }
             else if (newTheme == Theme.Light)
             {
                 Color light = HexToColor(colors.Light);
-                handler.SetBackgroundColor(ToUint(light));
+                int res = handler.SetBackgroundColor(ToUint(light));
+                if (res != 0)
+                {
+                    Logger.Warn($"set background color exit code was {res}");
+                }
                 //Thread.Sleep(500);
                 handler.Enable(false);
             }
@@ -73,6 +80,18 @@ namespace AutoDarkModeSvc.Handlers
             return Color.FromArgb(0, (byte)r, (byte)g, (byte)b);
         }
 
+        public static string HexToRgb(string hexString)
+        {
+            if (hexString.IndexOf('#') != -1)
+                hexString = hexString.Replace("#", "");
+
+            int r = int.Parse(hexString[..2], System.Globalization.NumberStyles.AllowHexSpecifier);
+            int g = int.Parse(hexString.Substring(2, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
+            int b = int.Parse(hexString.Substring(4, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
+
+            return $"{r} {g} {b}";
+        }
+
         public static bool SetEnabled(bool state)
         {
             IDesktopWallpaper handler = (IDesktopWallpaper)new DesktopWallpaperClass();
@@ -83,35 +102,40 @@ namespace AutoDarkModeSvc.Handlers
         {
             IDesktopWallpaper handler = (IDesktopWallpaper)new DesktopWallpaperClass();
             handler.SetPosition(position);
-            for (uint i = 0; i < handler.GetMonitorDevicePathCount(); i++)
+            var monitors = Task.Run(DisplayHandler.GetMonitorInfosAsync).Result;
+
+            foreach (var monitor in monitors)
             {
-                string monitorId = handler.GetMonitorDevicePathAt(i);
-                MonitorSettings monitorSetting = monitorSettings.Find(s => s.Id == monitorId);
+                MonitorSettings monitorSetting = monitorSettings.Find(s => s.Id == monitor.DeviceId);
                 if (monitorSetting != null)
                 {
                     if (newTheme == Theme.Dark)
                     {
                         if (!File.Exists(monitorSetting.DarkThemeWallpaper))
                         {
-                            Logger.Warn($"target {Enum.GetName(typeof(Theme), newTheme)} wallpaper does not exist (skipping) path: {monitorSetting.DarkThemeWallpaper ?? "null"}, monitor ${monitorId}");
+                            Logger.Warn($"target {Enum.GetName(typeof(Theme), newTheme)} wallpaper does not exist (skipping) path: {monitorSetting.DarkThemeWallpaper ?? "null"}, monitor ${monitor.DeviceId}");
                         }
                         else
                         {
-                            handler.SetWallpaper(monitorId, monitorSetting.DarkThemeWallpaper);
+                            handler.SetWallpaper(monitor.DeviceId, monitorSetting.DarkThemeWallpaper);
                         }
                     }
                     else
                     {
                         if (!File.Exists(monitorSetting.LightThemeWallpaper))
                         {
-                            Logger.Warn($"wallpaper does not exist. path ${monitorSetting.DarkThemeWallpaper}, monitor ${monitorId}");
+                            Logger.Warn($"wallpaper does not exist. path ${monitorSetting.DarkThemeWallpaper}, monitor ${monitor.DeviceId}");
                         }
-                        handler.SetWallpaper(monitorId, monitorSetting.LightThemeWallpaper);
+                        handler.SetWallpaper(monitor.DeviceId, monitorSetting.LightThemeWallpaper);
                     }
+                }
+                else if (monitor.DeviceId == "")
+                {
+                    Logger.Warn("invalid monitor id, skipping device. This most likely needs a windows restart to be fixed.");
                 }
                 else
                 {
-                    Logger.Warn($"no wallpaper config found for monitor {monitorId}, adding missing monitors");
+                    Logger.Warn($"no wallpaper config found for monitor {monitor.DeviceId}, adding missing monitors");
                     DisplayHandler.DetectMonitors();
                 }
             }
@@ -125,7 +149,10 @@ namespace AutoDarkModeSvc.Handlers
             {
                 string id = handler.GetMonitorDevicePathAt(i);
                 string wallpaper = handler.GetWallpaper(id);
-                wallpapers.Add(new Tuple<string, string>(id, wallpaper));
+                if (id.Length > 0)
+                {
+                    wallpapers.Add(new Tuple<string, string>(id, wallpaper));
+                }
             }
             return wallpapers;
         }
@@ -199,7 +226,7 @@ namespace AutoDarkModeSvc.Handlers
             [return: MarshalAs(UnmanagedType.Struct)]
             Rect GetMonitorRECT([MarshalAs(UnmanagedType.LPWStr)] string monitorID);
 
-            void SetBackgroundColor([MarshalAs(UnmanagedType.U4)] uint color);
+            int SetBackgroundColor([MarshalAs(UnmanagedType.U4)] uint color);
             [return: MarshalAs(UnmanagedType.U4)]
             uint GetBackgroundColor();
 
@@ -214,7 +241,7 @@ namespace AutoDarkModeSvc.Handlers
             [PreserveSig]
             uint GetSlideshowOptions(out DesktopSlideshowDirection options, out uint slideshowTick);
 
-            void AdvanceSlideshow([MarshalAs(UnmanagedType.LPWStr)] string monitorID, [MarshalAs(UnmanagedType.I4)] DesktopSlideshowDirection direction);
+            uint AdvanceSlideshow([MarshalAs(UnmanagedType.LPWStr)] string monitorID, [MarshalAs(UnmanagedType.I4)] DesktopSlideshowDirection direction);
 
             DesktopSlideshowDirection GetStatus();
 
@@ -250,6 +277,22 @@ namespace AutoDarkModeSvc.Handlers
                 return currentWallpaper == globalWallpaper.Light;
             }
             return false;
+        }
+
+
+        /// <summary>
+        /// Advances the slideshow of all monitors by the specified direction.
+        /// 
+        /// <param name="direction">The direction to advance the slideshow.</param>"
+        /// </summary>
+        public static void AdvanceSlideshow(DesktopSlideshowDirection direction)
+        {
+            IDesktopWallpaper handler = (IDesktopWallpaper)new DesktopWallpaperClass();
+            for (uint i = 0; i < EnumDisplayDevicesWrapper.ListDisplays().Count; i++)
+            {
+                handler.AdvanceSlideshow(null, direction);
+                Thread.Sleep(200);
+            }
         }
 
         /// <summary>

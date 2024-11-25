@@ -19,16 +19,36 @@ using AutoDarkModeSvc.Handlers.IThemeManager2;
 using AutoDarkModeSvc.Handlers.ThemeFiles;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Management;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 using WindowsInput;
 using WindowsInput.Native;
+using YamlDotNet.Core.Tokens;
 
 namespace AutoDarkModeSvc.Handlers
 {
     static class RegistryHandler
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public static string GetUbr()
+        {
+            try
+            {
+                var ubr = Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion", "UBR", null);
+                return ubr != null ? ubr.ToString() : "0";
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "error while retrieving ubr, assuming none present");
+            }
+            return "0";
+        }
 
         /// <summary>
         /// Switches system applications theme
@@ -160,6 +180,59 @@ namespace AutoDarkModeSvc.Handlers
             return themePath;
         }
 
+        public static string GetColorizationColor()
+        {
+            GetAccentColor();
+            using RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM");
+            int value = (int)key.GetValue("ColorizationColor");
+            string hexString = value.ToString("X");
+            hexString = "FF" + hexString[2..];
+            return $"#{hexString}";
+        }
+
+        /// <summary>
+        /// Retrieves the system accent color, attempting to parse the accent color palette first. Then as a fallback, uses the colorization color
+        /// </summary>
+        /// <returns>a hex string prepended with a hashtag representing the current system accent color</returns>
+        public static string GetAccentColor()
+        {
+            using RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent");
+            byte[] value = (byte[])key.GetValue("AccentPalette");
+            var palette = ParseAccentPalette(value);
+            if (palette.TryGetValue(3, out string colorizationColor))
+            {
+                Logger.Trace($"parsed accent color: #FF{colorizationColor}");
+                return $"#FF{colorizationColor}";
+            }
+            else
+            {
+                Logger.Warn("could not get colorization color from accent palette, using alternative colorization registry value as fallback");
+                return GetColorizationColor();
+            }
+        }
+
+        private static Dictionary<int, string> ParseAccentPalette(byte[] binPalette)
+        {
+            Dictionary<int, string> palette = new();
+
+            StringBuilder hexString = new();
+            int colorNum = 0;
+            for (int i = 0; i < binPalette.Length; i++)
+            {
+                if (i == 0 || (i+1) % 4 != 0)
+                {
+                    int value = binPalette[i];
+                    hexString.Append(value.ToString("X2"));
+                }
+                else if (i != 0 && (i+1) % 4 == 0)
+                {
+                    palette.Add(colorNum++, hexString.ToString());
+                    hexString.Clear();
+                }
+            }
+            return palette;
+        }
+
         /// <summary>
         /// Retrieves the operating system version
         /// </summary>
@@ -204,8 +277,14 @@ namespace AutoDarkModeSvc.Handlers
         {
             try
             {
-                using RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+                RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+                if (registryKey == null)
+                {
+                    Logger.Warn("autostart master registry key does not exist, attempting to create it");
+                    registryKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+                }
                 registryKey.SetValue("AutoDarkMode", '\u0022' + Helper.ExecutionPath + '\u0022');
+                registryKey.Close();
                 return true;
             }
             catch (Exception ex)
@@ -338,6 +417,125 @@ namespace AutoDarkModeSvc.Handlers
 
             filterType.SetValue("HotkeyEnabled", 1, RegistryValueKind.DWord); //and we activate the hotkey as free bonus :)
             filterType.Dispose();
+        }
+
+        public static Cursors GetCursorScheme(string name)
+        {
+            Cursors cursors = new();
+
+            using RegistryKey cursorsKeyUser = Registry.CurrentUser.OpenSubKey(@"Control Panel\Cursors\Schemes");
+            using RegistryKey cursorsKeySystem = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes");
+            List<string> cursorsUser = new();
+            List<string> cursorsSystem = new();
+
+            var cursorsUserRaw = cursorsKeyUser?.GetValueNames();
+
+            if (cursorsUserRaw != null)
+            {
+                cursorsUser = cursorsUserRaw.ToList();
+            }
+
+            var cursorsSystemRaw = cursorsKeySystem?.GetValueNames();
+            if (cursorsSystemRaw != null)
+            {
+                cursorsSystem = cursorsSystemRaw.ToList();
+            }         
+
+            string userTheme = cursorsUser.Where(x => x == name).FirstOrDefault();
+            string systemTheme = cursorsSystem.Where(x => x == name).FirstOrDefault();
+
+            if (userTheme != null)
+            {
+                string[] cursorsList = ((string)cursorsKeyUser?.GetValue(userTheme)).Split(",");
+                cursors = ParseCursors(cursorsList);
+                var cursorName = cursors.DefaultValue;
+                cursorName.Item1 = name;
+                cursors.DefaultValue = cursorName;
+            }
+            else if (systemTheme != null)
+            {
+                string[] cursorsList = ((string)cursorsKeySystem?.GetValue(systemTheme)).Split(",");
+                cursors = ParseCursors(cursorsList);
+                var cursorName = cursors.DefaultValue;
+                cursorName.Item1 = name;
+                cursors.DefaultValue = cursorName;
+            }
+
+            return cursors;
+        }
+
+        private static Cursors ParseCursors(string[] cursorsList)
+        {
+            Cursors cursors = new();
+            if (cursorsList == null)
+            {
+                Logger.Warn($"cursor parse called with null cursor list, assuming default cursor");
+                return cursors;
+            }
+
+            var flags = BindingFlags.Instance | BindingFlags.Public;
+            foreach (PropertyInfo p in cursors.GetType().GetProperties(flags))
+            {
+                int i = 0;
+                try
+                {
+                    (string, int) propValue = ((string, int))p.GetValue(cursors);
+
+                    // quadratic runtime is okay here, but if one were to be pedantic it could be done in nlogn
+                    for (i = 0; i < cursorsList.Length; i++)
+                    {
+                        if (propValue.Item2 == i+1)
+                        {
+                            propValue.Item1 = cursorsList[i];
+                            p.SetValue(cursors, propValue);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, $"could not parse cursor value {cursorsList[i]}, exception: ");
+                    throw;
+                }
+            }
+
+            return cursors;
+        }
+
+        public static Cursors GetCursors()
+        {
+            Cursors cursors = new();
+            using RegistryKey cursorsKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Cursors");
+            if (cursorsKey == null)
+            {
+                Logger.Warn("failed to retrieve active cursors, regkey key was not found");
+                return cursors;
+            }
+            string[] values = cursorsKey.GetValueNames();
+            foreach (string value in values)
+            {
+                var flags = BindingFlags.Instance | BindingFlags.Public;
+                foreach (PropertyInfo p in cursors.GetType().GetProperties(flags))
+                {
+                    try
+                    {
+                        (string, int) propValue = ((string, int))p.GetValue(cursors);
+                        if (value.StartsWith(p.Name))
+                        {
+                            propValue.Item1 = (string)cursorsKey.GetValue(value);
+                            p.SetValue(cursors, propValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, $"could not set cursor value {value}, exception: ");
+                    }
+                }
+            }
+            string schemeName = (string)cursorsKey.GetValue("");
+            (string, int) defaultValue = cursors.DefaultValue;
+            defaultValue.Item1 = schemeName;
+            cursors.DefaultValue = defaultValue;
+            return cursors;
         }
     }
 }

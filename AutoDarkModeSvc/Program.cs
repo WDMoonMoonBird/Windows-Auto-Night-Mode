@@ -238,14 +238,22 @@ namespace AutoDarkModeSvc
                         ToastHandler.HandleToastAction(toastArgs);
                     };
                 });
-
-                timerMillis = (timerMillis == 0) ? TimerFrequency.Short : timerMillis;
+                
+                if (timerMillis != 0)
+                {
+                    TimerFrequency.Main = timerMillis;
+                }
+                else
+                {
+                    timerMillis = TimerFrequency.Main;
+                }
                 Application.SetHighDpiMode(HighDpiMode.SystemAware);
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Service = new Service(timerMillis);
                 Service.Text = "Auto Dark Mode";
 
+                /* Disable for now.
                 try
                 {
                     // always show accelerator underlines
@@ -255,6 +263,7 @@ namespace AutoDarkModeSvc
                 {
                     Logger.Warn(ex, "could not set access key highlight flag");
                 }
+                */
 
                 Application.Run(Service);
 

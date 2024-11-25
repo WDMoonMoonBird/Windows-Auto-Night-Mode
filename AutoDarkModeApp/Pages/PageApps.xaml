@@ -7,6 +7,7 @@
       xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:uc="clr-namespace:AutoDarkModeApp.Controls"
       xmlns:p="clr-namespace:AutoDarkModeLib.Properties;assembly=AutoDarkModeLib"
+      xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
       mc:Ignorable="d"
       d:DesignWidth="650"
       Title="PageApps">
@@ -23,6 +24,7 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="50" />
@@ -57,6 +59,7 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center"
                                Margin="0,5,15,0"
+                               Name="TextBlockApps"
                                FontFamily="Segoe MDL2 Assets"
                                FontSize="25" />
                     <TextBlock HorizontalAlignment="Left"
@@ -115,6 +118,7 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
                                    Margin="0,0,15,0"
+                                   Name="TextBlockSystem"
                                    FontFamily="Segoe MDL2 Assets"
                                    FontSize="25" />
 
@@ -266,6 +270,91 @@
                     </Grid>
                 </ui:SimpleStackPanel>
             </uc:Card>
+            
+            <!-- Touch Keyboard -->
+            <uc:Card Padding="20,15,15,15" 
+                     Margin="0,2,0,0"
+                     x:Name="CardTouchKeyboard">
+
+                <Grid x:Name="GridTouchKeyboard"
+                      Margin="0,0,0,0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="&#xE765;"
+                               Grid.Column="0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Margin="0,5,15,0"
+                               Name="TextBlockTouchKeyboard"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="25" />
+                    
+                    <TextBlock  Grid.Column="1"
+                                HorizontalAlignment="Left"                               
+                                VerticalAlignment="Center"
+                                Margin="0,0,0,0"
+                                Text="{x:Static p:Resources.AppsLabelTouchKeyboard}"
+                                FontSize="14"
+                                Width="Auto" />
+
+                    <ui:ToggleSwitch Name="ToggleTouchkeyboard"
+                                     Grid.Column="2"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,0,0"
+                                     MinWidth="200"
+                                     OffContent="{x:Static p:Resources.ToggleSwitchOff}"
+                                     OnContent="{x:Static p:Resources.ToggleSwitchOn}"
+                                     Toggled="ToggleTouchkeyboard_Toggled" />
+                </Grid>
+            </uc:Card>
+
+            <!-- Color Filter -->
+            <uc:Card Padding="20,15,15,15" 
+                     Margin="0,2,0,0"
+                     x:Name="CardColorFilter">
+
+                <Grid x:Name="GridColorFilter"
+                      Margin="0,0,0,0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="&#xE790;"
+                               Grid.Column="0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Margin="0,5,15,0"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="25" />
+
+                    <TextBlock  Grid.Column="1"
+                                HorizontalAlignment="Left"                               
+                                VerticalAlignment="Center"
+                                Margin="0,0,0,0"
+                                Text="{x:Static p:Resources.cbSettingsColourFilter}"
+                                FontSize="14"
+                                Width="Auto" />
+
+                    <ui:ToggleSwitch Name="ToggleColorFilter"
+                                     Grid.Column="2"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,0,0"
+                                     MinWidth="200"
+                                     OffContent="{x:Static p:Resources.ToggleSwitchOff}"
+                                     OnContent="{x:Static p:Resources.ToggleSwitchOn}"
+                                     Toggled="ToggleColorFilter_Toggled" />
+                </Grid>
+            </uc:Card>
 
             <!-- Office-->
             <uc:Card Padding="30,15,15,15" Margin="0,2,0,0">
@@ -353,6 +442,7 @@
                    Margin="0,100,0,60"
                    FontSize="25"
                    FontFamily="Segoe MDL2 Assets" />
+        
         <StackPanel Orientation="Vertical"
                     Grid.Row="4"
                     Grid.Column="1"
@@ -380,5 +470,44 @@
                     Width="Auto"
                     Click="ButtonWikiBrowserExtension_Click" />
         </StackPanel>
+
+        <!-- Recommended Apps -->
+        <TextBlock Text="&#xE71D;"
+            Grid.Column="1"
+            Grid.Row="5"
+            VerticalAlignment="Top"
+            Margin="0,42,0,0"
+            FontSize="25"
+            FontFamily="Segoe MDL2 Assets" />
+
+        <StackPanel Orientation="Vertical"
+             Grid.Row="5"
+             Grid.Column="1"
+             Margin="40,0,0,0"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top">
+            <TextBlock Text="{x:Static p:Resources.RecommendedAppsTitle}"
+                Margin="0,25,0,0"
+                FontSize="14" />
+            <TextBlock Text="{x:Static p:Resources.RecommendedAppsDescription}"
+                Margin="0,4,0,0"
+                TextWrapping="Wrap"
+                Width="350"
+                Grid.Column="1"
+                Grid.Row="1"
+                Foreground="Gray"
+                FontSize="14" />
+            <Button Name="ButtonRecommendedApps"
+             Content="{x:Static p:Resources.RecommendedAppsButton}"
+             Grid.Column="1"
+             Grid.Row="1"
+             Margin="0,10,0,0"
+             MinHeight="30"
+             MinWidth="320"
+             Width="Auto"
+             Click="ButtonRecommendedApps_Click" />
+        </StackPanel>
+
+
     </Grid>
 </Page>

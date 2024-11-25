@@ -19,7 +19,9 @@ using AutoDarkModeSvc.Events;
 using AutoDarkModeSvc.Handlers;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AutoDarkModeSvc.SwitchComponents.Base
 {
@@ -28,7 +30,7 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
         private bool currentColorFilterActive;
         public ColorFilterSwitch() : base() { }
         public override bool ThemeHandlerCompatibility => true;
-        public override void EnableHook()
+        protected override void EnableHook()
         {
             try
             {
@@ -48,53 +50,56 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
                 Logger.Error(ex, "couldn't initialize color filter state");
             }
 
-            base.EnableHook();
         }
-        public override void DisableHook()
+        protected override void DisableHook()
         {
             if (!Settings.Enabled && currentColorFilterActive)
             {
                 RegistryHandler.ColorFilterKeySender(false);
                 currentColorFilterActive = false;
             }
-            base.DisableHook();
         }
-        public override bool ComponentNeedsUpdate(Theme newTheme)
+        protected override bool ComponentNeedsUpdate(SwitchEventArgs e)
         {
-            if (!currentColorFilterActive && newTheme == Theme.Dark)
+            if (!currentColorFilterActive && e.Theme == Theme.Dark)
             {
                 return true;
             }
-            else if (currentColorFilterActive && newTheme == Theme.Light)
+            else if (currentColorFilterActive && e.Theme == Theme.Light)
             {
                 return true;
             }
             return false;
         }
 
-        protected override void HandleSwitch(Theme newTheme, SwitchEventArgs e)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        protected override void HandleSwitch(SwitchEventArgs e)
         {
-            bool oldTheme = currentColorFilterActive;
-            try
+            Task.Delay(250).ContinueWith(t =>
             {
-                RegistryHandler.ColorFilterSetup();
-                if (newTheme == Theme.Dark)
+                bool oldTheme = currentColorFilterActive;
+                try
                 {
-                    RegistryHandler.ColorFilterKeySender(true);
-                    currentColorFilterActive = true;
-                }
-                else
-                {
-                    RegistryHandler.ColorFilterKeySender(false);
-                    currentColorFilterActive = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "could not enable color filter:");
-            }
-            Logger.Info($"update info - previous: {oldTheme}, now: {currentColorFilterActive}, enabled: {Settings.Enabled}");
+                    RegistryHandler.ColorFilterSetup();
+                    if (e.Theme == Theme.Dark)
+                    {
 
+                        RegistryHandler.ColorFilterKeySender(true);
+                        currentColorFilterActive = true;
+
+                    }
+                    else
+                    {
+                        RegistryHandler.ColorFilterKeySender(false);
+                        currentColorFilterActive = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "could not enable color filter:");
+                }
+                Logger.Info($"update info - previous: {oldTheme}, now: {currentColorFilterActive}, enabled: {Settings.Enabled}");
+            }).Wait();
         }
     }
 }

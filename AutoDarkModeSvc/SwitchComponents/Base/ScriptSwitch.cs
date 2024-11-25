@@ -32,22 +32,23 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
         public override int PriorityToLight => 30;
         private Theme currentComponentTheme = Theme.Unknown;
         public override bool ThemeHandlerCompatibility { get; } = true;
+        Task switchTask;
 
-        public override bool ComponentNeedsUpdate(Theme newTheme)
+        protected override bool ComponentNeedsUpdate(SwitchEventArgs e)
         {
-            if (currentComponentTheme != newTheme)
+            if (currentComponentTheme != e.Theme)
             {
                 return true;
             }
             return false;
         }
 
-        protected override async void HandleSwitch(Theme newTheme, SwitchEventArgs e)
+        protected override async void HandleSwitch(SwitchEventArgs e)
         {
             string oldTheme = Enum.GetName(typeof(Theme), currentComponentTheme);
-            Task switchTask = Task.Run(() =>
+            switchTask = Task.Run(() =>
             {
-                if (newTheme == Theme.Light)
+                if (e.Theme == Theme.Light)
                 {
                     Settings.Component.Scripts.ForEach(s =>
                     {
@@ -70,27 +71,33 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
             Logger.Info($"update info - previous: {oldTheme}, now: {Enum.GetName(typeof(Theme), currentComponentTheme)}");
         }
 
-        public override void EnableHook()
+        protected override void EnableHook()
         {
             currentComponentTheme = Theme.Unknown;
-            base.EnableHook();
         }
 
-        public override void DisableHook()
+        protected override void DisableHook()
         {
             currentComponentTheme = Theme.Unknown;
-            base.DisableHook();
         }
 
-        public override void UpdateSettingsState(object newSettings)
+        protected override void UpdateSettingsState()
         {
-            bool isInit = Settings == null;
-            base.UpdateSettingsState(newSettings);
-            if (isInit) return;
             if (!Settings.Component.Equals(SettingsBefore.Component))
             {
                 currentComponentTheme = Theme.Unknown;
             }
         }
+
+        /*
+        protected override async void Callback()
+        {
+            if (switchTask != null)
+            {
+                await switchTask;
+            }
+            Logger.Debug("test callback wait");
+        }
+        */
     }
 }

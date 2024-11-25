@@ -29,10 +29,10 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
 {
     class AppsSwitchThemeFile : BaseComponent<AppsSwitchSettings>
     {
-        private Theme currentComponentTheme;
+        protected Theme currentComponentTheme;
         public AppsSwitchThemeFile() : base() { }
 
-        public override void EnableHook()
+        protected override void EnableHook()
         {
             try
             {
@@ -42,12 +42,12 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
             {
                 Logger.Error(ex, "couldn't initialize apps theme state");
             }
-            base.EnableHook();
         }
-        public override bool TriggersDwmRefresh => true;
+        public override DwmRefreshType TriggersDwmRefresh => DwmRefreshType.Standard;
+        public override DwmRefreshType NeedsDwmRefresh => DwmRefreshType.Standard;
         public override bool ThemeHandlerCompatibility { get; } = false;
 
-        public override bool ComponentNeedsUpdate(Theme newTheme)
+        protected override bool ComponentNeedsUpdate(SwitchEventArgs e)
         {
             if (Settings.Component.Mode == Mode.DarkOnly && currentComponentTheme != Theme.Dark)
             {
@@ -57,17 +57,16 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
             {
                 return true;
             }
-            else if (Settings.Component.Mode == Mode.Switch && currentComponentTheme != newTheme)
+            else if (Settings.Component.Mode == Mode.Switch && currentComponentTheme != e.Theme)
             {
                 return true;
             }
             return false;
         }
 
-        protected override void HandleSwitch(Theme newTheme, SwitchEventArgs e)
+        protected override void HandleSwitch(SwitchEventArgs e)
         {
             string oldTheme = Enum.GetName(typeof(Theme), currentComponentTheme);
-            newTheme = newTheme == Theme.Dark ? Theme.Dark : Theme.Light;
             ThemeFile themeFile = GlobalState.ManagedThemeFile;
 
             if (Settings.Component.Mode == Mode.DarkOnly)
@@ -82,10 +81,10 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
             }
             else
             {
-                themeFile.VisualStyles.AppMode = (Enum.GetName(typeof(Theme), newTheme), themeFile.VisualStyles.AppMode.Item2);
-                currentComponentTheme = newTheme;
+                themeFile.VisualStyles.AppMode = (Enum.GetName(typeof(Theme), e.Theme), themeFile.VisualStyles.AppMode.Item2);
+                currentComponentTheme = e.Theme;
             }
-            Logger.Info($"update info - previous: {oldTheme}, now: {Enum.GetName(typeof(Theme), currentComponentTheme)}, mode: {Enum.GetName(typeof(Mode), Settings.Component.Mode)}");
+            Logger.Info($"update info - previous: {oldTheme}, pending: {Enum.GetName(typeof(Theme), currentComponentTheme)}, mode: {Enum.GetName(typeof(Mode), Settings.Component.Mode)}");
         }
     }
 }

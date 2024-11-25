@@ -24,6 +24,7 @@ using AutoDarkModeApp.Handlers;
 using AutoDarkModeApp.Properties;
 using AutoDarkModeApp.Pages;
 using ModernWpf.Media.Animation;
+using System.Runtime.InteropServices;
 
 namespace AutoDarkModeApp
 {
@@ -39,6 +40,20 @@ namespace AutoDarkModeApp
             LanguageHelper();
 
             InitializeComponent();
+
+            Architecture Arch = RuntimeInformation.ProcessArchitecture;
+            if (Arch == Architecture.Arm64)
+            {
+                string title = "ARMto Dark Mode";
+                WindowTitle.Text = title;
+                Title = title;
+            }
+            else
+            {
+                string title = "Auto Dark Mode";
+                WindowTitle.Text = title;
+                Title = title;
+            }
         }
 
         private void Window_OnSourceInitialized(object sender, EventArgs e)
@@ -60,7 +75,21 @@ namespace AutoDarkModeApp
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             LanguageHelper();
+            DonationScreen();
         }
+
+        private void DonationScreen()
+        {
+            //generate random number between 1 and 100. If the number is under or equals 2, show donation page
+            Random rdmnumber = new Random();
+            int generatedNumber = rdmnumber.Next(1, 100);
+            Debug.WriteLine("Donation gamble number: " + generatedNumber);
+            if (generatedNumber <= 2)
+            {
+                NavBar.SelectedItem = NavBar.FooterMenuItems[0];
+            }
+        }
+
 
         //region time and language
         private static void LanguageHelper()

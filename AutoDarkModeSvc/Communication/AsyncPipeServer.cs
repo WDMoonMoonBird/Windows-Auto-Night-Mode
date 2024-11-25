@@ -36,12 +36,11 @@ namespace AutoDarkModeSvc.Communication
         {
             get { return Thread.VolatileRead(ref availableWorkers); }
         }
-        private BlockingCollection<TimeoutEventWrapper> MonitoredStreams { get; } = new();
         private BlockingCollection<Action> Workers { get; } = new();
-        private Task TimeoutHandler { get; set; }
         private Task ConnectionHandler { get; set; }
         private readonly int streamTimeout;
         private readonly int abnormalWorkerCount = 2;
+        private bool disposed = false;
 
         public AsyncPipeServer(Service service, int numWorkers, int streamTimeout = 5000)
         {
@@ -51,23 +50,24 @@ namespace AutoDarkModeSvc.Communication
         }
         public void Start()
         {
+            if (disposed)
+            {
+                Logger.Error("cannot start async pipe server as it has already been disposed");
+                throw(new ObjectDisposedException(GetType().Name));
+            }
             Loop();
         }
-        public void Stop()
+        public void Dispose()
         {
             Workers.CompleteAdding();
-            MonitoredStreams.CompleteAdding();
             WorkerTokenSource.Cancel();
-            if (TimeoutHandler != null)
-            {
-                TimeoutHandler.Wait();
-            }
             if (ConnectionHandler != null)
             {
                 ConnectionHandler.Wait();
             }
             WorkerTokenSource.Dispose();
-            Logger.Info("npipe server stopped");
+            Logger.Debug("npipe server stopped");
+            disposed = true;
         }
 
         private void Loop()
@@ -121,14 +121,6 @@ namespace AutoDarkModeSvc.Communication
                     {
                         Logger.Error(ex, "error in request worker:");
                     }
-                }
-            });
-
-            TimeoutHandler = Task.Run(async () =>
-            {
-                while (MonitoredStreams.TryTake(out TimeoutEventWrapper stream, -1))
-                {
-                    await stream.Monitor();
                 }
             });
         }
@@ -262,7 +254,7 @@ namespace AutoDarkModeSvc.Communication
 
                 DateTime end = DateTime.Now;
                 TimeSpan elapsed = end - start;
-                if (elapsed.TotalSeconds > 5)
+                if (elapsed.TotalSeconds > 7)
                 {
                     Logger.Warn($"processing message: {msg} took longer than expected ({Math.Round(elapsed.TotalSeconds, 2)} seconds), requested response channel: {responderPipeId}");
                 }
@@ -281,12 +273,12 @@ namespace AutoDarkModeSvc.Communication
                         await sw.WriteAsync(builder, writeTimeoutTokenSource.Token);
                     }
                 }
-                catch (TaskCanceledException)
+                catch (OperationCanceledException)
                 {
                     Logger.Warn("no client available to consume data within response window");
                 }
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 Logger.Warn("no client waiting for response, processing request anyway");
                 MessageParser.Parse(new List<string>() { msg }, (message) => { }, Service);

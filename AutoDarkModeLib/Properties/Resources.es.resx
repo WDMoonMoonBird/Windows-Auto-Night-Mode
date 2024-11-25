@@ -231,7 +231,7 @@ Versión instalada actualmente: {0}, nueva versión: {1}</value>
     <value>Traductor: Daniel Sevillano</value>
   </data>
   <data name="lblCity" xml:space="preserve">
-    <value>Cuidad</value>
+    <value>Ciudad</value>
   </data>
   <data name="lblPosition" xml:space="preserve">
     <value>Posición</value>
@@ -420,13 +420,13 @@ Puedes activarlas individualmente en tu tema de Windows.</value>
     <value>Establecer horas personalizadas</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>Del anochecer al amanecer</value>
+    <value>Desde el amanecer hasta el atardecer (servicio de localización)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Paso</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Usar filtro de color (usa Win + Ctrl + C)</value>
+    <value>Filtro de color (usa Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Usar tarea al iniciar sesión en lugar de durante el encendido</value>
@@ -500,7 +500,7 @@ Por cierto, ¡NUNCA ejecutes Auto Dark Mode como administrador manualmente!</val
     <value>Reiniciar</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Activar el tema oscuro cuando el dispositivo está desconectado</value>
+    <value>Switch to dark mode when device is unplugged</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Valor por defecto para el control deslizante de ahorro de batería</value>
@@ -563,16 +563,13 @@ Por cierto, ¡NUNCA ejecutes Auto Dark Mode como administrador manualmente!</val
     <value>Esconder icono de la bandeja del sistema (no recomendado)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>Esta característica está deshabilitada mientras el modo tema está activado.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>Esta característica está deshabilitada mientras el modo fondo de pantalla está activado.</value>
+    <value>Esta función está desactivada mientras Windows gestiona tu tema.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Ofrece más características, pero necesitas crear un archivo .theme de Windows. Personaliza tu fondo de escritorio para cada monitor, establecer una presentación de imágenes, cambiar tu cursor, establecer un color de acento y sonidos individuales.</value>
+    <value>Selecciona un tema de Windows diferente para los modos oscuro y claro respectivamente. Permite la personalización completa del tema, pero requiere que configures los archivos .theme por tu cuenta.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Ofrece menos funciones, pero es más fácil de configurar. Personalice su fondo de escritorio para todos los monitores, o establezca un color para el fondo.</value>
+    <value>Personaliza tu fondo de pantalla para todos los monitores, establece un color de fondo o activa el foco.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>Comprobamos si hay nuevas versiones de Auto Dark Mode en segundo plano. Cuando una actualización esté disponible, te avisaremos mediante una notificación</value>
@@ -819,7 +816,7 @@ Por cierto, ¡NUNCA ejecutes Auto Dark Mode como administrador manualmente!</val
     <value>Dejar de forzar tema</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
-    <value>Activar atajos de teclado a nivel de sistema</value>
+    <value>Habilitar las teclas de acceso rápido</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
     <value>Forzar el &amp;Tema Oscuro</value>
@@ -910,7 +907,7 @@ Por cierto, ¡NUNCA ejecutes Auto Dark Mode como administrador manualmente!</val
     <value>Reanudar solo funcionará para elementos pospuestos que tienen un tiempo de expiración</value>
   </data>
   <data name="TimePageTextBlockPostponeInfoHeader" xml:space="preserve">
-    <value>Control de posposición</value>
+    <value>Control de demora</value>
   </data>
   <data name="ToggleTheme" xml:space="preserve">
     <value>Cambiar tema</value>
@@ -1135,5 +1132,134 @@ Por cierto, ¡NUNCA ejecutes Auto Dark Mode como administrador manualmente!</val
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Contenido destacado de Windows</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Acentuar el color</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Elige un color del acento</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Personaliza el esquema de colores del sistema de Windows a tu gusto.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Actualizar la coloración</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Esta función está desactivada mientras el Auto Dark Mode gestiona tu tema.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Enlaces</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Documentación para scripts personalizados</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Repositorio personalizado del usuario de los script</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Rellenar</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Adaptar</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Estirar</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>elija un ajuste para su imagen de escritorio</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Desconectando</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Actualizar siempre DWM al cambiar de tema</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Intenta reducir la apariencia de colores de interfaz de usuario incorrectos en el administrador de archivos, la barra de tareas y el menú de inicio. Si experimenta este problema con frecuencia o le molesta, intente habilitar esta configuración.
+
+Esto puede introducir retrasos de cambio de tema leves a moderados en algunos sistemas, similar a lo que sucede en Windows 10.
+En casos excepcionales, Windows puede emitir un pitido cuando se mueve el mouse durante una actualización de DWM.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>¿Forzar las actualización de DWM?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>De acuerdo</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Habilitar el cambio del puntero del ratón</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Abrir la configuración del puntero de Windows</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Seleccionar el cursor oscuro</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Seleccionar el cursor claro</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Cursores</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Configura los diferentes cursores del ratón para los modos oscuro y claro.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Elegir los cursores del ratón</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Permitir que Auto Dark Mode gestione mi tema</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Permitir que Windows gestione mi tema</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Puedes definir nuevos esquemas del cursor en la configuración de Windows y seleccionarlos aquí posteriormente.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Abrir shell</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Abrir el registro del actualizador</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Habilitar el cambio del color del acento</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Cambiar al teclado táctil y de entrada</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Automático</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Bloqueando los procesos</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>No cambiar mientras se ejecutan determinados procesos</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Explorar las aplicaciones compatibles con Auto Dark Mode</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>No todas las aplicaciones de terceros soportan Auto Dark Mode por defecto. En nuestra página wiki ofrecemos una lista de aplicaciones compatibles.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Aplicaciones recomendadas</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>También puedes hacer una donación a través de GitHub Sponsors, que también admite programar donaciones mensuales.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Intentar arreglar el tema</value>
   </data>
 </root>

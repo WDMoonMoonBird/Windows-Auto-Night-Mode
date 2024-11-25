@@ -33,25 +33,23 @@ namespace AutoDarkModeSvc.Interfaces
         /// If the component is disabled, and still initialized, the deinit hook will be called.<br></br>
         /// If the component is disabled and properly deinitialized, nothing will happen.
         /// </summary>
-        /// <param name="newTheme">the nwe theme that should be set</param>
-        /// <param name="e">the event args from the event source</param>
-        public void Switch(Theme newTheme, SwitchEventArgs e);
+        /// <param name="e">the event args from the event source, containing the new theme and information about the switch</param>
+        public void Switch(SwitchEventArgs e);
 
         /// <summary>
         /// Checks if the component needs to be updated according to its internal state
         /// </summary>
         /// <param name="newTheme">The requested new theme</param>
         /// <returns>true if the component needs to be updated; false otherwise</returns>
-        public bool ComponentNeedsUpdate(Theme newTheme);
+        public bool RunComponentNeedsUpdate(SwitchEventArgs e);
         /// <summary>
         /// Refreshes the local copy of the component settings. Should be called before invoking Switch() to make sure the config is up to date
         /// </summary>
         /// <param name="newSettings">the correct settings object for the switch component. Using the wrong object will result in no update.</param>
-        public void UpdateSettingsState(object newSettings);
+        public void RunUpdateSettingsState(object newSettings);
         /// <summary>
         /// Checks if the component needs to be updated, i.e Switch() needs to be called
         /// </summary>
-        /// <returns></returns>
         public int PriorityToDark { get; }
         /// <summary>
         /// Priority for switching to light mode
@@ -62,22 +60,25 @@ namespace AutoDarkModeSvc.Interfaces
         /// </summary>
         public HookPosition HookPosition { get; }
         /// <summary>
-        /// Initializes the module if necessary
+        /// Initializes the module if it has a hook specified. Does nothing otherwise.
         /// </summary>
-        public void EnableHook();
+        public void RunEnableHook();
         /// <summary>
-        /// Deinitializes the module and restores the original state
+        /// Deinitializes the module and restores the original state. Does nothing if no hook is specified.
         /// </summary>
-        /// <returns></returns>
-        public void DisableHook();
+        public void RunDisableHook();
         /// <summary>
-        /// Determines if the module is expected a dwm refresh when the theme is applied with the settings it modifies.
+        /// Executes the callback function of the component
         /// </summary>
-        public bool TriggersDwmRefresh { get; }
+        public void RunCallback(SwitchEventArgs e);
         /// <summary>
         /// Determines if the module requires dwm refresh
         /// </summary>
-        public bool NeedsDwmRefresh { get; }
+        public DwmRefreshType NeedsDwmRefresh { get; }
+        /// <summary>
+        /// Determines the quality of DWM refresh a module performs
+        /// </summary>
+        public DwmRefreshType TriggersDwmRefresh { get; }
         /// <summary>
         /// Determines if the module can be run with the windows theme switcher
         /// </summary>

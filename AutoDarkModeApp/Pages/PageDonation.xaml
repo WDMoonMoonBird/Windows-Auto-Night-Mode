@@ -21,6 +21,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
@@ -58,7 +60,7 @@
             FontSize="14"
             />
 
-        <!-- Donation Button -->
+        <!-- Paypal Donation Button -->
         <TextBlock 
             Text="{x:Static p:Resources.DonationHowTo}" 
             Margin="0,30,0,0" 
@@ -101,5 +103,68 @@
                     Click="ButtonPayPal_Click" 
                     />
         </StackPanel>
+
+
+        <!-- GitHub Sponsors Donation Button -->
+        <Image 
+            x:Name="gitHubImage"
+            Width="25" 
+            Margin="0,40,0,0" 
+            Grid.Column="1" Grid.Row="4" 
+            VerticalAlignment="Top" HorizontalAlignment="Left" 
+            Source="/AutoDarkModeApp;component/Resources/GitHub_Logo_Black.png" 
+            />
+        <StackPanel 
+            Orientation="Vertical" 
+            Margin="40,25,0,0" 
+            Grid.Column="1" Grid.Row="4" 
+            HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock 
+                Text="GitHub Sponsors" 
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                FontSize="14"
+                />
+            <Button 
+                x:Name="ButtonGitHubSponsors" 
+                Content="{x:Static p:Resources.NavbarDonation}" 
+                Margin="0,5,0,0" 
+                MinWidth="150"
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Click="ButtonGitHubSponsors_Click" 
+                />
+        </StackPanel>
+
+        <!-- Kofi Donation Button -->
+        <Image 
+            x:Name="kofiImage"
+            Width="27" 
+            Margin="0,25,0,0" 
+            Grid.Column="1" Grid.Row="5" 
+            VerticalAlignment="Top" HorizontalAlignment="Left" 
+            Source="/AutoDarkModeApp;component/Resources/Kofi_Logo.png"
+            />
+        <StackPanel 
+            Orientation="Vertical" 
+            Margin="40,25,0,0" 
+            Grid.Column="1" Grid.Row="5" 
+            HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock 
+                Text="Ko-fi" 
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left" VerticalAlignment="Top"
+                FontSize="14"
+                />
+            <Button 
+                x:Name="ButtonKofi" 
+                Content="{x:Static p:Resources.NavbarDonation}" 
+                Margin="0,5,0,0" 
+                MinWidth="150"
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Click="ButtonKofi_Click" 
+                />
+        </StackPanel>
+
+
     </Grid>
 </Page>

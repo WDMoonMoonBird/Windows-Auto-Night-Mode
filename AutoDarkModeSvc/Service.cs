@@ -36,6 +36,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using static AutoDarkModeSvc.DarkColorTable;
 using AutoDarkModeLib.Configs;
+using System.Linq;
 
 namespace AutoDarkModeSvc
 {
@@ -57,11 +58,13 @@ namespace AutoDarkModeSvc
         public readonly ToolStripMenuItem autoThemeSwitchingItem = new();
         public readonly ToolStripMenuItem toggleThemeItem = new();
         public readonly ToolStripMenuItem pauseThemeSwitchItem = new();
+        public readonly ToolStripMenuItem tryFixTheme = new();
 
         private readonly ToolStripProfessionalRenderer toolStripDarkRenderer = new DarkRenderer();
         private readonly ToolStripProfessionalRenderer toolStripDefaultRenderer = new ToolStripProfessionalRenderer();
 
         private bool closeApp = true;
+        private bool admReady = false;
 
         public Service(int timerMillis)
         {
@@ -72,10 +75,12 @@ namespace AutoDarkModeSvc
             autoThemeSwitchingItem.Name = "autoThemeSwitching";
             toggleThemeItem.Name = "toggleTheme";
             pauseThemeSwitchItem.Name = "pauseThemeSwitch";
+            tryFixTheme.Name = "tryFixTheme";
             forceDarkMenuItem.Text = AdmProperties.Resources.TrayMenuItemForceDarkTheme;
             forceLightMenuItem.Text = AdmProperties.Resources.TrayMenuItemForceLightTheme;
             autoThemeSwitchingItem.Text = AdmProperties.Resources.TrayMenuItemAutomaticThemeSwitch;
             toggleThemeItem.Text = AdmProperties.Resources.TrayMenuItemToggleTheme;
+            tryFixTheme.Text = AdmProperties.Resources.TrayMenuItemTryFixTheme;
 
             NotifyIcon = new NotifyIcon();
             state.SetNotifyIcon(NotifyIcon);
@@ -88,17 +93,22 @@ namespace AutoDarkModeSvc
             ConfigMonitor = AdmConfigMonitor.Instance();
             ConfigMonitor.Start();
 
+            // load pending postpone events
+            state.PostponeManager.GetPostonesFromDisk();
+
             ModuleTimer MainTimer = new(timerMillis, TimerName.Main);
+            //ModuleTimer ShortTimer = new(TimerFrequency.Short, TimerName.Short);
             ModuleTimer IOTimer = new(TimerFrequency.IO, TimerName.IO);
             ModuleTimer GeoposTimer = new(TimerFrequency.Location, TimerName.Geopos);
-            ModuleTimer StateUpdateTimer = new(TimerFrequency.StateUpdate, TimerName.StateUpdate);
+            //ModuleTimer StateUpdateTimer = new(TimerFrequency.StateUpdate, TimerName.StateUpdate);
 
             Timers = new List<ModuleTimer>()
             {
                 MainTimer,
+                //ShortTimer,
                 IOTimer,
                 GeoposTimer,
-                StateUpdateTimer
+                //StateUpdateTimer
             };
 
             WardenModule warden = new("ModuleWarden", Timers, true);
@@ -121,10 +131,16 @@ namespace AutoDarkModeSvc
 
             // register resume event (mandatory)
             SystemEventHandler.RegisterResumeEvent();
+
+            // register system time change detection
+            SystemEventHandler.RegisterTimeChangedEvent();
+
+            // idle checker will prevent switches right after startup, so we request it here
             if (Builder.Config.AutoThemeSwitchingEnabled && Builder.Config.IdleChecker.Enabled)
             {
                 ThemeManager.RequestSwitch(new(SwitchSource.Startup));
             }
+            admReady = true;
         }
 
         protected override void SetVisibleCore(bool value)
@@ -144,6 +160,7 @@ namespace AutoDarkModeSvc
             autoThemeSwitchingItem.Click += new EventHandler(ToggleAutoThemeSwitching);
             toggleThemeItem.Click += new EventHandler(ToggleTheme);
             pauseThemeSwitchItem.Click += new EventHandler(PauseThemeSwitch);
+            tryFixTheme.Click += new EventHandler(TryFixTheme);
 
             NotifyIcon.Text = "Auto Dark Mode";
             state.UpdateNotifyIcon(builder);
@@ -156,6 +173,7 @@ namespace AutoDarkModeSvc
             NotifyIcon.ContextMenuStrip.Items.Insert(0, forceDarkMenuItem);
             NotifyIcon.ContextMenuStrip.Items.Insert(0, forceLightMenuItem);
             NotifyIcon.ContextMenuStrip.Items.Insert(0, new ToolStripSeparator());
+            NotifyIcon.ContextMenuStrip.Items.Insert(0, tryFixTheme);
             NotifyIcon.ContextMenuStrip.Items.Insert(0, toggleThemeItem);
             NotifyIcon.ContextMenuStrip.Items.Insert(0, pauseThemeSwitchItem);
             NotifyIcon.ContextMenuStrip.Items.Insert(0, autoThemeSwitchingItem);
@@ -168,9 +186,14 @@ namespace AutoDarkModeSvc
             }
         }
 
+        private void TryFixTheme(object sender, EventArgs e)
+        {
+            ThemeManager.RequestSwitch(new(SwitchSource.Manual, refreshDwm: true));
+        }
+
         private void UpdateContextMenu(object sender, EventArgs e)
         {
-            if (state.RequestedTheme == Theme.Dark)
+            if (state.InternalTheme == Theme.Dark)
             {
                 NotifyIcon.ContextMenuStrip.Renderer = toolStripDarkRenderer;
             }
@@ -218,11 +241,11 @@ namespace AutoDarkModeSvc
                 }
                 else
                 {
-                    if (skipType == SkipType.Sunrise)
+                    if (skipType == SkipType.UntilSunset)
                     {
                         pauseThemeSwitchItem.Text = $"{AdmProperties.Resources.TrayMenuItemThemeSwitchPause} ({AdmProperties.Resources.ThemeSwitchPauseUntilSunset})";
                     }
-                    else if (skipType == SkipType.Sunset)
+                    else if (skipType == SkipType.UntilSunrise)
                     {
                         pauseThemeSwitchItem.Text = $"{AdmProperties.Resources.TrayMenuItemThemeSwitchPause} ({AdmProperties.Resources.ThemeSwitchPauseUntilSunrise})";
                     }
@@ -238,7 +261,9 @@ namespace AutoDarkModeSvc
         {
             Logger.Info("exiting service");
 
-            MessageServer.Stop();
+            state.PostponeManager.FlushPostponesToDisk();
+
+            MessageServer.Dispose();
             ConfigMonitor.Dispose();
             WindowsThemeMonitor.StopThemeMonitor();
             Timers.ForEach(t => t.Stop());
@@ -247,7 +272,8 @@ namespace AutoDarkModeSvc
             {
                 if (closeApp)
                 {
-                    Process[] pApp = Process.GetProcessesByName("AutoDarkModeApp");
+                    var currentSessionID = Process.GetCurrentProcess().SessionId;
+                    Process[] pApp = Process.GetProcessesByName("AutoDarkModeApp").Where(p => p.SessionId == currentSessionID).ToArray();
                     if (pApp.Length != 0)
                     {
                         pApp[0].Kill();
@@ -265,8 +291,26 @@ namespace AutoDarkModeSvc
             Application.Exit();
         }
 
+        public void CheckReadyStatus()
+        {
+            bool isInitializing = !admReady;
+            if (isInitializing)
+            {
+                Logger.Warn("adm initialization in progress, waiting for completion before exiting service");
+            }
+            while (!admReady)
+            {
+                Thread.Sleep(200);
+            }
+            if (isInitializing)
+            {
+                Logger.Info("adm initialization complete");
+            }
+        }
+
         public void RequestExit(object sender, EventArgs e)
         {
+            CheckReadyStatus();
             if (e is ExitEventArgs exe)
             {
                 closeApp = exe.CloseApp;
@@ -327,7 +371,6 @@ namespace AutoDarkModeSvc
                 Logger.Info("ui signal received: enabling auto theme switching");
                 state.SkipConfigFileReload = true;
                 builder.Config.AutoThemeSwitchingEnabled = true;
-                AdmConfigMonitor.Instance().PerformConfigUpdate(old, internalUpdate: true);
                 ThemeManager.RequestSwitch(new(SwitchSource.Manual));
                 mi.Checked = true;
             }
@@ -366,14 +409,14 @@ namespace AutoDarkModeSvc
                     Logger.Info("ui signal received: forcing light theme");
                     state.ForcedTheme = Theme.Light;
                     ThemeHandler.EnforceNoMonitorUpdates(Builder, state, Theme.Light);
-                    ThemeManager.UpdateTheme(Theme.Light, new(SwitchSource.Manual));
+                    ThemeManager.UpdateTheme(new(SwitchSource.Manual, Theme.Light));
                 }
                 else if (mi.Name == "forceDark")
                 {
                     Logger.Info("ui signal received: forcing dark theme");
                     state.ForcedTheme = Theme.Dark;
                     ThemeHandler.EnforceNoMonitorUpdates(Builder, state, Theme.Dark);
-                    ThemeManager.UpdateTheme(Theme.Dark, new(SwitchSource.Manual));
+                    ThemeManager.UpdateTheme(new(SwitchSource.Manual, Theme.Dark));
                 }
                 mi.Checked = true;
             }

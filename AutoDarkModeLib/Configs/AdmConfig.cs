@@ -31,6 +31,7 @@ namespace AutoDarkModeLib.Configs
             Location = new();
             Tunable = new();
             GPUMonitoring = new();
+            ProcessBlockList = new();
             Events = new();
             WindowsThemeMode = new();
             Updater = new();
@@ -42,9 +43,12 @@ namespace AutoDarkModeLib.Configs
             // New Component Settings;
             AppsSwitch = new();
             SystemSwitch = new();
+            TouchKeyboardSwitch = new();
             ColorFilterSwitch = new();
             OfficeSwitch = new();
             WallpaperSwitch = new();
+            ColorizationSwitch = new();
+            CursorSwitch = new();
         }
         public bool AutoThemeSwitchingEnabled { get; set; }
         public Governor Governor { get; set; } = Governor.Default;
@@ -52,13 +56,17 @@ namespace AutoDarkModeLib.Configs
         public WindowsThemeMode WindowsThemeMode { get; set; }
         public BaseSettingsEnabled<AppsSwitchSettings> AppsSwitch { get; set; }
         public BaseSettingsEnabled<SystemSwitchSettings> SystemSwitch { get; set; }
+        public BaseSettings<object> TouchKeyboardSwitch { get; set; }
+        public BaseSettings<ColorizationSwitchSettings> ColorizationSwitch { get; set; }
         public BaseSettings<object> ColorFilterSwitch { get; set; }
         public BaseSettings<OfficeSwitchSettings> OfficeSwitch { get; set; }
+        public BaseSettings<CursorSwitchSettings> CursorSwitch { get; set; }
         public DateTime Sunrise { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 7, 0, 0);
         public DateTime Sunset { get; set; } = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 0, 0);
         public Location Location { get; set; }
         public Tunable Tunable { get; set; }
         public GPUMonitoring GPUMonitoring { get; set; }
+        public ProcessBlockList ProcessBlockList { get; set; }
         public Events Events { get; set; }
         public Notifications Notifications { get; set; }
         public AutoSwitchNotify AutoSwitchNotify { get; set; }
@@ -174,6 +182,7 @@ namespace AutoDarkModeLib.Configs
         public bool Trace { get; set; }
         public bool DebugTimerMessage { get; set; }
         public bool ShowTrayIcon { get; set; } = true;
+        public bool AlwaysFullDwmRefresh { get; set; } = false;
         public string UICulture { get; set; } = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     }
 
@@ -181,22 +190,6 @@ namespace AutoDarkModeLib.Configs
     {
         public bool Enabled { get; set; }
         public int Threshold { get; set; } = 30;
-        private int monitorTimeSpanMin;
-        public int MonitorTimeSpanMin
-        {
-            get { return monitorTimeSpanMin; }
-            set
-            {
-                if (value <= 1)
-                {
-                    monitorTimeSpanMin = 1;
-                }
-                else
-                {
-                    monitorTimeSpanMin = value;
-                }
-            }
-        }
         private int samples = 1;
         public int Samples
         {
@@ -213,5 +206,15 @@ namespace AutoDarkModeLib.Configs
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Configures the <see cref="AutoDarkModeSvc.Modules.BlockListModule"/>, used for postponing theme switches while
+    /// some processes are running
+    /// </summary>
+    public class ProcessBlockList
+    {
+        public SortedSet<string> ProcessNames { get; set; } = new();
+        public bool Enabled { get; set; }
     }
 }

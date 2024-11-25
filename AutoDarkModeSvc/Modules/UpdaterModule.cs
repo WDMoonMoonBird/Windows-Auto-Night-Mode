@@ -43,12 +43,13 @@ namespace AutoDarkModeSvc.Modules
             {
                 Logger.Error(ex, "could not load last update time:");
             }
+            Priority = 0;
         }
         public override string TimerAffinity => TimerName.IO;
 
-        public override void Fire()
+        public override Task Fire(object caller = null)
         {
-            _ = Task.Run(() =>
+            return Task.Run(() =>
             {
                 Check();
             });

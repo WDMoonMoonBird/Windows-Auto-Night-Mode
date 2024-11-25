@@ -175,7 +175,7 @@
     <value>Memakai layanan lokasi</value>
   </data>
   <data name="msgChangesSaved" xml:space="preserve">
-    <value>Perubahan anda telah tersimpan!</value>
+    <value>Perubahan Anda telah tersimpan!</value>
   </data>
   <data name="msgClickApply" xml:space="preserve">
     <value>Atur waktu pergantian dan pengaturan disimpan otomatis.</value>
@@ -396,7 +396,7 @@ Anda dapat mengatur secara individu.</value>
     <value>Tekan ini untuk membuka setelan tema Windows.</value>
   </data>
   <data name="ThemeTutorialStep2" xml:space="preserve">
-    <value>Kemudian arahkan ke 'Warna' dan ganti warna sistem ke 'Terang' untuk tema terang. Pilih latar belakang, Kursor Mouse dan Warna Aksen.</value>
+    <value>Kemudian arahkan ke 'Warna' dan ganti warna sistem ke 'Terang' untuk tema terang. Pilih latar belakang, kursor tetikus dan aksen warna.</value>
   </data>
   <data name="ThemeTutorialStep3" xml:space="preserve">
     <value>Lalu kembali ke setelan tema dan simpan tema yang terbentuk</value>
@@ -420,13 +420,13 @@ Anda dapat mengatur secara individu.</value>
     <value>Atur waktu kustom</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>Dari terbit hingga terbenam</value>
+    <value>Dari terbenam hingga terbit (layanan lokasi)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Langkah</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Pakai filter warna abu-abu (Tekan Win + Ctrl + C)</value>
+    <value>Color filter (sends Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Memakai jadwal saat masuk daripada entri mulai otomatis</value>
@@ -500,7 +500,7 @@ Pesan: tolong untuk TIDAK menjalankan Auto Dark Mode dengan Administrator!</valu
     <value>Atur Ulang</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Nyalakan mode gelap saat catu daya dilepas</value>
+    <value>Switch to dark mode when device is unplugged</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Nilai bawaan untuk slider penghemat energi</value>
@@ -530,10 +530,10 @@ Pesan: tolong untuk TIDAK menjalankan Auto Dark Mode dengan Administrator!</valu
     <value>Data lokasi</value>
   </data>
   <data name="rbLocationGeo" xml:space="preserve">
-    <value>Dari terbit hingga terbenam (koordinat geografis)</value>
+    <value>Dari terbenam hingga terbit (koordinat geografis)</value>
   </data>
   <data name="tbGetCoordinates" xml:space="preserve">
-    <value>Koordinat geografis Anda</value>
+    <value>Cari koordinat geografis Anda</value>
   </data>
   <data name="ConfigHyperLinkOpenConfig" xml:space="preserve">
     <value>Buka file konfigurasi</value>
@@ -563,16 +563,13 @@ Pesan: tolong untuk TIDAK menjalankan Auto Dark Mode dengan Administrator!</valu
     <value>Sembunyikan ikon tray (tidak direkomendasikan)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>Fitur ini dinonaktifkan ketika mode tema diaktifkan.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>Fitur ini dinonaktifkan ketika mode latar belakang diaktifkan.</value>
+    <value>Fitur ini dinonaktifkan ketika Windows mengelola tema Anda.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Menawarkan lebih banyak fitur, tetapi Anda harus membuat file tema Windows (.themes) Anda sendiri. Kustomisasi latar belakang Anda per layar, menyetel diashow, mengganti kursor mouse Anda, menyetel aksen warna dan suara secara individu.</value>
+    <value>PIlih tema Windows yang berbeda untuk masing-masing mode gelap dan terang. memungkinkan kustomisasi tema secara penuh, tapi membutuhkan Anda untuk menyetel file .theme Anda sendiri.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Menawarkan lebih sedikit fitur, tetapi lebih mudah disiapkan. Kustomisasi latar belakang desktop Anda untuk semua layar, layar individu atau warna latar.</value>
+    <value>Atur latar belakang desktop anda untuk semua monitor, beberapa monitor secara individu, atur warna latar belakang, atau nyalakan Windows Spotlight.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>Kami memeriksa versi terbaru dari Auto Dark Mode di latar belakang. Ketika pembaruan tersedia, kami akan memberitahukan Anda</value>
@@ -819,7 +816,7 @@ Pesan: tolong untuk TIDAK menjalankan Auto Dark Mode dengan Administrator!</valu
     <value>Cegah memaksa tema</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
-    <value>Nyalakan hotkey secara system-wide</value>
+    <value>Nyalakan hotkey secara menyeluruh</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
     <value>Paksa Mode Gelap</value>
@@ -847,7 +844,7 @@ Pesan: tolong untuk TIDAK menjalankan Auto Dark Mode dengan Administrator!</valu
     <value>Jumlah menit hingga sistem dianggap menganggur</value>
   </data>
   <data name="AppsCheckBoxDWMPrevalence" xml:space="preserve">
-    <value>Warna aksen untuk bilah judul dan batas jendela hanya dalam</value>
+    <value>Aksen warna untuk bilah judul dan batas jendela hanya dalam</value>
   </data>
   <data name="AboutVersionInfoCopied" xml:space="preserve">
     <value>Info versi disalin ke papan klip</value>
@@ -1135,5 +1132,134 @@ Pesan: tolong untuk TIDAK menjalankan Auto Dark Mode dengan Administrator!</valu
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Aksen warna</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Pilih aksen warna</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Sesuaikan skema warna sistem Windows sesuai keinginan Anda.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Perbarui pewarnaan</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Fitur ini dinonaktifkan ketika Auto Dark Mode mengelola tema Anda.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Tautan</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Dokumentasi untuk skrip kustom</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Repo pengguna untuk skrip kustom</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Isikan</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Paskan</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Rentangkan</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Pilih mode untuk latar belakang Anda</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Terputus</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Selalu segarkan DWM ketika pergantian tema</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Berupaya untuk mengurangi terjadinya warna UI yang salah di penjelajah, bilah tugas, dan menu mulai. Jika Anda sering mengalami hal ini atau merasa terganggu, coba aktifkan pengaturan ini.
+
+Hal ini dapat menyebabkan sedikit hingga sedang jeda pada beberapa sistem selama pergantian tema yang mirip dengan yang terjadi pada Windows 10. 
+Pada kesempatan yang jarang terjadi, Windows dapat mengeluarkan suara bip ketika mouse digerakkan selama penyegaran DWM.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Paksa penyegaran DWM?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Nyalakan pergantian kursor tetikus</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Buka setelan penunjuk Windows</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>PIlih kursor gelap</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Pilih kursor terang</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Kursor</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Konfigurasikan kursor tetikus yang berbeda untuk mode gelap dan terang.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Pilih kursor tetikus</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Biarkan Auto Dark Mode yang mengatur tema saya</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Biarkan Windows yang mengatur tema saya</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Anda dapat menentukan skema kursor di setelan Windows dan kemudian memilihnya di sini sesudahnya.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Buka shell</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Buka log pembaruan</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Nyalakan pergantian aksen warna</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Beralih ke papan ketik sentuh dan masukan</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Otomatis</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Tambah</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Proses Yang Memblokir</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Jangan beralih ketika proses tertentu berjalan</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Jelajahi aplikasi dengan dukungan Mode Gelap Otomatis</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Tidak semua aplikasi pihak ketiga mendukung Mode Gelap Otomatis secara default. Pada halaman wiki kami, kami menyediakan daftar pilihan aplikasi yang mendukung.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Aplikasi yang direkomendasikan</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Alternatifnya, Anda dapat menyumbang melalui GitHub Sponsor, yang juga mendukung donasi berkala bulanan.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Try to fix the theme</value>
   </data>
 </root>

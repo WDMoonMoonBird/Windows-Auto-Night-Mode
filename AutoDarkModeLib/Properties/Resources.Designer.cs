@@ -79,6 +79,24 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open shell.
+        /// </summary>
+        public static string AboutHyperLinkOpenShell {
+            get {
+                return ResourceManager.GetString("AboutHyperLinkOpenShell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open updater log.
+        /// </summary>
+        public static string AboutHyperLinkOpenUpdaterLog {
+            get {
+                return ResourceManager.GetString("AboutHyperLinkOpenUpdaterLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follow us.
         /// </summary>
         public static string AboutTextBlockFollowUs {
@@ -133,6 +151,15 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Switch touch keyboard and input.
+        /// </summary>
+        public static string AppsLabelTouchKeyboard {
+            get {
+                return ResourceManager.GetString("AppsLabelTouchKeyboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Taskbar Accent Color during.
         /// </summary>
         public static string AppsTextBlockAdaptiveTaskbarAccent {
@@ -156,6 +183,15 @@ namespace AutoDarkModeLib.Properties {
         public static string autoCheckBox {
             get {
                 return ResourceManager.GetString("autoCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatic.
+        /// </summary>
+        public static string Automatic {
+            get {
+                return ResourceManager.GetString("Automatic", resourceCulture);
             }
         }
         
@@ -262,7 +298,7 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enable dark mode when device is unplugged.
+        ///   Looks up a localized string similar to Switch to dark mode when device is unplugged.
         /// </summary>
         public static string cbSettingsBatteryDarkMode {
             get {
@@ -271,7 +307,7 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use color filter (sends Win + Ctrl + C).
+        ///   Looks up a localized string similar to Color filter (sends Win + Ctrl + C).
         /// </summary>
         public static string cbSettingsColourFilter {
             get {
@@ -361,6 +397,51 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Accent color switch.
+        /// </summary>
+        public static string ColorizationEnableSwitch {
+            get {
+                return ResourceManager.GetString("ColorizationEnableSwitch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick an accent color.
+        /// </summary>
+        public static string ColorizationPick {
+            get {
+                return ResourceManager.GetString("ColorizationPick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customize the Windows system color scheme to your liking..
+        /// </summary>
+        public static string ColorizationTextBlockDescription {
+            get {
+                return ResourceManager.GetString("ColorizationTextBlockDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accent color.
+        /// </summary>
+        public static string ColorizationTextBlockHeader {
+            get {
+                return ResourceManager.GetString("ColorizationTextBlockHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update colorization.
+        /// </summary>
+        public static string ColorizationTextBlockUpdate {
+            get {
+                return ResourceManager.GetString("ColorizationTextBlockUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open config file.
         /// </summary>
         public static string ConfigHyperLinkOpenConfig {
@@ -393,6 +474,60 @@ namespace AutoDarkModeLib.Properties {
         public static string ConfigTextBlockHeader {
             get {
                 return ResourceManager.GetString("ConfigTextBlockHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable mouse cursor switch.
+        /// </summary>
+        public static string CursorsPageEnable {
+            get {
+                return ResourceManager.GetString("CursorsPageEnable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Windows pointer settings.
+        /// </summary>
+        public static string CursorsPageOpenPointerSettings {
+            get {
+                return ResourceManager.GetString("CursorsPageOpenPointerSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can define new cursor schemes in the Windows settings and then select them here afterwards..
+        /// </summary>
+        public static string CursorsPageOpenPointerSettingsDescription {
+            get {
+                return ResourceManager.GetString("CursorsPageOpenPointerSettingsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select dark cursor.
+        /// </summary>
+        public static string CursorsPageSelectDark {
+            get {
+                return ResourceManager.GetString("CursorsPageSelectDark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select light cursor.
+        /// </summary>
+        public static string CursorsPageSelectLight {
+            get {
+                return ResourceManager.GetString("CursorsPageSelectLight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cursors.
+        /// </summary>
+        public static string CursorsPageTitle {
+            get {
+                return ResourceManager.GetString("CursorsPageTitle", resourceCulture);
             }
         }
         
@@ -541,6 +676,15 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disconnected.
+        /// </summary>
+        public static string DisplayMonitorDisconnected {
+            get {
+                return ResourceManager.GetString("DisplayMonitorDisconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hello! Thank you for using Auto Dark Mode! Do you like it so far?
         ///
         ///This app makes your everyday more pleasant, by helping you take care of your eyes. At the same time it&apos;s completely free, ad-free, doesn&apos;t collect user data and it&apos;s open source.
@@ -551,6 +695,15 @@ namespace AutoDarkModeLib.Properties {
         public static string donationDescription {
             get {
                 return ResourceManager.GetString("donationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alternatively you can donate via GitHub Sponsors, which also supports recurring monthly donations..
+        /// </summary>
+        public static string DonationGitHubSponsorsDescription {
+            get {
+                return ResourceManager.GetString("DonationGitHubSponsorsDescription", resourceCulture);
             }
         }
         
@@ -884,6 +1037,15 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Links.
+        /// </summary>
+        public static string Links {
+            get {
+                return ResourceManager.GetString("Links", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use Location Service.
         /// </summary>
         public static string locationCheckBox {
@@ -898,6 +1060,15 @@ namespace AutoDarkModeLib.Properties {
         public static string locationCityNotFound {
             get {
                 return ResourceManager.GetString("locationCityNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual.
+        /// </summary>
+        public static string Manual {
+            get {
+                return ResourceManager.GetString("Manual", resourceCulture);
             }
         }
         
@@ -1141,6 +1312,15 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string ok {
+            get {
+                return ResourceManager.GetString("ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Folder.
         /// </summary>
         public static string OpenPath {
@@ -1168,6 +1348,24 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Documentation for custom scripts.
+        /// </summary>
+        public static string PageScriptsCardDocumentationTextBlock {
+            get {
+                return ResourceManager.GetString("PageScriptsCardDocumentationTextBlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom script user repository.
+        /// </summary>
+        public static string PageScriptsCardUserRepositoryTextBlock {
+            get {
+                return ResourceManager.GetString("PageScriptsCardUserRepositoryTextBlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scripts.
         /// </summary>
         public static string PageScriptsTextBlockHeader {
@@ -1182,6 +1380,42 @@ namespace AutoDarkModeLib.Properties {
         public static string PageScriptsToggle {
             get {
                 return ResourceManager.GetString("PageScriptsToggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure different mouse cursors for dark and light modes..
+        /// </summary>
+        public static string PersonalizationPageCursorDescription {
+            get {
+                return ResourceManager.GetString("PersonalizationPageCursorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick mouse cursors.
+        /// </summary>
+        public static string PersonalizationPageCursorTitle {
+            get {
+                return ResourceManager.GetString("PersonalizationPageCursorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let Auto Dark Mode manage my theme.
+        /// </summary>
+        public static string PersonalizationPageManagedMode {
+            get {
+                return ResourceManager.GetString("PersonalizationPageManagedMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let Windows manage my theme.
+        /// </summary>
+        public static string PersonalizationPageUnmanagedMode {
+            get {
+                return ResourceManager.GetString("PersonalizationPageUnmanagedMode", resourceCulture);
             }
         }
         
@@ -1366,7 +1600,7 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to From sunset to sunrise.
+        ///   Looks up a localized string similar to From sunset to sunrise (location service).
         /// </summary>
         public static string rbLocation {
             get {
@@ -1380,6 +1614,33 @@ namespace AutoDarkModeLib.Properties {
         public static string rbLocationGeo {
             get {
                 return ResourceManager.GetString("rbLocationGeo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse apps with Auto Dark Mode support.
+        /// </summary>
+        public static string RecommendedAppsButton {
+            get {
+                return ResourceManager.GetString("RecommendedAppsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not every third party app supports Auto Dark Mode by default. On our wiki page we provide a curated list with supported apps..
+        /// </summary>
+        public static string RecommendedAppsDescription {
+            get {
+                return ResourceManager.GetString("RecommendedAppsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommended apps.
+        /// </summary>
+        public static string RecommendedAppsTitle {
+            get {
+                return ResourceManager.GetString("RecommendedAppsTitle", resourceCulture);
             }
         }
         
@@ -1555,6 +1816,36 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Always refresh DWM on theme switch.
+        /// </summary>
+        public static string SettingsPageCheckBoxAlwaysRefreshDwm {
+            get {
+                return ResourceManager.GetString("SettingsPageCheckBoxAlwaysRefreshDwm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempts to reduce the occurrence of wrong UI colors in the explorer, taskbar and start menu. If you experience this often or are bothered by it, try enabling this setting.
+        ///
+        ///This may introduce slight to moderate lag on some systems during theme switch similar to how it happened in Windows 10. 
+        ///On rare occasions, Windows may emit a beeping sound when the mouse is moved during DWM refreshes..
+        /// </summary>
+        public static string SettingsPageCheckBoxAlwaysRefreshDwmExplanation {
+            get {
+                return ResourceManager.GetString("SettingsPageCheckBoxAlwaysRefreshDwmExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force DWM refresh?.
+        /// </summary>
+        public static string SettingsPageCheckBoxAlwaysRefreshDwmHeader {
+            get {
+                return ResourceManager.GetString("SettingsPageCheckBoxAlwaysRefreshDwmHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A downgrade is available.
         /// </summary>
         public static string SettingsPageDowngradeAvailable {
@@ -1664,6 +1955,24 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string SwitchModesButtonAddProcess {
+            get {
+                return ResourceManager.GetString("SwitchModesButtonAddProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string SwitchModesButtonRemoveProcess {
+            get {
+                return ResourceManager.GetString("SwitchModesButtonRemoveProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notify before automatically switching themes.
         /// </summary>
         public static string SwitchModesCheckBoxAutoSwitchNotification {
@@ -1691,6 +2000,15 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t switch while certain processes are running.
+        /// </summary>
+        public static string SwitchModesCheckBoxProcessBlockList {
+            get {
+                return ResourceManager.GetString("SwitchModesCheckBoxProcessBlockList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fast (1 sample).
         /// </summary>
         public static string SwitchModesComboBoxItemSamplesFast {
@@ -1714,6 +2032,15 @@ namespace AutoDarkModeLib.Properties {
         public static string SwitchModesComboBoxItemSamplesSlow {
             get {
                 return ResourceManager.GetString("SwitchModesComboBoxItemSamplesSlow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blocking Processes.
+        /// </summary>
+        public static string SwitchModesExpanderHeaderBlockedProcesses {
+            get {
+                return ResourceManager.GetString("SwitchModesExpanderHeaderBlockedProcesses", resourceCulture);
             }
         }
         
@@ -1844,7 +2171,7 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enable system-wide hotkeys.
+        ///   Looks up a localized string similar to Enable hotkeys.
         /// </summary>
         public static string SwitchModesToggleHeaderHotkey {
             get {
@@ -1871,20 +2198,20 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This feature is disabled while theme mode is enabled..
+        ///   Looks up a localized string similar to This feature is disabled while Auto Dark Mode manages your theme..
         /// </summary>
-        public static string tbFeatureDisabledWhileThemeMode {
+        public static string tbFeatureDisabledWhileManagedMode {
             get {
-                return ResourceManager.GetString("tbFeatureDisabledWhileThemeMode", resourceCulture);
+                return ResourceManager.GetString("tbFeatureDisabledWhileManagedMode", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This feature is disabled while wallpaper mode is enabled..
+        ///   Looks up a localized string similar to This feature is disabled while Windows manages your theme..
         /// </summary>
-        public static string tbFeatureDisabledWhileWallpaperMode {
+        public static string tbFeatureDisabledWhileThemeMode {
             get {
-                return ResourceManager.GetString("tbFeatureDisabledWhileWallpaperMode", resourceCulture);
+                return ResourceManager.GetString("tbFeatureDisabledWhileThemeMode", resourceCulture);
             }
         }
         
@@ -1907,7 +2234,7 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Offers more features, but you need to set up a windows .theme file. Customize your desktop wallpaper per monitor, set a slideshow, change your mouse cursor, set an accent color and individual sounds..
+        ///   Looks up a localized string similar to Select a different Windows theme for dark and light mode respectively. Allows full theme customization, but requires you to set up .theme files on your own..
         /// </summary>
         public static string tbPickTheme {
             get {
@@ -1916,7 +2243,7 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Offers less features, but is easier to set up. Customize your desktop wallpaper for all monitors, individual monitors or set a background color..
+        ///   Looks up a localized string similar to Customize your desktop wallpaper for all monitors, individual monitors, set a background color or enable spotlight..
         /// </summary>
         public static string tbPickWallpaper {
             get {
@@ -2583,6 +2910,15 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Try to fix the theme.
+        /// </summary>
+        public static string TrayMenuItemTryFixTheme {
+            get {
+                return ResourceManager.GetString("TrayMenuItemTryFixTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to until.
         /// </summary>
         public static string UntilTime {
@@ -2880,6 +3216,24 @@ namespace AutoDarkModeLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        public static string WallpaperComboBoxItemFill {
+            get {
+                return ResourceManager.GetString("WallpaperComboBoxItemFill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fit.
+        /// </summary>
+        public static string WallpaperComboBoxItemFit {
+            get {
+                return ResourceManager.GetString("WallpaperComboBoxItemFit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Light Theme.
         /// </summary>
         public static string WallpaperComboBoxItemLight {
@@ -2921,6 +3275,15 @@ namespace AutoDarkModeLib.Properties {
         public static string WallpaperComboBoxItemSpotlight {
             get {
                 return ResourceManager.GetString("WallpaperComboBoxItemSpotlight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stretch.
+        /// </summary>
+        public static string WallpaperComboBoxItemStretch {
+            get {
+                return ResourceManager.GetString("WallpaperComboBoxItemStretch", resourceCulture);
             }
         }
         
@@ -2993,6 +3356,15 @@ namespace AutoDarkModeLib.Properties {
         public static string WallpaperTextBlockImagePath {
             get {
                 return ResourceManager.GetString("WallpaperTextBlockImagePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a fit for your desktop image.
+        /// </summary>
+        public static string WallpaperTextBlockPosition {
+            get {
+                return ResourceManager.GetString("WallpaperTextBlockPosition", resourceCulture);
             }
         }
         

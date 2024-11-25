@@ -66,7 +66,7 @@ namespace AutoDarkModeSvc.Monitors
             {
                 Logger.Error(ex, "error while waiting for thread to stop:");
             }
-            ThemeManager.RequestSwitch(new(SwitchSource.ExternalThemeSwitch, GlobalState.Instance().RequestedTheme));
+            ThemeManager.RequestSwitch(new(SwitchSource.ExternalThemeSwitch, GlobalState.Instance().InternalTheme));
         }
 
         public static void StartThemeMonitor()
@@ -100,6 +100,24 @@ namespace AutoDarkModeSvc.Monitors
                 });
             }
         }
+
+        public static void PauseThemeMonitor()
+        {
+            if (globalThemeEventWatcher != null && !IsPaused)
+            {
+                globalThemeEventWatcher.Stop();
+                IsPaused = true;
+            }
+        }
+
+        public static void ResumeThemeMonitor()
+        {
+            if (globalThemeEventWatcher != null && IsPaused)
+            {
+                globalThemeEventWatcher.Start();
+                IsPaused = false;
+            }
+        }   
 
         public static void StopThemeMonitor()
         {

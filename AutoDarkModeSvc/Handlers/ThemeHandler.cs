@@ -1,5 +1,4 @@
 ﻿#region copyright
-
 //  Copyright (C) 2022 Auto Dark Mode
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -14,18 +13,16 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #endregion
-
 using AutoDarkModeLib;
 using AutoDarkModeLib.Configs;
 using AutoDarkModeSvc.Core;
+using AutoDarkModeSvc.Events;
 using AutoDarkModeSvc.Handlers.ThemeFiles;
 using AutoDarkModeSvc.Monitors;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using static AutoDarkModeLib.IThemeManager2.Flags;
 using static AutoDarkModeSvc.Handlers.IThemeManager.TmHandler;
@@ -56,11 +53,10 @@ namespace AutoDarkModeSvc.Handlers
         /// <summary>
         /// Applies an ADM managed theme
         /// </summary>
-        /// <param name="config"></param>
-        /// <param name="theme"></param>
-        public static void ApplyManagedTheme(AdmConfig config, ThemeFile theme)
+        /// <param name="theme">the theme file that should be applied in managed mode</param>
+        /// <param name="flagList">the list of ignore flags that should be used when applying the theme</param>
+        public static void ApplyManagedTheme(ThemeFile theme, List<ThemeApplyFlags> flagList)
         {
-            List<ThemeApplyFlags> flagList = new() { ThemeApplyFlags.IgnoreBackground };
             Apply(theme.ThemeFilePath, flagList: flagList);
         }
 
@@ -70,13 +66,15 @@ namespace AutoDarkModeSvc.Handlers
         /// </summary>
         /// <param name="newTheme"></param>
         /// <returns>true if an update was performed; false otherwise</returns>
-        public static void ApplyTheme(Theme newTheme)
+        public static void ApplyUnmanagedTheme(Theme newTheme)
         {
             PowerHandler.RequestDisableEnergySaver(builder.Config);
             if (builder.Config.WindowsThemeMode.MonitorActiveTheme)
             {
-                WindowsThemeMonitor.PauseThemeMonitor(TimeSpan.FromSeconds(10));
+                WindowsThemeMonitor.PauseThemeMonitor();
             }
+
+            // string appliedThemeFilePath = null;
 
             // refresh active theme for syncing data into unmanaged themes
             state.ManagedThemeFile.SyncWithActiveTheme(patch: false, logging: false);
@@ -110,6 +108,13 @@ namespace AutoDarkModeSvc.Handlers
                     dark.Save(managed: false);
                 }
                 Apply(builder.Config.WindowsThemeMode.DarkThemePath, unmanagedPatched: dark);
+            }
+
+            
+
+            if (builder.Config.WindowsThemeMode.MonitorActiveTheme)
+            {
+                WindowsThemeMonitor.ResumeThemeMonitor();
             }
         }
 
@@ -214,43 +219,82 @@ namespace AutoDarkModeSvc.Handlers
             return false;
         }
 
-        public static void RefreshDwm(bool managed)
+        public static void RefreshDwmFull(bool managed, SwitchEventArgs e)
         {
             if (Environment.OSVersion.Version.Build >= (int)WindowsBuilds.Win11_22H2)
             {
                 try
                 {
-                    ThemeFile dwmRefreshTheme = new(Helper.PathManagedDwmRefreshTheme);
-                    if (!managed) state.ManagedThemeFile.SyncWithActiveTheme(false, false, true);
-                    dwmRefreshTheme.SetContentAndParse(state.ManagedThemeFile.ThemeFileContent);
+                    // prepare theme
+                    ThemeFile dwmRefreshTheme = new(Helper.PathDwmRefreshTheme);
+                    // if unmanaged we need to force-sync the theme
+                    if (!managed)
+                    {
+                        state.ManagedThemeFile.SyncWithActiveTheme(false, false, true);
+                        ThemeFile unmanagedTarget;
+                        if (e.Theme == Theme.Dark)
+                        {
+                            unmanagedTarget = new(builder.Config.WindowsThemeMode.DarkThemePath);
+                        }
+                        else
+                        {
+                            unmanagedTarget = new(builder.Config.WindowsThemeMode.LightThemePath);
+                        }
+                        try
+                        {
+                            unmanagedTarget.Load();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "dwm management: could not load unmanaged target theme while refreshing dwm, forcing refresh:");
+                        }
+                        if (unmanagedTarget.VisualStyles.AutoColorization.Item1 == "1")
+                        {
+                            Logger.Info("dwm management: no refresh required because auto colorization is enabled in the target theme");
+                            return;
+                        }
+                        else if (unmanagedTarget.VisualStyles.ColorizationColor.Item1 != state.ManagedThemeFile.VisualStyles.ColorizationColor.Item1)
+                        {
+                            Logger.Info("dwm management: no refresh required because target theme has different accent color");
+                            return;
+                        }
+                        dwmRefreshTheme.SetContentAndParse(unmanagedTarget.ThemeFileContent);
+                    }
+                    else
+                    {
+                        dwmRefreshTheme.SetContentAndParse(state.ManagedThemeFile.ThemeFileContent);
+                    }
                     dwmRefreshTheme.RefreshGuid();
-                    string lastColorizationDigitString = dwmRefreshTheme.VisualStyles.ColorizationColor.Item1[dwmRefreshTheme.VisualStyles.ColorizationColor.Item1.Length - 1].ToString();
-                    int lastColorizationDigit = int.Parse(lastColorizationDigitString);
+                    dwmRefreshTheme.DisplayName = "DwmRefreshTheme";
+
+                    // get current accent color
+                    string currentColorization = RegistryHandler.GetAccentColor().Replace("#", "0X");
+                    string lastColorizationDigitString = currentColorization[currentColorization.Length - 1].ToString();
+                    int lastColorizationDigit = int.Parse(lastColorizationDigitString, System.Globalization.NumberStyles.HexNumber);
+
+                    // modify last digit
                     if (lastColorizationDigit >= 9) lastColorizationDigit--;
                     else lastColorizationDigit++;
-                    string newColorizationColor = dwmRefreshTheme.VisualStyles.ColorizationColor.Item1[..(dwmRefreshTheme.VisualStyles.ColorizationColor.Item1.Length - 1)] + lastColorizationDigit.ToString();
+                    string newColorizationColor = currentColorization[..(currentColorization.Length - 1)] + lastColorizationDigit.ToString("X");
+
+                    // update theme
                     dwmRefreshTheme.VisualStyles.ColorizationColor = (newColorizationColor, dwmRefreshTheme.VisualStyles.ColorizationColor.Item2);
-                    dwmRefreshTheme.DisplayName = "DwmRefreshTheme";
+                    dwmRefreshTheme.VisualStyles.AutoColorization = ("0", dwmRefreshTheme.VisualStyles.AutoColorization.Item2);
                     dwmRefreshTheme.Save();
 
-                    string oldUnmanagedThemePath = state.UnmanagedActiveThemePath;
                     List<ThemeApplyFlags> flagList = new() { ThemeApplyFlags.IgnoreBackground, ThemeApplyFlags.IgnoreCursor, ThemeApplyFlags.IgnoreDesktopIcons, ThemeApplyFlags.IgnoreSound, ThemeApplyFlags.IgnoreScreensaver };
                     Apply(dwmRefreshTheme.ThemeFilePath, true, null, flagList);
 
-                    if (!managed)
-                    {
-                        Apply(oldUnmanagedThemePath, true, null, flagList);
-                    }
-                    Logger.Info("refreshed dwm because a module requested it");
+                    Logger.Info("dwm management: refresh performed by theme handler");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex, "could not refresh Dwm due to malformed colorization string: ");
+                    Logger.Warn(ex, "dwm management: could not refresh dwm due to malformed colorization string: ");
                 }
             }
             else
             {
-                Logger.Trace("no dwm refresh required needed in this windows version");
+                Logger.Trace("dwm management: no refresh required needed in this windows version");
             }
         }
 
@@ -318,7 +362,7 @@ namespace AutoDarkModeSvc.Handlers
                     if (flagList == null) flagList = builder.Config.WindowsThemeMode.ApplyFlags;
                     else builder.Config.WindowsThemeMode.ApplyFlags.ForEach(f => { if (!flagList.Contains(f)) flagList.Add(f); });
                 }
-                (_, displayNameFromFile) = ThemeFile.GetDisplayNameFromRaw(themeFilePath);
+                (_, _, displayNameFromFile) = ThemeFile.GetDisplayNameFromRaw(themeFilePath);
                 (tm2Found, tm2Success) = IThemeManager2.Tm2Handler.SetTheme(displayNameFromFile, originalPath, flagList: flagList, suppressLogging: suppressLogging);
             }
             catch (Exception ex)

@@ -8,6 +8,7 @@
       xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:uc="clr-namespace:AutoDarkModeApp.Controls"
       xmlns:p="clr-namespace:AutoDarkModeLib.Properties;assembly=AutoDarkModeLib"
+      xmlns:ge="clr-namespace:SourceChord.GridExtra"
       mc:Ignorable="d"
       Title="PageTime"
       fw:PointerTracker.Enabled="True"
@@ -154,7 +155,7 @@
                                    Margin="0,0,0,0"
                                    VerticalAlignment="Top"
                                    HorizontalAlignment="Left"
-                                   FontSize="13"
+                                   FontSize="14"
                                    Text="{x:Static p:Resources.TimePageOpenNightLight}"
                                    TextWrapping="Wrap"
                                    MaxWidth="650" />
@@ -164,7 +165,8 @@
                     <ui:FontIcon Grid.Column="3"
                                  Margin="15, 0, 10, 0"
                                  FontSize="15"
-                                 FontFamily="Segoe fluent Icons"
+                                 Name="FontIconNightLightLink"
+                                 FontFamily="Segoe MDL2 Assets"
                                  Glyph="&#xe8a7;" />
                 </Grid>
             </ui:SimpleStackPanel>
@@ -200,7 +202,14 @@
                             VerticalAlignment="Top">
 
                     <DockPanel LastChildFill="false">
-                        <TextBlock Margin="15,5,0,0"
+                        <ui:FontIcon Margin="15, 0, 0, 0"
+                                         FontFamily="Segoe MDL2 Assets"
+                                         Name="FontIconLightTimePicker"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Glyph="&#xE706;" />
+                        <TextBlock Margin="15,0,0,0"
+                                   VerticalAlignment="Center"
                                    Text="{x:Static p:Resources.lblLight}" />
                         <ui:SimpleTimePicker x:Name="TimePickerLight"
                                              Margin="0,0,0,0"
@@ -215,7 +224,14 @@
                                Background="{DynamicResource Win11Border}" />
 
                     <DockPanel LastChildFill="false">
-                        <TextBlock Margin="15,6,0,0"
+                        <ui:FontIcon Margin="15, 0, 0, 0"
+                                         FontFamily="Segoe MDL2 Assets"
+                                         Name="FontIconDarkTimePicker"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Glyph="&#xe708;" />
+                        <TextBlock Margin="15,0,0,0"
+                                   VerticalAlignment="Center"
                                    Text="{x:Static p:Resources.lblDark}" />
                         <ui:SimpleTimePicker x:Name="TimePickerDark"
                                              Margin="0,0,0,0"
@@ -264,33 +280,76 @@
                        Text="{x:Static p:Resources.headerLocationData}"
                        FontFamily="Segoe UI Semibold"
                        FontSize="14" />
+
             <uc:Card x:Name="StackPanelLocationTime"
                      Grid.Row="3"
-                     Padding="15"
+                     Padding="15,7,15,15"
                      Margin="0,0,0,0">
-                <StackPanel Margin="15,0,0,0">
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Top">
+                <Grid Margin="15,0,0,0">
 
-                        <TextBlock x:Name="locationBlock"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   Margin="0,0,0,0"
-                                   TextWrapping="Wrap"
-                                   Height="Auto"
-                                   Width="Auto"
-                                   FontSize="14" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <TextBlock Name="TextBlockLightTime"
-                                   Margin="20,0,0,0"
-                                   FontSize="14" />
+                    <ge:ResponsiveGrid Margin="0,0,0,0" x:Name="ResponsiveLocationGrid">
 
-                        <TextBlock Name="TextBlockDarkTime"
-                                   Margin="20,0,0,0"
-                                   FontSize="14" />
-                    </StackPanel>
-                    <Grid Margin="0, 6, 0, 0">
+                        <ui:SimpleStackPanel Orientation="Horizontal"
+                                             Margin="0,15,0,0"
+                                             ge:ResponsiveGrid.SM="4"
+                                             ge:ResponsiveGrid.XS="12">
+                            <ui:FontIcon Margin="0, 0, 10, 0"
+                                         Name="FontIconLocation"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         FontFamily="Segoe MDL2 Assets"
+                                         Glyph="&#xE707;" />
+                            <TextBlock x:Name="locationBlock"
+                                       Margin="0,0,0,0"
+                                       TextWrapping="Wrap"
+                                       Height="Auto"
+                                       Width="Auto"
+                                       Text="LocationPlaceholder"
+                                       FontSize="14" />
+                        </ui:SimpleStackPanel>
+
+
+                        <ui:SimpleStackPanel Margin="0,15,0,0"
+                                             ge:ResponsiveGrid.SM="4"
+                                             ge:ResponsiveGrid.XS="6"
+                                             Orientation="Horizontal">
+                            <ui:FontIcon Margin="0, 1, 10, 0"
+                                         FontFamily="Segoe MDL2 Assets"
+                                         Name="FontIconLight"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Glyph="&#xE706;" />
+                            <TextBlock Name="TextBlockLightTime"
+                                       Margin="0,0,0,0"
+                                       Text="Sunrise"
+                                       FontSize="14" />
+                        </ui:SimpleStackPanel>
+
+
+                        <ui:SimpleStackPanel Margin="0,15,0,0"
+                                             ge:ResponsiveGrid.XS="6"
+                                             ge:ResponsiveGrid.SM="3"
+                                             Orientation="Horizontal">
+                            <ui:FontIcon Margin="0, 0, 10, 0"
+                                         FontFamily="Segoe MDL2 Assets"
+                                         Name="FontIconDark"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Glyph="&#xe708;" />
+                            <TextBlock Name="TextBlockDarkTime"
+                                       Margin="0,0,0,0"
+                                       Text="Sunset"
+                                       FontSize="14" />
+                        </ui:SimpleStackPanel>
+                    </ge:ResponsiveGrid>
+
+                    <Grid Margin="0, 10, 0, 0"
+                          Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
@@ -306,7 +365,7 @@
                                    FontSize="12"
                                    Name="LocationNextUpdateDate" />
                     </Grid>
-                </StackPanel>
+                </Grid>
             </uc:Card>
 
         </Grid>
@@ -393,11 +452,12 @@
                 </StackPanel>
             </uc:Card>
 
-            <uc:Card Grid.Row="4" Padding="15" Margin="0,1,0,0"
+            <uc:Card Grid.Row="4"
+                     Padding="15"
+                     Margin="0,1,0,0"
                      MouseDown="TextBlockOpenLatLongWebsite_MouseDown"
                      KeyDown="TextBlockOpenLatLongWebsite_KeyDown"
-                     Cursor="Hand"
-                     >
+                     Cursor="Hand">
 
                 <Grid Margin="0,2,0,0">
                     <Grid.ColumnDefinitions>
@@ -441,7 +501,8 @@
                     <ui:FontIcon Grid.Column="3"
                                  Margin="15, 0, 10, 0"
                                  FontSize="15"
-                                 FontFamily="Segoe fluent Icons"
+                                 Name="FontIconGeoLink"
+                                 FontFamily="Segoe MDL2 Assets"
                                  Glyph="&#xe71b;" />
                 </Grid>
             </uc:Card>
@@ -515,7 +576,7 @@
                             VerticalAlignment="Bottom"
                             DockPanel.Dock="Right"
                             Margin="25,0,0,0"
-                            Width="80"
+                            MinWidth="80"
                             Height="30"
                             Click="OffsetButton_Click"
                             IsEnabled="False" />

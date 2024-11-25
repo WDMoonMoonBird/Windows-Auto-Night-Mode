@@ -22,6 +22,8 @@ using AutoDarkModeSvc.Timers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AutoDarkModeSvc.Modules
 {
@@ -30,6 +32,8 @@ namespace AutoDarkModeSvc.Modules
         private AdmConfigBuilder ConfigBuilder { get; }
         private GlobalState State { get; }
         private List<ModuleTimer> Timers { get; }
+        private GovernorModule governorModule;
+
         public override string TimerAffinity { get; } = TimerName.Main;
 
 
@@ -44,22 +48,28 @@ namespace AutoDarkModeSvc.Modules
             State = GlobalState.Instance();
             State.SetWarden(this);
             Timers = timers;
-            Priority = 1;
+            Priority = 2;
+            governorModule = new GovernorModule(typeof(GovernorModule).Name, true);
         }
 
         /// <summary>
         /// Registers all modules enabled in the AutoDarkMode Configuration
         /// </summary>
-        public override void Fire()
+        public override Task Fire(object caller = null)
         {
             AdmConfig config = ConfigBuilder.Config;
             AutoManageModule(typeof(SystemIdleCheckModule), true, config.IdleChecker.Enabled);
             AutoManageModule(typeof(GeopositionUpdateModule), true, config.Location.Enabled);
-            AutoManageModule(typeof(TimeSwitchModule), true, config.AutoThemeSwitchingEnabled && config.Governor == Governor.Default);
-            AutoManageModule(typeof(NightLightTrackerModule), false, config.AutoThemeSwitchingEnabled && config.Governor == Governor.NightLight);
             //AutoManageModule(typeof(ThemeUpdateModule), true, config.WindowsThemeMode.Enabled && config.WindowsThemeMode.MonitorActiveTheme);
             AutoManageModule(typeof(GPUMonitorModule), true, config.GPUMonitoring.Enabled);
+            AutoManageModule(typeof(ProcessBlockListModule), true, config.ProcessBlockList.Enabled);
             AutoManageModule(typeof(UpdaterModule), true, config.Updater.Enabled);
+            AutoManageGovernorModule(config.AutoThemeSwitchingEnabled);
+            if (config.AutoThemeSwitchingEnabled)
+            {
+                governorModule.AutoManageGovernors(config.Governor);
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -88,6 +98,19 @@ namespace AutoDarkModeSvc.Modules
                 {
                     Timers.ForEach(t => t.DeregisterModule(moduleType.Name));
                 }
+            }
+        }
+
+        private void AutoManageGovernorModule(bool condition)
+        {
+            if (condition)
+            {
+                var timer = Timers.Find(t => t.Name == governorModule.TimerAffinity);
+                timer?.RegisterModule(governorModule);
+            }
+            else
+            {
+                Timers.ForEach(t => t.DeregisterModule(governorModule));
             }
         }
     }

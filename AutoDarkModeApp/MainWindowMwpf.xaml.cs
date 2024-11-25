@@ -39,12 +39,17 @@ using System.Runtime.InteropServices;
 using System.Management;
 using System.Security.Cryptography;
 using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace AutoDarkModeApp
 {
     public partial class MainWindowMwpf : Window
     {
         private ResourceDictionary navbarDict;
+        private ManagementEventWatcher DWMPrevalenceWatcher;
+        private bool micaInitialized = false;
+        private CancellationTokenSource refreshTitleBarCts = new();
 
         private static SecurityIdentifier SID
         {
@@ -74,8 +79,8 @@ namespace AutoDarkModeApp
                     $"'{sidString}\\\\" +
                     @"Software\\Microsoft\\Windows\\DWM' AND ValueName='ColorPrevalence'";
                 WqlEventQuery query = new WqlEventQuery(queryString);
-                ManagementEventWatcher DWMPrevalenceWatcher = new ManagementEventWatcher(query);
-                DWMPrevalenceWatcher.EventArrived += new EventArrivedEventHandler((s, e) => Dispatcher.Invoke(RefreshDarkMode));
+                DWMPrevalenceWatcher = new ManagementEventWatcher(query);
+                DWMPrevalenceWatcher.EventArrived += new EventArrivedEventHandler((s, e) => Dispatcher.Invoke(RefreshWindowStyle));
                 DWMPrevalenceWatcher.Start();
             }
             catch
@@ -86,6 +91,19 @@ namespace AutoDarkModeApp
 
             Loaded += OnLoaded;
 
+            Architecture Arch = RuntimeInformation.ProcessArchitecture;
+            if (Arch == Architecture.Arm64)
+            {
+                string title = "ARMto Dark Mode";
+                WindowTitle.Text = title;
+                Title = title;
+            }
+            else
+            {
+                string title = "Auto Dark Mode";
+                WindowTitle.Text = title;
+                Title = title;
+            }
         }
 
         private void ConfigureMica()
@@ -98,8 +116,8 @@ namespace AutoDarkModeApp
                     2
                 );
                 RefreshFrame();
-                RefreshDarkMode();
-                ThemeManager.Current.ActualApplicationThemeChanged += (_, _) => RefreshDarkMode();
+                RefreshWindowStyle();
+                ThemeManager.Current.ActualApplicationThemeChanged += (_, _) => RefreshWindowStyle();
             }
             else
             {
@@ -127,33 +145,60 @@ namespace AutoDarkModeApp
             Methods.ExtendFrame(mainWindowSrc.Handle, margins);
         }
 
-        private void RefreshDarkMode()
+        private void RefreshWindowStyle()
         {
             var isDark = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark;
             int flag = isDark ? 1 : 0;
 
+            Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+
+            var newResources = new ResourceDictionary
+            {
+                ["NavigationViewTopPaneBackground"] = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                ["NavigationViewDefaultPaneBackground"] = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                ["NavigationViewExpandedPaneBackground"] = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0))
+            };
+            NavBar.Resources = newResources;
+
             if (!RegistryHandler.IsDWMPrevalence())
             {
-                Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-
-                var newResources = new ResourceDictionary
+                if (micaInitialized)
                 {
-                    ["NavigationViewTopPaneBackground"] = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
-                    ["NavigationViewDefaultPaneBackground"] = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
-                    ["NavigationViewExpandedPaneBackground"] = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0))
-                };
-                NavBar.Resources = newResources;
-                TopBarCloseButtonsOpaque.Visibility = Visibility.Hidden;
-                TopBarHeader.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-                TopBarTitle.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                    CancellationToken token = refreshTitleBarCts.Token;
+                    Task.Delay(3000, token).ContinueWith(t =>
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                        Dispatcher.Invoke(() =>
+                        {
+                            TopBarCloseButtonsOpaque.Visibility = Visibility.Hidden;
+                            TopBarHeader.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                            TopBarTitle.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                        });
+                    });
+                }
+                else
+                {
+                    TopBarCloseButtonsOpaque.Visibility = Visibility.Hidden;
+                    TopBarHeader.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                    TopBarTitle.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                    micaInitialized = true;
+                }              
             }
             else
             {
+                // allow full transparency except for close buttons
+                if (!refreshTitleBarCts.IsCancellationRequested)
+                {
+                    refreshTitleBarCts.Cancel();
+                }
+                refreshTitleBarCts.Dispose();
+                refreshTitleBarCts = new();
                 TopBarCloseButtonsOpaque.Visibility = Visibility.Visible;
-                SetResourceReference(BackgroundProperty, "AltHighClone");
-                NavBar.Resources = navbarDict;
                 TopBarHeader.SetResourceReference(BackgroundProperty, "AltHighClone");
-                TopBarTitle.SetResourceReference(BackgroundProperty, "NavbarFill");
+                TopBarTitle.SetResourceReference(BackgroundProperty, "AltHighClone");      
             }
 
 
@@ -182,7 +227,21 @@ namespace AutoDarkModeApp
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             LanguageHelper();
+            DonationScreen();
         }
+
+        private void DonationScreen()
+        {
+            //generate random number between 1 and 100. If the number is under or equals 2, show donation page
+            Random rdmnumber = new Random();
+            int generatedNumber = rdmnumber.Next(1, 100);
+            Debug.WriteLine("Donation gamble number: " + generatedNumber);
+            if (generatedNumber <= 2)
+            {
+                NavBar.SelectedItem = NavBar.FooterMenuItems[0];
+            }
+        }
+
 
         //region time and language
         private static void LanguageHelper()
@@ -209,6 +268,13 @@ namespace AutoDarkModeApp
         //application close behaviour
         private void Window_Closed(object sender, EventArgs e)
         {
+            try
+            {
+                DWMPrevalenceWatcher.Stop();
+                DWMPrevalenceWatcher.Dispose();
+            }
+            catch { }
+
             //NetMQConfig.Cleanup();
             Settings.Default.Save();
             Application.Current.Shutdown();

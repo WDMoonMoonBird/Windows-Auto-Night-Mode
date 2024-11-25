@@ -21,13 +21,9 @@ using AutoDarkModeSvc.Handlers;
 using AutoDarkModeSvc.Interfaces;
 using AutoDarkModeSvc.Modules;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoDarkModeLib.Configs;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace AutoDarkModeSvc.Monitors
 {
@@ -42,6 +38,9 @@ namespace AutoDarkModeSvc.Monitors
         private readonly GlobalState state = GlobalState.Instance();
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private IAutoDarkModeModule warden;
+        private const int CacheTimeMilliseconds = 200;
+        private Task configRefreshTask;
+
 
         public static AdmConfigMonitor Instance()
         {
@@ -76,15 +75,17 @@ namespace AutoDarkModeSvc.Monitors
                 NotifyFilter = NotifyFilters.LastWrite
             };
             ScriptConfigWatcher.Changed += OnChangedScriptConfig;
-            ConfigWatcher.Changed += OnChangedConfig;
+            // throttle config updates due to too many FileSystemWatcher events being generated
+            ConfigWatcher.Changed += OnChangedConfigCached;
             LocationDataWatcher.Changed += OnChangedLocationData;
-            
+
             IConfigUpdateEvent<AdmConfig> geolocatorEvent = new GeolocatorEvent();
             IConfigUpdateEvent<AdmConfig> themeModeEvent = new ThemeModeEvent(componentManager);
             IConfigUpdateEvent<AdmConfig> hotkeyEvent = new HotkeyEvent();
             IConfigUpdateEvent<AdmConfig> governorEvent = new GovernorEvent();
             IConfigUpdateEvent<AdmConfig> eventConfigChangeEvent = new EventConfigChangeEvent();
             IConfigUpdateEvent<AdmConfig> loggingVerbosityEvent = new LoggingVerbosityEvent();
+            IConfigUpdateEvent<AdmConfig> autoSwitchToggledEvent = new AutoSwitchToggledEvent();
 
             //change event trackers
             builder.ConfigUpdatedHandler += geolocatorEvent.OnConfigUpdate;
@@ -93,18 +94,48 @@ namespace AutoDarkModeSvc.Monitors
             builder.ConfigUpdatedHandler += governorEvent.OnConfigUpdate;
             builder.ConfigUpdatedHandler += eventConfigChangeEvent.OnConfigUpdate;
             builder.ConfigUpdatedHandler += loggingVerbosityEvent.OnConfigUpdate;
+            builder.ConfigUpdatedHandler += autoSwitchToggledEvent.OnConfigUpdate;
 
         }
 
-        private void OnChangedConfig(object source, FileSystemEventArgs e)
+        private void OnChangedConfigCached(object source, FileSystemEventArgs e)
         {
-            if (state.SkipConfigFileReload)
+            try
             {
-                state.SkipConfigFileReload = false;
-                Logger.Debug("skipping config file reload, update source internal");
-                return;
+                // only allow config updates every CacheTimeMilliseconds to counteract the bugged filesystemwatcher
+                if (configRefreshTask == null)
+                {
+                    Logger.Trace($"queueing config update to run in {CacheTimeMilliseconds}ms");
+                    _ = state.ConfigIsUpdatingWaitHandle.Reset();
+                    state.ConfigIsUpdating = true;
+                    configRefreshTask = Task.Delay(CacheTimeMilliseconds).ContinueWith(o =>
+                    {
+                        // reset the task so the config may be updated again
+                        configRefreshTask = null;
+
+                        if (state.SkipConfigFileReload)
+                        {
+                            state.SkipConfigFileReload = false;
+                            Logger.Debug("skipping config file reload, update source internal");
+                            PerformConfigUpdate(builder.Config, internalUpdate: true);
+                            return;
+                        }
+                        else
+                        {
+                            PerformConfigUpdate(builder.Config);
+                        }
+                    });
+                }
+                else
+                {
+                    Logger.Trace("config update already cached");
+                }
             }
-            PerformConfigUpdate(builder.Config);
+            catch (Exception ex)
+            {
+                Logger.Warn(ex, "failed performing config update with cached events during queueing, performing config update uncached");
+                PerformConfigUpdate(builder.Config);
+            }
         }
 
         private void OnChangedLocationData(object source, FileSystemEventArgs e)
@@ -137,7 +168,6 @@ namespace AutoDarkModeSvc.Monitors
         public void PerformConfigUpdate(AdmConfig oldConfig, bool internalUpdate = false)
         {
             _ = state.ConfigIsUpdatingWaitHandle.Reset();
-            state.ConfigIsUpdating = true;
 
             try
             {
@@ -157,13 +187,13 @@ namespace AutoDarkModeSvc.Monitors
 
                 // update expiry on config update if necessary (handled by UpdateNextSwitchExpiry)
                 state.PostponeManager.UpdateSkipNextSwitchExpiry();
-                Logger.Debug("updated configuration file");
+                if (internalUpdate) Logger.Debug("updated configuration internally");
+                else Logger.Debug("updated configuration from file");
             }
             catch (Exception ex)
             {
                 Logger.Debug(ex, "config file load failed:");
             }
-
 
             state.ConfigIsUpdating = false;
             if (!state.ConfigIsUpdatingWaitHandle.Set()) Logger.Fatal("could not trigger reset event");
@@ -211,11 +241,15 @@ namespace AutoDarkModeSvc.Monitors
         public void Dispose()
         {
             ConfigWatcher.EnableRaisingEvents = false;
-            ConfigWatcher.Changed -= OnChangedConfig;
+            ConfigWatcher.Changed -= OnChangedConfigCached;
             ConfigWatcher.Dispose();
             LocationDataWatcher.EnableRaisingEvents = false;
-            LocationDataWatcher.Changed -= OnChangedConfig;
+            LocationDataWatcher.Changed -= OnChangedLocationData;
             LocationDataWatcher.Dispose();
+            ScriptConfigWatcher.EnableRaisingEvents = false;
+            ScriptConfigWatcher.Changed -= OnChangedScriptConfig;
+            ScriptConfigWatcher.Dispose();
+            Logger.Debug("config monitors stopped");
         }
 
         public void RegisterWarden(IAutoDarkModeModule warden)

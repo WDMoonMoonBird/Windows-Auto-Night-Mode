@@ -18,98 +18,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace AutoDarkModeLib
 {
-    public enum Mode
-    {   
-        Switch = 0,
-        LightOnly = 1,
-        DarkOnly = 2,
-        AccentOnly = 3,
-        FollowSystemTheme = 4
-    };
-    public enum Theme
-    {
-        Ignore = -2,
-        Unknown = -1,
-        Dark = 0,
-        Light = 1,
-        Automatic = 2
-    };
-
-    /// <summary>
-    /// This enumeration indicates the wallpaper position for all monitors. (This includes when slideshows are running.)
-    /// The wallpaper position specifies how the image that is assigned to a monitor should be displayed.
-    /// </summary>
-    public enum WallpaperPosition
-    {
-        Center = 0,
-        Tile = 1,
-        Stretch = 2,
-        Fit = 3,
-        Fill = 4,
-        Span = 5,
-    }
-
-    public enum SwitchSource
-    {
-        Any,
-        TimeSwitchModule,
-        NightLightTrackerModule,
-        BatteryStatusChanged,
-        SystemResume,
-        Manual,
-        ExternalThemeSwitch,
-        Startup,
-        SystemUnlock,
-        Api
-    }
-
-    public enum Governor
-    {
-        Default,
-        NightLight
-    }
-
-    public enum SkipType
-    {
-        Unspecified,
-        Sunrise,
-        Sunset
-    }
-
-    public enum HookPosition
-    {
-        PreSync,
-        PostSync
-    }
-
-    public enum BridgeResponseCode {
-        InvalidArguments,
-        Success,
-        Fail,
-        NotFound
-    }
-
-    public enum WindowsBuilds : int
-    {
-        MinBuildForNewFeatures = 19044,
-        Win11_RC = 22000,
-        Win11_22H2 = 22621,
-    }
-
-    public enum WindowsBuildsUbr: int
-    {
-        Win11_22H2_Spotlight = 1105
-    }
-
     public static class Helper
     {
         public const string UpdaterExecutableName = "AutoDarkModeUpdater.exe";
-        public const string UpdaterDirName = "Updater";
+        public const string UpdaterDirName = "adm-updater";
         public const string PostponeItemPauseAutoSwitch = "PauseAutoSwitch";
         public const string PostponeItemDelayAutoSwitch = "DelayAutoSwitch";
         public const string PostponeItemDelayGracePeriod = "SwitchNotification";
@@ -119,15 +38,17 @@ namespace AutoDarkModeLib
         public static readonly string ExecutionPathApp = GetExecutionPathApp();
         public static readonly string ExecutionPathUpdater = GetExecutionPathUpdater();
         public static readonly string ExectuionPathThemeBridge = GetExecutionPathThemeBridge();
+        public static readonly string ExectuionPathShell = GetExecutionPathShell();
         public static readonly string ExecutionDirUpdater = GetExecutionDirUpdater();
         public static readonly string UpdateDataDir = GetUpdateDataDir();
         public static string PathThemeFolder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes");
-        public static string PathManagedTheme { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes" ,"ADMTheme.theme");
-        public static string PathManagedDwmRefreshTheme { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes" ,"DwmRefreshTheme.theme");
+        public static string PathManagedTheme { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes", "ADMTheme.theme");
+        public static string PathDwmRefreshTheme { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes", "DwmRefreshTheme.theme");
         public static string PathUnmanagedDarkTheme { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes", "ADMUnmanagedDark.theme");
         public static string PathUnmanagedLightTheme { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", "Windows", "Themes", "ADMUnmanagedLight.theme");
         public static string NameUnmanagedLightTheme { get; } = "ADMUnmanagedLight";
         public static string NameUnmanagedDarkTheme { get; } = "ADMUnmanagedDark";
+        public static string Hegex { get; } = @"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$";
 
         public static bool NowIsBetweenTimes(TimeSpan start, TimeSpan end)
         {
@@ -235,10 +156,18 @@ namespace AutoDarkModeLib
 
         private static string GetExecutionPathUpdater()
         {
-            var assemblyLocation = AppContext.BaseDirectory;
+            var assemblyLocation = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
             var executableName = UpdaterExecutableName;
-            var executablePath = Path.GetDirectoryName(assemblyLocation);
+            var executablePath = Directory.GetParent(assemblyLocation).FullName;
             return Path.Combine(executablePath, UpdaterDirName, executableName);
+        }
+
+        private static string GetExecutionPathShell()
+        {
+            var assemblyLocation = AppContext.BaseDirectory;
+            var executableName = Path.DirectorySeparatorChar + "AutoDarkModeShell.exe";
+            var executablePath = Path.GetDirectoryName(assemblyLocation);
+            return Path.Combine(executablePath + executableName);
         }
 
         private static string GetExecutionDir()
@@ -251,9 +180,9 @@ namespace AutoDarkModeLib
 
         private static string GetExecutionDirUpdater()
         {
-            var assemblyLocation = AppContext.BaseDirectory;
-            var executablePath = Path.GetDirectoryName(assemblyLocation);
-            return Path.Combine(executablePath, UpdaterDirName);
+            var assemblyLocation = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            var executablePath = Path.Combine(Directory.GetParent(assemblyLocation).FullName, "adm-updater");
+            return executablePath;
         }
 
         private static string GetExecutionPathThemeBridge()
@@ -266,8 +195,8 @@ namespace AutoDarkModeLib
 
         private static string GetUpdateDataDir()
         {
-            var assemblyLocation = AppContext.BaseDirectory;
-            var dataPath = Path.Combine(Path.GetDirectoryName(assemblyLocation), "UpdateData");
+            var assemblyLocation = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            var dataPath = Path.Combine(Directory.GetParent(assemblyLocation).FullName, "adm-update-data");
             return dataPath;
         }
 
@@ -278,7 +207,8 @@ namespace AutoDarkModeLib
             return !(ExecutionDir.Contains(pFilesx64) || ExecutionDir.Contains(pFilesx86));
         }
 
-        public static string SerializeLearnedThemesDict(Dictionary<string, string> dict) {
+        public static string SerializeLearnedThemesDict(Dictionary<string, string> dict)
+        {
             YamlDotNet.Serialization.ISerializer yamlSerializer = new YamlDotNet.Serialization.SerializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
             return yamlSerializer.Serialize(dict);
         }
@@ -288,6 +218,18 @@ namespace AutoDarkModeLib
             var yamlDeserializer = new YamlDotNet.Serialization.DeserializerBuilder().IgnoreUnmatchedProperties().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
             Dictionary<string, string> deserialized = yamlDeserializer.Deserialize<Dictionary<string, string>>(data);
             return deserialized;
+        }
+    }
+
+    public static class TimeZoneInfoExtensions
+    {
+        public static string ToUtcOffsetString(this TimeZoneInfo timeZone)
+        {
+            var utcOffset = timeZone.BaseUtcOffset;
+            var sign = utcOffset < TimeSpan.Zero ? "-" : "+";
+            var hours = Math.Abs(utcOffset.Hours).ToString("00");
+            var minutes = Math.Abs(utcOffset.Minutes).ToString("00");
+            return $"UTC{sign}{hours}:{minutes}";
         }
     }
 }

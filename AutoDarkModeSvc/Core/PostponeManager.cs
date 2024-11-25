@@ -15,6 +15,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
 using AutoDarkModeLib;
+using AutoDarkModeLib.Configs;
 using AutoDarkModeSvc.Handlers;
 using AutoDarkModeSvc.Modules;
 using System;
@@ -41,6 +42,16 @@ namespace AutoDarkModeSvc.Core
             this.state = state;
         }
 
+        public int Count
+        {
+            get { return PostponeQueue.Count; }
+        }
+
+        public int CountUserClearable
+        {
+            get { return PostponeQueue.Count(x => x.IsUserClearable); }
+        }
+
         /// <summary>
         /// Checks if a full theme switch skip is currently queued
         /// </summary>
@@ -64,6 +75,19 @@ namespace AutoDarkModeSvc.Core
             get
             {
                 if (PostponeQueue.Any(x => x.Reason == Helper.PostponeItemDelayAutoSwitch))
+                    return true;
+                return false;
+            }
+        }
+        /// <summary>
+        /// Checks if a grace period for theme switching is currently active
+        /// </summary>
+        /// <returns>True if a grace period item is queued; false otherwise</returns>
+        public bool IsGracePeriod
+        {
+            get
+            {
+                if (PostponeQueue.Any(x => x.Reason == Helper.PostponeItemDelayGracePeriod))
                     return true;
                 return false;
             }
@@ -157,7 +181,7 @@ namespace AutoDarkModeSvc.Core
         {
             if (PostponeQueue.Any(x => x.Reason == Helper.PostponeItemPauseAutoSwitch || x.Reason == Helper.PostponeItemDelayAutoSwitch))
             {
-                RemoveUserClearablePostpones();
+                RemoveSkipNextSwitch();
                 return false;
             }
             AddSkipNextSwitch();
@@ -171,9 +195,9 @@ namespace AutoDarkModeSvc.Core
         /// <returns>The time the next switch should expire and the skiptype as a tuple, or an empty datetime object if that information is unavailable</returns>
         public (DateTime, SkipType) GetSkipNextSwitchExpiryTime(Theme overrideTheme = Theme.Unknown)
         {
-            Theme newTheme = overrideTheme == Theme.Unknown ? state.RequestedTheme : overrideTheme;
+            Theme newTheme = overrideTheme == Theme.Unknown ? state.InternalTheme : overrideTheme;
 
-            if (builder.Config.Governor != Governor.Default) return (new(), state.NightLight.Requested == Theme.Light ? SkipType.Sunset : SkipType.Sunrise);
+            if (builder.Config.Governor != Governor.Default) return (new(), state.NightLight.Requested == Theme.Light ? SkipType.UntilSunrise : SkipType.UntilSunset);
 
             TimedThemeState ts = new();
             DateTime nextSwitchAdjusted;
@@ -185,19 +209,19 @@ namespace AutoDarkModeSvc.Core
                 if (ts.TargetTheme == Theme.Light)
                 {
                     nextSwitchAdjusted = ts.AdjustedSunrise;
-                    skipType = SkipType.Sunset;
+                    skipType = SkipType.UntilSunrise;
                 }
                 else
                 {
                     nextSwitchAdjusted = ts.AdjustedSunset;
-                    skipType = SkipType.Sunrise;
+                    skipType = SkipType.UntilSunset;
                 }
             }
             else
             {
                 nextSwitchAdjusted = ts.NextSwitchTime;
-                if (ts.TargetTheme == Theme.Light) skipType = SkipType.Sunrise;
-                else skipType = SkipType.Sunset;
+                if (ts.TargetTheme == Theme.Light) skipType = SkipType.UntilSunset;
+                else skipType = SkipType.UntilSunrise;
             }
             if (DateTime.Compare(nextSwitchAdjusted, DateTime.Now) < 0)
             {
@@ -273,6 +297,30 @@ namespace AutoDarkModeSvc.Core
             }
         }
 
+        public void RemoveSkipNextSwitch()
+        {
+            PostponeItem item = PostponeQueue.Where(x => x.Reason == Helper.PostponeItemPauseAutoSwitch).FirstOrDefault();
+            if (item != null)
+            {
+                if (item.Expires) item.CancelExpiry();
+                Remove(item.Reason);
+            }
+        }
+
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void SyncExpiryTimesWithSystemClock()
+        {
+            List<PostponeItem> items = PostponeQueue.Where(x =>
+            {
+                if (x.Reason == Helper.PostponeItemPauseAutoSwitch) return true;
+                else if (x.Reason == Helper.PostponeItemDelayAutoSwitch) return true;
+                return false;
+            }).ToList();
+
+            items.ForEach(i => { if (i.Expires) i.SyncExpiryWithSystemClock(); });
+        }
+
         public void RemoveUserClearablePostpones()
         {
             List<PostponeItem> toClear = PostponeQueue.Select(i =>
@@ -318,7 +366,7 @@ namespace AutoDarkModeSvc.Core
             return false;
         }
 
-        public PostponeQueueDto MakeDto()
+        public PostponeQueueDto MakeQueueDto()
         {
             List<PostponeItemDto> itemDtos = new();
             PostponeQueue.ForEach(i =>
@@ -328,14 +376,96 @@ namespace AutoDarkModeSvc.Core
             return new(itemDtos);
         }
 
+        public void GetPostonesFromDisk()
+        {
+            try
+            {
+                builder.LoadPostponeData();
+                if (builder.PostponeData.InternalThemeAtExit != Theme.Unknown)
+                    state.InternalTheme = builder.PostponeData.InternalThemeAtExit;
+                if (builder.PostponeData.Queue.Items.Count > 0)
+                {
+                    Logger.Info("restoring postpone queue from disk");
+                }
+                List<PostponeItem> items = builder.PostponeData.Queue.Items.Where(i =>
+                {
+                    if (i.Expires)
+                    {
+                        return true;
+                    }
+                    else if (i.SkipType != SkipType.Unspecified)
+                    {
+                        // only keep previous night light postpone if the skiptype and state is reversed
+                        // This way, switches will properly get delayed.
+                        bool nightLightEnabled = RegistryHandler.IsNightLightEnabled();
+                        // if last modified is older than 24 hours, don't keep it because then the user has spent more than one day away from their computer
+                        // and the postpone is very likely not relevant anymore
+                        if (builder.PostponeData.LastModified.CompareTo(DateTime.Now.AddDays(-1)) < 1)
+                        {
+                            return false;
+                        }
+                        // if night light has been toggled in the absence of the user (for example due to a system shutdown remove the postpone
+                        else if (i.SkipType == SkipType.UntilSunset && !nightLightEnabled && builder.PostponeData.InternalThemeAtExit == Theme.Light)
+                        {
+                            return false;
+                        }
+                        else if (i.SkipType == SkipType.UntilSunrise && nightLightEnabled && builder.PostponeData.InternalThemeAtExit == Theme.Dark)
+                        {
+                            return false;
+                        }
+                        // all other cases should preserve the postpone
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }).Select(i => new PostponeItem(i)).ToList();
+                items.ForEach(i => { if (i.Expiry > DateTime.Now.AddSeconds(5)) Add(i); });
+                builder.PostponeData.Queue = new();
+                builder.PostponeData.InternalThemeAtExit = Theme.Unknown;
+                builder.SavePostponeData();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Error loading postpone data");
+            }
+        }
+
+        public void FlushPostponesToDisk()
+        {
+            try
+            {
+                if (state.PostponeManager.CountUserClearable > 0)
+                {
+                    builder.PostponeData.InternalThemeAtExit = state.InternalTheme;
+                    PostponeQueueDto dto = state.PostponeManager.MakeQueueDto();
+                    dto.Items = dto.Items.Where(i => i.IsUserClearable).ToList();
+                    dto.Items = dto.Items.Where(i => i.Reason == Helper.PostponeItemDelayAutoSwitch || i.Reason == Helper.PostponeItemPauseAutoSwitch).ToList();
+                    builder.PostponeData.Queue = dto;
+                    Logger.Info($"postpone items preserved for next start: [{string.Join(", ", builder.PostponeData.Queue.Items.Select(i => i.Reason))}]");
+                    builder.SavePostponeData();
+                }
+                else if (builder.PostponeData.InternalThemeAtExit != Theme.Unknown)
+                {
+                    builder.PostponeData.InternalThemeAtExit = Theme.Unknown;
+                    builder.SavePostponeData();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex, "could not save postpone data");
+            }
+        }
+
         public override string ToString()
         {
             return $"[{string.Join(", ", PostponeQueue)}]";
         }
     }
 
-  
-public class PostponeItem
+
+    public class PostponeItem
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public string Reason { get; }
@@ -352,6 +482,15 @@ public class PostponeItem
             }
         }
 
+        public PostponeItem(PostponeItemDto dto)
+        {
+            //transform dto to postpone item
+            Reason = dto.Reason;
+            Expiry = dto.Expiry;
+            SkipType = dto.SkipType;
+            IsUserClearable = dto.IsUserClearable;
+        }
+
         public PostponeItem(string reason, bool isUserClearable = true)
         {
             Reason = reason;
@@ -363,7 +502,7 @@ public class PostponeItem
         /// </summary>
         /// <param name="reason">the name of the postpone item</param>
         /// <param name="expiry">the datetime when it should expire</param>
-        public PostponeItem(string reason, DateTime expiry, SkipType skipType, bool isUserClearable = true)
+        public PostponeItem(string reason, DateTime? expiry, SkipType skipType, bool isUserClearable = true)
         {
             Reason = reason;
             Expiry = expiry;
@@ -398,8 +537,26 @@ public class PostponeItem
             StartExpiry(suppressLaunchMessage: true);
         }
 
+        public void SyncExpiryWithSystemClock()
+        {
+            if (Expiry == null) return;
+            DateTime expiryUnwrapped = Expiry.Value;
+            // if the expiry time is in the past we need to cancel it
+            if (DateTime.Compare(expiryUnwrapped, DateTime.Now) <= 0)
+            {
+                CancelExpiry();
+                PostponeManager pm = GlobalState.Instance().PostponeManager;
+                pm.Remove(Reason);
+            }
+            else
+            {
+                UpdateExpiryTime(expiryUnwrapped);
+            }
+        }
+
         /// <summary>
-        /// Starts the expiry timer
+        /// Starts the expiry timer.
+        /// If no expiry is set, this method does nothing.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void StartExpiry(bool suppressLaunchMessage = false)

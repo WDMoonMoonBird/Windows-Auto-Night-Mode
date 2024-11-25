@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Display;
 using Windows.Devices.Enumeration;
 using Windows.UI;
+using YamlDotNet.Serialization;
 
 namespace AutoDarkModeLib.ComponentSettings.Base
 {
@@ -64,9 +65,13 @@ namespace AutoDarkModeLib.ComponentSettings.Base
     public class MonitorSettings
     {
         public string Id { get; set; }
-        private string MonitorString { get; set; }
+        [YamlIgnore]
+        public string MonitorString { get; set; }
+        [YamlIgnore]
+        public bool Connected { get; private set; } = false;
         public string LightThemeWallpaper { get; set; }
         public string DarkThemeWallpaper { get; set; }
+
         public override string ToString()
         {
             if (MonitorString == null)
@@ -74,6 +79,10 @@ namespace AutoDarkModeLib.ComponentSettings.Base
                 try
                 {
                     DisplayMonitor monitor = Task.Run(async () => await GetMonitorInfoAsync()).Result;
+                    if (monitor != null)
+                    {
+                        Connected = true;
+                    }
                     if (monitor != null && monitor.DisplayName.Length > 0)
                     {
                         MonitorString = $"{monitor.DisplayName} - {monitor.DisplayAdapterTargetId}";

@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>10.3.1.26</Version>
+    <Version>10.4.2.25</Version>
     <AssemblyName>AutoDarkModeSvc</AssemblyName>
     <ApplicationIcon>..\adm_tray_new.ico</ApplicationIcon>
     <StartupObject>AutoDarkModeSvc.Program</StartupObject>
@@ -19,19 +19,31 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+    <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\adm-app</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <OutputPath>..\bin\Release\adm-app</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug</OutputPath>
+    <OutputPath>..\bin\Debug\adm-app</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <OutputPath>..\bin\Debug\adm-app</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SwitchComponents\BaseComponent.cs~RFc134192.TMP" />
     <None Remove="ThemeManager.cs~RF40d17af8.TMP" />
   </ItemGroup>
 
@@ -41,7 +53,7 @@
     <PackageReference Include="Microsoft.VisualStudio.VsixColorCompiler" Version="17.0.31709.430" />
     <PackageReference Include="NLog" Version="5.0.4" />
     <PackageReference Include="NLog.Schema" Version="5.0.4" />
-    <PackageReference Include="System.Management" Version="6.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="TaskScheduler" Version="2.10.0" />

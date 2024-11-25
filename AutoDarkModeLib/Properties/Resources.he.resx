@@ -121,7 +121,7 @@
     <value>הגדרות</value>
   </data>
   <data name="applyButton" xml:space="preserve">
-    <value>Apply</value>
+    <value>החל</value>
   </data>
   <data name="autoCheckBox" xml:space="preserve">
     <value>הפעל החלפת ערכת נושא אוטומטית</value>
@@ -133,10 +133,10 @@
     <value>תמיד בהיר</value>
   </data>
   <data name="debugModeCheckBox" xml:space="preserve">
-    <value>Enable features for Windows 1903</value>
+    <value>אפשר תכונות עבור Windows 1903</value>
   </data>
   <data name="lblApps" xml:space="preserve">
-    <value>Apps</value>
+    <value>אפליקציות</value>
   </data>
   <data name="lblCustomStart" xml:space="preserve">
     <value>זמן הפעלה מותאם אישית</value>
@@ -205,12 +205,12 @@
     <value>עדכון חדש זמין!</value>
   </data>
   <data name="msgUpdaterText" xml:space="preserve">
-    <value>Thank you for using Auto Dark Mode!
+    <value>תודה שהשתמשת בAuto Dark Mode!
 
-A new version is available on GitHub with fixes and enhancements.
-Do you want to install it?
+גרסה חדשה זמינה ב-GitHub עם תיקונים ושיפורים.
+האם אתה רוצה להתקין אותה?
 
-Currently installed version: {0}, new version: {1}</value>
+הגרסה המותקנת כעת: {0}, גרסה חדשה: {1}</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Auto Dark Mode</value>
@@ -225,7 +225,7 @@ Currently installed version: {0}, new version: {1}</value>
     <value>ברוך הבא</value>
   </data>
   <data name="welcomeText" xml:space="preserve">
-    <value>Change settings here to modify the automatic theme switch behavior.</value>
+    <value>שנה הגדרות כאן כדי לשנות את התנהגות החלפת הנושא האוטומטית.</value>
   </data>
   <data name="lblTranslator" xml:space="preserve">
     <value>Translator: Armin Osaj &amp; Samuel Schiegg</value>
@@ -237,7 +237,7 @@ Currently installed version: {0}, new version: {1}</value>
     <value>Position</value>
   </data>
   <data name="restartNeeded" xml:space="preserve">
-    <value>App restart required to see changes</value>
+    <value>נדרשת הפעלה מחדש של האפליקציה כדי לראות שינויים</value>
   </data>
   <data name="lblLanguage" xml:space="preserve">
     <value>שפה:</value>
@@ -255,7 +255,7 @@ Currently installed version: {0}, new version: {1}</value>
     <value>טפט לערכת נושא כהה</value>
   </data>
   <data name="dbDel" xml:space="preserve">
-    <value>Delete/Disable</value>
+    <value>מחק/השבת</value>
   </data>
   <data name="dbFilePicker" xml:space="preserve">
     <value>בחר קובץ</value>
@@ -282,32 +282,32 @@ Currently installed version: {0}, new version: {1}</value>
     <value>השתמש ברקע הנוכחי</value>
   </data>
   <data name="disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>כבוי</value>
   </data>
   <data name="enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>פועל</value>
   </data>
   <data name="or" xml:space="preserve">
-    <value>or</value>
+    <value>או</value>
   </data>
   <data name="save" xml:space="preserve">
     <value>שמור</value>
   </data>
   <data name="dbErrorText" xml:space="preserve">
-    <value>Maybe your picture file is corrupted or the path doesn't exist.</value>
+    <value>אולי קובץ התמונה שלך פגום או שהנתיב לא קיים.</value>
   </data>
   <data name="dbPreviewError" xml:space="preserve">
-    <value>We couldn't generate a preview of your image, sorry!</value>
+    <value>לא הצלחנו ליצור תצוגה מקדימה של התמונה שלך, מצטערים!</value>
   </data>
   <data name="dbSavedError" xml:space="preserve">
-    <value>We couldn't save your settings, sorry!</value>
+    <value>לא הצלחנו לשמור את ההגדרות שלך, מצטערים!</value>
   </data>
   <data name="errorOcurredTitle" xml:space="preserve">
-    <value>An error has occured</value>
+    <value>ארעה שגיאה</value>
   </data>
   <data name="cbAccentColor" xml:space="preserve">
-    <value>Only visible in dark mode.
-If you run into issues: please increase the switching delay in settings.</value>
+    <value>גלוי רק במצב כהה
+אם אתה נתקל בבעיות: נא להגדיל את עיכוב המעבר בהגדרות.</value>
   </data>
   <data name="info" xml:space="preserve">
     <value>מידע</value>
@@ -328,29 +328,29 @@ If you run into issues: please increase the switching delay in settings.</value>
     <value>בדיקת עדכונים אוטומטית</value>
   </data>
   <data name="ErrorMessageBox" xml:space="preserve">
-    <value>There was an issue with the UI.
+    <value>הייתה בעיה בממשק המשתמש.
 
-Please ensure:
-- the service is running
-- your config.yaml file is correct
+נא לוודא:
+- השירות פועל
+- הקובץ config.yaml שלך נכון
 
-Would you like to create an issue on the Auto Dark Mode repository?
-Click "Yes" to open a new browser window.
+האם תרצה ליצור בעיה במאגר מצב כהה אוטומטי?
+לחץ על "כן" כדי לפתוח חלון דפדפן חדש.
 </value>
   </data>
   <data name="errorNumberInput" xml:space="preserve">
-    <value>Error: Your input is invalid</value>
+    <value>שגיאה: הקלט שלך לא חוקי</value>
   </data>
   <data name="cbConnectedStandby" xml:space="preserve">
     <value>Switch after Connected Standby (not recommended)</value>
   </data>
   <data name="cbConnectedStandbyTooltip" xml:space="preserve">
-    <value>Mobile devices, like Microsoft Surface products, are using a new kind of standby mode.
-Enabling this option makes sure that Auto Dark Mode immediately switches the theme after waking up your computer.
-But it also reduces the battery life, so ONLY activate if necessary!</value>
+    <value>מכשירים ניידים, כמו מוצרי Microsoft Surface, משתמשים בסוג חדש של מצב המתנה.
+הפעלת אפשרות זו מבטיחה שמצב כהה אוטומטי יחליף את ערכת הנושא מיד לאחר התעוררות המחשב.
+אבל זה גם מקטין את חיי הסוללה, אז הפעל רק במידת הצורך!</value>
   </data>
   <data name="msgBatterySaver" xml:space="preserve">
-    <value>Due to a Windows bug, the taskbar doesn't properly switch its color in battery saver mode. Please turn off battery saver if you run into issues.</value>
+    <value>עקב באג של Windows, שורת המשימות אינה מחליפה את צבעה כראוי במצב חיסכון בסוללה. אנא כבה את חיסכון בסוללה אם אתה נתקל בבעיות.</value>
   </data>
   <data name="lblOffset" xml:space="preserve">
     <value>Offset</value>
@@ -359,11 +359,11 @@ But it also reduces the battery life, so ONLY activate if necessary!</value>
     <value>Set</value>
   </data>
   <data name="ToolTipDisabledDueTheme" xml:space="preserve">
-    <value>These options are disabled while using a Windows Theme.
-You can set them up individually in your Windows Theme.</value>
+    <value>אפשרויות אלה מושבתות בעת שימוש בערכת נושא של Windows.
+אתה יכול להגדיר אותם בנפרד בעיצוב ערכות הנושא של Windows שלך.</value>
   </data>
   <data name="NavbarApps" xml:space="preserve">
-    <value>Apps</value>
+    <value>אפליקציות</value>
   </data>
   <data name="NavbarSettings" xml:space="preserve">
     <value>הגדרות</value>
@@ -396,16 +396,16 @@ You can set them up individually in your Windows Theme.</value>
     <value>לחץ כאן כדי לפתוח את הגדרות ערכת הנושא של Windows.</value>
   </data>
   <data name="ThemeTutorialStep2" xml:space="preserve">
-    <value>Now navigate to 'Colors' and change the system color to 'Light' for the light theme. Select your favorite Wallpaper, Mouse Cursor and Accent Color.</value>
+    <value>כעת נווט אל 'צבעים' ושנה את צבע המערכת ל'בהיר' עבור ערכת הנושא בהיר. בחר את הטפט, סמן העכבר וצבע ההדגשה המועדפים עליך.</value>
   </data>
   <data name="ThemeTutorialStep3" xml:space="preserve">
-    <value>Go back to theme settings and save your theme.</value>
+    <value>חזור להגדרות העיצוב ושמור את העיצוב שלך.</value>
   </data>
   <data name="ThemeTutorialStep4" xml:space="preserve">
-    <value>Repeat this process for the dark theme.</value>
+    <value>חזור על תהליך זה עבור ערכת נושא כהה.</value>
   </data>
   <data name="SettingsAccentColorTimeout" xml:space="preserve">
-    <value>Delay for switching taskbar colors (ms):</value>
+    <value>השהיה להחלפת צבעי שורת המשימות (שניות):</value>
   </data>
   <data name="NavbarAbout" xml:space="preserve">
     <value>אודות</value>
@@ -414,28 +414,28 @@ You can set them up individually in your Windows Theme.</value>
     <value>תפריט</value>
   </data>
   <data name="restart" xml:space="preserve">
-    <value>Restart</value>
+    <value>איתחול</value>
   </data>
   <data name="rbCustomHours" xml:space="preserve">
-    <value>Set custom hours</value>
+    <value>הגדר שעות מותאמות אישית</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>From sunset to sunrise</value>
+    <value>מהשקיעה ועד הזריחה (שירות מיקום)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
-    <value>Step</value>
+    <value>שלב</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Use color filter (sends Win + Ctrl + C)</value>
+    <value>מסנן צבע (שולח Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
-    <value>Use logon task instead of startup entry</value>
+    <value>השתמש במשימת כניסה במקום ברשומת ההפעלה</value>
   </data>
   <data name="ThemeSelection" xml:space="preserve">
-    <value>Select mode:</value>
+    <value>בחר מצב:</value>
   </data>
   <data name="ThemeApplyError1" xml:space="preserve">
-    <value>Error occurred while applying the selected themes, we disabled theme switching</value>
+    <value>אירעה שגיאה בעת החלת העיצובים שנבחרו, השבתנו את החלפת העיצוב</value>
   </data>
   <data name="cbOfficeWhiteTheme" xml:space="preserve">
     <value>Alternative light theme</value>
@@ -444,13 +444,13 @@ You can set them up individually in your Windows Theme.</value>
     <value>הורד הרחבה</value>
   </data>
   <data name="tbAppsTitleRecommendedTools" xml:space="preserve">
-    <value>Recommended tools</value>
+    <value>כלים מומלצים</value>
   </data>
   <data name="tbDarkReaderDescription" xml:space="preserve">
-    <value>This browser extension makes websites in Chrome, Firefox and Edge respect the system theme.</value>
+    <value>תוסף דפדפן זה גורם לאתרים ב-Chrome, Firefox ו-Edge לכבד את נושא המערכת.</value>
   </data>
   <data name="locationCityNotFound" xml:space="preserve">
-    <value>Not found</value>
+    <value>לא נמצא</value>
   </data>
   <data name="DonationHeaderReason" xml:space="preserve">
     <value>למה כדאי לך לתרום?</value>
@@ -459,28 +459,28 @@ You can set them up individually in your Windows Theme.</value>
     <value>איך לתרום?</value>
   </data>
   <data name="DonationPayPalDescription" xml:space="preserve">
-    <value>You can send me money via PayPal. It's completely voluntary and you shouldn't expect any compensation.</value>
+    <value>אתה יכול לשלוח לי כסף דרך PayPal. זה מרצונך החופשי ואתה לא אמור לצפות לפיצוי כלשהו.</value>
   </data>
   <data name="NavbarDonation" xml:space="preserve">
-    <value>Donate</value>
+    <value>לִתְרוֹם</value>
   </data>
   <data name="donationDescription" xml:space="preserve">
-    <value>Hello! Thank you for using Auto Dark Mode! Do you like it so far?
+    <value>שלום! תודה שהשתמשת בAuto Dark Mode! האם אתה אוהב את זה עד כה?
 
-This app makes your everyday more pleasant, by helping you take care of your eyes. At the same time it's completely free, ad-free, doesn't collect user data and it's open source.
-I don't generate any profit with this project.
+אפליקציה זו הופכת את היומיום שלך לנעים יותר, בכך שהיא עוזרת לך לטפל בעיניים שלך. יחד עם זאת הוא חינמי לחלוטין, ללא פרסומות, אינו אוסף נתוני משתמשים והוא קוד פתוח.
+אני לא מייצר שום רווח עם הפרויקט הזה.
 
-For this reason you could support me with a voluntary donation. Even a small amount makes me jumping happy through my apartment. Just donate as much as you value my work.</value>
+מסיבה זו תוכל לתמוך בי בתרומה מרצון. אפילו כמות קטנה גורמת לי לקפוץ מאושר דרך הדירה שלי. פשוט תרום כמה שאתה מעריך את העבודה שלי.</value>
   </data>
   <data name="ThemeApplyError2" xml:space="preserve">
     <value>Error occured while applying a .theme-file. Maybe your created theme got deleted or moved. This is why we deactivated theme switching for now. To re-enable it, please open Auto Dark Mode and configure {0} Settings.</value>
   </data>
   <data name="ErrorApplyRestart" xml:space="preserve">
-    <value>We ran into the following issue:
+    <value>נתקלנו בבעיה הבאה:
 {0}
 
-We will now try to solve this problem by running an algorithm as administrator. Maybe this will help.
-Auto Dark Mode will restart afterwards and you'll need to re-apply your settings, sorry!
+כעת ננסה לפתור בעיה זו על ידי הפעלת אלגוריתם כמנהל. אולי זה יעזור.
+Auto Dark Mode יופעל מחדש לאחר מכן ותצטרך להחיל מחדש את ההגדרות שלך, מצטער!
 
 Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
   </data>
@@ -488,10 +488,10 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>עזרה</value>
   </data>
   <data name="cbSettingsMultiUserImprovements" xml:space="preserve">
-    <value>Multi-User support</value>
+    <value>תמיכה מרובה משתמשים</value>
   </data>
   <data name="tbSettingsColourFilterDelay" xml:space="preserve">
-    <value>Optional delay for activating grayscale color filter:</value>
+    <value>השהיה אופציונלית להפעלת מסנן צבע בגווני אפור:</value>
   </data>
   <data name="cmbAdjTheme" xml:space="preserve">
     <value>התאמה למערכת</value>
@@ -500,40 +500,40 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>אתחול</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>הפעל מצב כהה כאשר המכשיר מנותק מהחשמל</value>
+    <value>החלף למצב כהה כאשר המכשיר מנותק מהחשמל</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>ערך ברירת מחדל עבור מצב חיסכון בחשמל</value>
   </data>
   <data name="cbSettingsEnergySaverMitigation" xml:space="preserve">
-    <value>Energy saver mitigation for theme switch</value>
+    <value>הפחתת חיסכון באנרגיה עבור מתג ערכת נושא</value>
   </data>
   <data name="cbSettingsEnergySaverMitigationInfo" xml:space="preserve">
-    <value>This only works if you haven't manually enabled battery saver!</value>
+    <value>זה עובד רק אם לא הפעלת ידנית את חיסכון בסוללה!</value>
   </data>
   <data name="NavbarSwitchModes" xml:space="preserve">
     <value>החלף מצבים</value>
   </data>
   <data name="NavbarPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>התאמה אישית</value>
   </data>
   <data name="applyGeoButton" xml:space="preserve">
-    <value>Apply Coordinates</value>
+    <value>החל קואורדינטות</value>
   </data>
   <data name="cmb1903" xml:space="preserve">
-    <value>This option is disabled, because you haven't installed the Windows 10 April 2019 Update on your machine.</value>
+    <value>אפשרות זו מושבתת, מכיוון שלא התקנת את עדכון אפריל 2019 של Windows 10 במחשב שלך.</value>
   </data>
   <data name="headerGeoCoordinates" xml:space="preserve">
-    <value>Geographic coordinates</value>
+    <value>קואורדינטות גיאוגרפיות</value>
   </data>
   <data name="headerLocationData" xml:space="preserve">
-    <value>Location data</value>
+    <value>נתוני מיקום</value>
   </data>
   <data name="rbLocationGeo" xml:space="preserve">
-    <value>From sunset to sunrise (geographic coordinates)</value>
+    <value>משקיעה לזריחה (קואורדינטות גיאוגרפיות)</value>
   </data>
   <data name="tbGetCoordinates" xml:space="preserve">
-    <value>Find geo coordinates for your location</value>
+    <value>מצא קואורדינטות גיאוגרפיות עבור המיקום שלך</value>
   </data>
   <data name="ConfigHyperLinkOpenConfig" xml:space="preserve">
     <value>Open config file</value>
@@ -563,16 +563,13 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>הסתר את סמל המגש (לא מומלץ)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>תכונה זו מושבתת בזמן שמצב ערכת נושא מופעל.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>תכונה זו מושבתת בזמן שמצב טפט מופעל.</value>
+    <value>תכונה זו מושבתת בזמן ש-Windows מנהל את ערכת הנושא שלך.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Offers more features, but you need to set up a windows .theme file. Customize your desktop wallpaper per monitor, set a slideshow, change your mouse cursor, set an accent color and individual sounds.</value>
+    <value>בחר ערכת נושא שונה של Windows עבור מצב כהה ואור בהתאמה. מאפשר התאמה אישית מלאה של ערכת הנושא, אך מחייב אותך להגדיר קבצי .theme בעצמך.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Offers less features, but is easier to set up. Customize your desktop wallpaper for all monitors, individual monitors or set a background color.</value>
+    <value>התאם אישית את טפט שולחן העבודה שלך עבור כל המסכים, מסכים בודדים, הגדר צבע רקע או הפעל זרקור.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>אנחנו בודקים אם יש גרסאות חדשות של מצב כהה אוטומטי ברקע. כאשר יהיה עדכון זמין, אנחנו נודיע לך באמצעות הודעה קופצת</value>
@@ -614,19 +611,19 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>ערכת נושא בהיר</value>
   </data>
   <data name="WallpaperComboBoxItemPicture" xml:space="preserve">
-    <value>Picture</value>
+    <value>תְמוּנָה</value>
   </data>
   <data name="WallpaperComboBoxItemPictureMM" xml:space="preserve">
-    <value>Picture (multiple monitors)</value>
+    <value>תמונה (מסכים מרובים)</value>
   </data>
   <data name="WallpaperComboBoxItemSolidColor" xml:space="preserve">
-    <value>Solid color</value>
+    <value>צבע אחיד</value>
   </data>
   <data name="WallpaperComboBoxMode" xml:space="preserve">
     <value>מצב</value>
   </data>
   <data name="WallpaperComboBoxMonitor" xml:space="preserve">
-    <value>Monitor</value>
+    <value>מסך</value>
   </data>
   <data name="WallpaperComboBoxType" xml:space="preserve">
     <value>סוּג</value>
@@ -650,16 +647,16 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>אל תחליף בזמן משחקי וידאו</value>
   </data>
   <data name="SwitchModesComboBoxItemSamplesFast" xml:space="preserve">
-    <value>Fast (1 sample)</value>
+    <value>מהיר (דוגמה 1)</value>
   </data>
   <data name="SwitchModesComboBoxItemSamplesMedium" xml:space="preserve">
-    <value>Medium (2 samples)</value>
+    <value>בינוני (2 דוגמאות)</value>
   </data>
   <data name="SwitchModesComboBoxItemSamplesSlow" xml:space="preserve">
-    <value>Slow (3 samples)</value>
+    <value>איטי (3 דוגמאות)</value>
   </data>
   <data name="SwitchModesTextBlockGPUUsageDetectionSpeed" xml:space="preserve">
-    <value>GPU usage detection speed</value>
+    <value>מהירות זיהוי שימוש ב-GPU</value>
   </data>
   <data name="SwitchModesTextBlockHeaderBatteryPowered" xml:space="preserve">
     <value>מכשירים המופעלים על ידי סוללה</value>
@@ -683,13 +680,13 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>השירות עדיין לא פועל, אנא המתן…</value>
   </data>
   <data name="StartupLaunchingServiceTitle" xml:space="preserve">
-    <value>Launching Service</value>
+    <value>שירות השקה</value>
   </data>
   <data name="StartupServiceUnresponsive" xml:space="preserve">
     <value>השירות לא מגיב. אנא בדוק אם AutoDarkModeSvc.exe פועל, ונסה שוב!</value>
   </data>
   <data name="ThemeToggleSwichEnableTheme" xml:space="preserve">
-    <value>Enable Windows theme switch</value>
+    <value>הפעל את מתג ערכת הנושא של Windows</value>
   </data>
   <data name="ToggleSwitchOff" xml:space="preserve">
     <value>כבוי</value>
@@ -740,7 +737,7 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <comment>Info for Translators: Use name from the Win11 settings (go to personalization -&gt; themes and hover over the theme name)</comment>
   </data>
   <data name="ThemePickerTheme11Sunrise" xml:space="preserve">
-    <value>Sunrise</value>
+    <value>זריחה</value>
     <comment>Info for Translators: Use name from the Win11 settings (go to personalization -&gt; themes and hover over the theme name)</comment>
   </data>
   <data name="UpdatesComboBoxInterval1" xml:space="preserve">
@@ -768,7 +765,7 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>הפעלה אוטומטית</value>
   </data>
   <data name="SettingsPageAutostartMode" xml:space="preserve">
-    <value>Mode:</value>
+    <value>מצב:</value>
   </data>
   <data name="SettingsPageAutostartPath" xml:space="preserve">
     <value>Path:</value>
@@ -783,28 +780,28 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>Disabled</value>
   </data>
   <data name="SettingsPageAutostartModeNone" xml:space="preserve">
-    <value>None</value>
+    <value>אף אחד</value>
   </data>
   <data name="SettingsPageAutostartModeNotFound" xml:space="preserve">
-    <value>Not found</value>
+    <value>לא נמצא</value>
   </data>
   <data name="SettingsPageAutostartModeRegistry" xml:space="preserve">
-    <value>Registry Key</value>
+    <value>מפתח הרישום</value>
   </data>
   <data name="SettingsPageAutostartModeTask" xml:space="preserve">
-    <value>Task</value>
+    <value>מְשִׁימָה</value>
   </data>
   <data name="SettingsPageWindowsAutostartDisabled" xml:space="preserve">
-    <value>You have disabled the auto start entry via Windows.</value>
+    <value>השבתת את ערך ההפעלה האוטומטית דרך Windows.</value>
   </data>
   <data name="TimePageNextUpdateAt" xml:space="preserve">
-    <value>Next update at</value>
+    <value>העדכון הבא ב</value>
   </data>
   <data name="WallpaperColor" xml:space="preserve">
-    <value>Color</value>
+    <value>צבע</value>
   </data>
   <data name="SwitchModesHotkeyEditHint" xml:space="preserve">
-    <value>You can only edit hotkeys while they are disabled.</value>
+    <value>אתה יכול לערוך מקשי קיצור רק כשהם מושבתים.</value>
   </data>
   <data name="SwitchModesTextBlockHeaderForceDark" xml:space="preserve">
     <value>כפה מצב כהה</value>
@@ -813,10 +810,10 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>כפה מצב בהיר</value>
   </data>
   <data name="SwitchModesTextBlockHeaderHotkeys" xml:space="preserve">
-    <value>Hotkeys</value>
+    <value>מקשי קיצור</value>
   </data>
   <data name="SwitchModesTextBlockHeaderNoForce" xml:space="preserve">
-    <value>Stop forcing theme</value>
+    <value>הפסק כפיית נושא</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
     <value>Enable system-wide hotkeys</value>
@@ -828,32 +825,32 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>כפה ערכת נושא בהיר</value>
   </data>
   <data name="SettingsPageTrayDisableMessageBoxContent" xml:space="preserve">
-    <value>Hiding the icon isn't recommended.
-Do you really want to continue?</value>
+    <value>הסתרת הסמל אינה מומלצת.
+אתה באמת רוצה להמשיך?</value>
   </data>
   <data name="SettingsPageTrayDisableMessageBoxHeader" xml:space="preserve">
-    <value>Hide Tray Icon</value>
+    <value>הסתר סמל מגש</value>
   </data>
   <data name="TrayMenuItemOpenConfigDir" xml:space="preserve">
     <value>&amp;Open Config Directory</value>
   </data>
   <data name="LabelFollowSystemTheme" xml:space="preserve">
-    <value>Let the app decide</value>
+    <value>תן לאפליקציה להחליט</value>
   </data>
   <data name="SwitchModesCheckBoxIdleTimer" xml:space="preserve">
-    <value>Don't switch themes unless the system is idle</value>
+    <value>אל תחליף ערכות נושא אלא אם המערכת לא פעילה</value>
   </data>
   <data name="SwitchModesTextBlockIdleTimerDescription" xml:space="preserve">
-    <value>Minutes until the system is considered idle</value>
+    <value>דקות עד שהמערכת נחשבת לא פעילה</value>
   </data>
   <data name="AppsCheckBoxDWMPrevalence" xml:space="preserve">
-    <value>Accent Color for title bars and window borders only during</value>
+    <value>צבע הדגשה עבור פסי כותרת וגבולות חלונות רק במהלך</value>
   </data>
   <data name="AboutVersionInfoCopied" xml:space="preserve">
-    <value>Version info copied to clipboard</value>
+    <value>פרטי הגרסה הועתקו ללוח</value>
   </data>
   <data name="AutomaticThemeSwitch" xml:space="preserve">
-    <value>Automatic theme switch</value>
+    <value>החלפת ערכת נושא אוטומטית</value>
   </data>
   <data name="HotkeyCheckboxToggleAutomaticThemeSwitchNotification" xml:space="preserve">
     <value>Show notification on toggle</value>
@@ -871,16 +868,16 @@ Do you really want to continue?</value>
     <value>System idle checker</value>
   </data>
   <data name="RequestSwitchAction" xml:space="preserve">
-    <value>Hit confirm to request a theme switch immediately.</value>
+    <value>לחץ על אשר כדי לבקש החלפת ערכת נושא באופן מיידי.</value>
   </data>
   <data name="Resume" xml:space="preserve">
-    <value>Resume</value>
+    <value>המשך</value>
   </data>
   <data name="RevertAction" xml:space="preserve">
-    <value>Revert this action by clicking on the undo button below.</value>
+    <value>בטל פעולה זו על ידי לחיצה על כפתור הביטול למטה.</value>
   </data>
   <data name="SwitchModesHotkey" xml:space="preserve">
-    <value>hotkey</value>
+    <value>מקש קיצור</value>
   </data>
   <data name="SwitchModesTextBlockHeaderToggleAutomaticThemeSwitch" xml:space="preserve">
     <value>Toggle automatic theme switch</value>
@@ -889,22 +886,22 @@ Do you really want to continue?</value>
     <value>Disable automatic switch</value>
   </data>
   <data name="ThemeSwitchActionUndo" xml:space="preserve">
-    <value>Undo</value>
+    <value>בטל</value>
   </data>
   <data name="TrayMenuItemThemeSwitchPause" xml:space="preserve">
     <value>Pause auto switch</value>
   </data>
   <data name="ThemeSwitchPauseActionDisableQuestion" xml:space="preserve">
-    <value>Would you like to disable auto switching instead?</value>
+    <value>האם תרצה להשבית את ההחלפה האוטומטית במקום זאת?</value>
   </data>
   <data name="ThemeSwitchPauseActionNotification" xml:space="preserve">
     <value>Automatic switching will also resume if you return to your previous theme.</value>
   </data>
   <data name="ThemeSwitchPauseHeader" xml:space="preserve">
-    <value>Theme switching paused until</value>
+    <value>החלפת ערכות נושא הושהתה עד</value>
   </data>
   <data name="TimePagePostponeInfo" xml:space="preserve">
-    <value>Auto theme switching is currently paused due to the following modules:</value>
+    <value>החלפת עיצוב אוטומטי מושהית כעת עקב המודולים הבאים:</value>
   </data>
   <data name="TimePageResumeInfo" xml:space="preserve">
     <value>Resuming will only work for postpones that have an expiry time</value>
@@ -940,7 +937,7 @@ Do you really want to continue?</value>
     <value>postpones until next sunset</value>
   </data>
   <data name="UntilTime" xml:space="preserve">
-    <value>until</value>
+    <value>עד</value>
   </data>
   <data name="ThemeSwitchPauseUntilSunrise" xml:space="preserve">
     <value>until next sunrise</value>
@@ -979,16 +976,16 @@ Do you really want to continue?</value>
     <value>Allow theme switching during lockscreen (Win10)</value>
   </data>
   <data name="ButtonConfirm" xml:space="preserve">
-    <value>Confirm</value>
+    <value>אשר</value>
   </data>
   <data name="ButtonSwitchNow" xml:space="preserve">
-    <value>Switch now</value>
+    <value>החלף עכשיו</value>
   </data>
   <data name="PostponeReasonDelayAutoSwitch" xml:space="preserve">
     <value>Delay module</value>
   </data>
   <data name="PostponeReasonSwitchNotification" xml:space="preserve">
-    <value>Switch notification</value>
+    <value>החלף התראה</value>
   </data>
   <data name="PostponeTime120" xml:space="preserve">
     <value>2 שעות</value>
@@ -1088,7 +1085,7 @@ Do you really want to continue?</value>
     <value>Open log directory</value>
   </data>
   <data name="UpdateToastButtonPostpone" xml:space="preserve">
-    <value>Postpone</value>
+    <value>דחה</value>
   </data>
   <data name="UpdateToastButtonUpdate" xml:space="preserve">
     <value>עדכון</value>
@@ -1104,7 +1101,7 @@ Do you really want to continue?</value>
     <value>A downgrade is available</value>
   </data>
   <data name="NavbarScripts" xml:space="preserve">
-    <value>Scripts</value>
+    <value>סקריפטים</value>
   </data>
   <data name="PageScriptsButtonOpenConfig" xml:space="preserve">
     <value>Open script config</value>
@@ -1122,10 +1119,10 @@ Do you really want to continue?</value>
     <value>Image path</value>
   </data>
   <data name="TrayMenuItemClose" xml:space="preserve">
-    <value>Close</value>
+    <value>&amp;סגור</value>
   </data>
   <data name="TrayMenuItemAutomaticThemeSwitch" xml:space="preserve">
-    <value>Automatic theme switch</value>
+    <value>&amp;החלף עיצוב אוטומטית</value>
   </data>
   <data name="TrayMenuItemToggleTheme" xml:space="preserve">
     <value>Toggle theme</value>
@@ -1135,5 +1132,134 @@ Do you really want to continue?</value>
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Accent color</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Pick an accent color</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Customize the Windows system color scheme to your liking.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Update colorization</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>תכונה זו מושבתת בזמן שמצב כהה אוטומטי מנהל את הנושא שלך.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Documentation for custom scripts</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Custom script user repository</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Stretch</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Choose a fit for your desktop image</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>מנותק</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Always refresh DWM on theme switch</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Attempts to reduce the occurrence of wrong UI colors in the explorer, taskbar and start menu. If you experience this often or are bothered by it, try enabling this setting.
+
+This may introduce slight to moderate lag on some systems during theme switch similar to how it happened in Windows 10. 
+On rare occasions, Windows may emit a beeping sound when the mouse is moved during DWM refreshes.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Force DWM refresh?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Enable mouse cursor switch</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Open Windows pointer settings</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Select dark cursor</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Select light cursor</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Cursors</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Configure different mouse cursors for dark and light modes.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Pick mouse cursors</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Let Auto Dark Mode manage my theme</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Let Windows manage my theme</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>You can define new cursor schemes in the Windows settings and then select them here afterwards.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>הפעל מעטפת</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>פתח יומן עדכונים</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>הפעל מתג צבע הדגשה</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Switch touch keyboard and input</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>אוטומטי</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>ידני</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>הוסף</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Blocking Processes</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Don't switch while certain processes are running</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Browse apps with Auto Dark Mode support</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Not every third party app supports Auto Dark Mode by default. On our wiki page we provide a curated list with supported apps.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Recommended apps</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Alternatively you can donate via GitHub Sponsors, which also supports recurring monthly donations.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Try to fix the theme</value>
   </data>
 </root>

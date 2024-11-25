@@ -420,13 +420,13 @@ Možete ih podesiti pojedinačno u vašoj Windows temi.</value>
     <value>Podesi prilagođeno vreme</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>Od zalaska do izlaska sunca</value>
+    <value>Od zalaska do izlaska sunca (koristi uslugu za lokaciju)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Korak</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Koristi filter za boju (šalje Win + Ctrl + C)</value>
+    <value>Color filter (sends Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Koristi zadatak pri prijavljivanju (logon task) umesto unosa za automatsko pokretanje</value>
@@ -500,7 +500,7 @@ Napomena: NIKAD ne pokrećite Auto Dark Mode kao administrator sami!</value>
     <value>Resetuj</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Omogući tamnu temu kada se uređaj skine sa napajanja</value>
+    <value>Switch to dark mode when device is unplugged</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Podrazumevana vrednost slajdera uštede energije</value>
@@ -563,16 +563,13 @@ Napomena: NIKAD ne pokrećite Auto Dark Mode kao administrator sami!</value>
     <value>Sakrij ikonicu u sistemskoj paleti (ne preporučuje se)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>Ova funkcija je onemogućena kada je režim teme omogućen.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>Ova funkcija je onemogućena kada je režim pozadine omogućen.</value>
+    <value>Ova opcija je onemogućena kada Windows upravlja vašom temom.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Nudi više mogućnosti, ali morate sami da napravite Windows-ovu datoteku .theme. Podesite pozadinu za svaki monitor, podesite slajdšou, promenite vaš kursor miša, podesite boju naglašavanja i pojedinačne zvuke.</value>
+    <value>Izaberite različitu Windows temu za svetli, odnosno tamni režim. Omogućava potpuno prilagođavanje tema, ali zahteva da prvo sami napravite .theme fajlove.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Nudi manje mogućnosti, ali je lakše za podešavanje. Podesite pozadinu za sve monitore, za pojedinačne monitore, ili pozadinsku boju.</value>
+    <value>Podesite pozadinu radne površine za pojedinačne ili sve monitore, pozadinsku boju ili omogućite Windows interesovanja.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>Proveravamo nove verzije Auto Dark Mode-a u pozadini. Ako je dostupno ažuriranje, obavestićemo vas notifikacijom</value>
@@ -822,10 +819,10 @@ Napomena: NIKAD ne pokrećite Auto Dark Mode kao administrator sami!</value>
     <value>Omogući tasterske prečice</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
-    <value>Prisili tamnu temu</value>
+    <value>Prisili &amp;tamnu temu</value>
   </data>
   <data name="TrayMenuItemForceLightTheme" xml:space="preserve">
-    <value>Prisili svetlu temu</value>
+    <value>Prisili &amp;svetlu temu</value>
   </data>
   <data name="SettingsPageTrayDisableMessageBoxContent" xml:space="preserve">
     <value>Sakrivanje ikonice se ne preporučuje.
@@ -835,7 +832,7 @@ Jeste li sigurni da želite da nastavite?</value>
     <value>Sakrij ikonicu u sistemskoj paleti</value>
   </data>
   <data name="TrayMenuItemOpenConfigDir" xml:space="preserve">
-    <value>Otvori konfiguracionu fasciklu</value>
+    <value>&amp;Otvori konfiguracionu fasciklu</value>
   </data>
   <data name="LabelFollowSystemTheme" xml:space="preserve">
     <value>Neka aplikacija odluči</value>
@@ -847,7 +844,7 @@ Jeste li sigurni da želite da nastavite?</value>
     <value>Vreme dok se sistem ne bude smatrao neaktivnim, u minutima</value>
   </data>
   <data name="AppsCheckBoxDWMPrevalence" xml:space="preserve">
-    <value>Accent Color for title bars and window borders only during</value>
+    <value>Boja naglašavanja na naslovnoj traci i ivicama prozora samo tokom</value>
   </data>
   <data name="AboutVersionInfoCopied" xml:space="preserve">
     <value>Informacije o verziji kopirane u ostavu</value>
@@ -892,7 +889,7 @@ Jeste li sigurni da želite da nastavite?</value>
     <value>Opozovi</value>
   </data>
   <data name="TrayMenuItemThemeSwitchPause" xml:space="preserve">
-    <value>Pauziraj automatsku promenu</value>
+    <value>&amp;Pauziraj automatsku promenu</value>
   </data>
   <data name="ThemeSwitchPauseActionDisableQuestion" xml:space="preserve">
     <value>Da li biste umesto toga hteli da onemogućite automatsku promenu?</value>
@@ -1122,18 +1119,147 @@ Jeste li sigurni da želite da nastavite?</value>
     <value>Putanja do slike</value>
   </data>
   <data name="TrayMenuItemClose" xml:space="preserve">
-    <value>Zatvori</value>
+    <value>&amp;Zatvori</value>
   </data>
   <data name="TrayMenuItemAutomaticThemeSwitch" xml:space="preserve">
-    <value>Automatska promena tema</value>
+    <value>&amp;Automatska promena tema</value>
   </data>
   <data name="TrayMenuItemToggleTheme" xml:space="preserve">
-    <value>Promeni temu</value>
+    <value>Pro&amp;meni temu</value>
   </data>
   <data name="ThemePickerTheme11Spotlight" xml:space="preserve">
-    <value>Spotlight</value>
+    <value>Interesovanja</value>
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
-    <value>Windows spotlight</value>
+    <value>Windows interesovanja</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Boja naglašavanja</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Izaberite boju naglašavanja</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Prilagodite sistemsku šemu boja Windows-a sebi.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Ažuriraj kolorizaciju</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Ova opcija je onemogućena kada Auto Dark Mode upravlja vašom temom.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Veze</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Dokumentacija za sopstvene skripte</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Repozitorijum za korisničke skripte</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Popuna</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Uklapanje</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Rastezanje</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Odaberite uklapanje za sliku radne površine</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Nije povezano</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Uvek osveži DWM pri promeni teme</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Pokušava da ispravi povremeno pojavljivanje pogrešnih boja u interfejsu Istraživača, trake zadataka i Start menija. Ako vam se ovo često dešava ili vas nervira, probajte da omogućite ovu postavku.
+
+Može izazvati blaga do umerena kočenja na nekim sistemima tokom promene teme, slično kao što je bilo na Windows-u 10. 
+U retkim slučajevima, Windows može izdati zvuk pištanja kad se miš pomera tokom osvežavanja DWM-a.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Prinudno osvežiti DWM?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Omogući promenu kursora miša</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Otvori Windows postavke pokazivača</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Izaberi tamni kursor</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Izaberi svetli kursor</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Kursori</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Konfigurišite različite kursore miša za tamni i svetli režim.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Izaberite kursore miša</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Neka Auto Dark Mode upravlja mojom temom</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Neka Windows upravlja mojom temom</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Možete da definišete nove šeme kursora u postavkama Windows-a, i posle ih izaberete ovde .</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Otvori interfejs komandne linije</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Otvori evidenciju ažuriranja</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Omogući promenu boje naglašavanja</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Promeni tastaturu na ekranu na dodir i unos</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Automatski</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Ručno</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Ukloni</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Procesi koji blokiraju</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Ne menjaj dok određeni procesi rade</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Browse apps with Auto Dark Mode support</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Not every third party app supports Auto Dark Mode by default. On our wiki page we provide a curated list with supported apps.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Recommended apps</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Alternatively you can donate via GitHub Sponsors, which also supports recurring monthly donations.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Try to fix the theme</value>
   </data>
 </root>

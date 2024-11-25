@@ -61,7 +61,7 @@ namespace AutoDarkModeSvc.Handlers
                     Logger.Info("hotkey signal received: forcing dark theme");
                     state.ForcedTheme = Theme.Dark;
                     ThemeHandler.EnforceNoMonitorUpdates(builder, state, Theme.Dark);
-                    ThemeManager.UpdateTheme(Theme.Dark, new(SwitchSource.Manual));
+                    ThemeManager.UpdateTheme(new(SwitchSource.Manual, Theme.Dark));
                 });
 
                 if (builder.Config.Hotkeys.ForceLight != null) Register(builder.Config.Hotkeys.ForceLight, () =>
@@ -69,7 +69,7 @@ namespace AutoDarkModeSvc.Handlers
                     Logger.Info("hotkey signal received: forcing light theme");
                     state.ForcedTheme = Theme.Light;
                     ThemeHandler.EnforceNoMonitorUpdates(builder, state, Theme.Light);
-                    ThemeManager.UpdateTheme(Theme.Light, new(SwitchSource.Manual));
+                    ThemeManager.UpdateTheme(new(SwitchSource.Manual, Theme.Light));
                 });
 
                 if (builder.Config.Hotkeys.NoForce != null) Register(builder.Config.Hotkeys.NoForce, () =>
@@ -92,7 +92,6 @@ namespace AutoDarkModeSvc.Handlers
                     AdmConfig old = builder.Config;
                     state.SkipConfigFileReload = true;
                     builder.Config.AutoThemeSwitchingEnabled = !builder.Config.AutoThemeSwitchingEnabled;
-                    AdmConfigMonitor.Instance().PerformConfigUpdate(old, internalUpdate: true);
                     builder.Save();
                     ToastHandler.InvokeAutoSwitchToggleToast();
                 });
@@ -103,7 +102,7 @@ namespace AutoDarkModeSvc.Handlers
                     {
                         if (state.PostponeManager.IsSkipNextSwitch)
                         {
-                            state.PostponeManager.RemoveUserClearablePostpones();
+                            state.PostponeManager.RemoveSkipNextSwitch();
                             ToastHandler.InvokePauseAutoSwitchToast();
                             Task.Delay(TimeSpan.FromSeconds(2)).ContinueWith(o => ThemeManager.RequestSwitch(new(SwitchSource.Manual)));
                         }

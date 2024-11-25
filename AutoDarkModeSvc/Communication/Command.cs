@@ -42,7 +42,8 @@ namespace AutoDarkModeSvc.Communication
         public const string Swap = "--swap";
 
         /// <summary>
-        /// Requests Auto Dark Mode to switch to the light theme and pauses automatic switching once. Only returns an ApiResponse with StatusCode.Ok or a StatusCode.Timeout
+        /// Requests Auto Dark Mode to switch to the light theme and pauses 
+        /// switching once. Only returns an ApiResponse with StatusCode.Ok or a StatusCode.Timeout
         /// </summary>
         [Includable]
         public const string Light = "--light";
@@ -92,6 +93,19 @@ namespace AutoDarkModeSvc.Communication
 
         [Includable]
         public const string GetPostponeStatus = "--get-postpone-status";
+
+        /// <summary>
+        /// Returns the internal theme that ADM is currently maintaining
+        /// </summary>
+        [Includable]
+        public const string GetRequestedTheme = "--get-requested-theme";
+
+        /// <summary>
+        /// Returns the current system colorization color (accent color)
+        /// Returns a hex string of the last parsed colorization color and the currently requested theme as details
+        /// </summary>
+        [Includable]
+        public const string GetCurrentColorization = "--get-colorization";
 
         /// <summary>
         /// Checks for updates silently

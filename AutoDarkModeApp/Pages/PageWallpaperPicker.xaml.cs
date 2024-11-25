@@ -44,7 +44,7 @@ namespace AutoDarkModeApp.Pages
     public partial class PageWallpaperPicker : ModernWpf.Controls.Page
     {
         private readonly AdmConfigBuilder builder = AdmConfigBuilder.Instance();
-        private bool init = true;
+        private bool initializing = true;
         private bool SelectedLight { get; set; } = true;
         private delegate void ShowPreviewDelegate(string picture);
         private delegate void NoArgDelegate();
@@ -64,8 +64,8 @@ namespace AutoDarkModeApp.Pages
 
             InitializeComponent();
             bool hasUbr = int.TryParse(RegistryHandler.GetUbr(), out int ubr);
-            if (hasUbr && 
-               ((Environment.OSVersion.Version.Build == (int)WindowsBuilds.Win11_22H2 && ubr >= (int)WindowsBuildsUbr.Win11_22H2_Spotlight) || 
+            if (hasUbr &&
+               ((Environment.OSVersion.Version.Build == (int)WindowsBuilds.Win11_22H2 && ubr >= (int)WindowsBuildsUbr.Win11_22H2_Spotlight) ||
                Environment.OSVersion.Version.Build > (int)WindowsBuilds.Win11_22H2))
             {
                 ComboBoxBackgroundSelectionSpotlight.Content = AdmProperties.Resources.WallpaperComboBoxItemSpotlight;
@@ -120,23 +120,68 @@ namespace AutoDarkModeApp.Pages
                 await DetectMonitors();
             }
 
-            //generate a list with all installed Monitors, select the first one
-            List<MonitorSettings> monitorIds = builder.Config.WallpaperSwitch.Component.Monitors;
-            ComboBoxMonitorSelection.ItemsSource = monitorIds;
-            ComboBoxMonitorSelection.SelectedItem = monitorIds.FirstOrDefault();
+            // generate a list with all installed Monitors, select the first one
+            List<MonitorSettings> monitors = builder.Config.WallpaperSwitch.Component.Monitors;
+            List<MonitorSettings> disconnected = new();
+            List<MonitorSettings> connected = monitors.Where(m =>
+            {
+                // preload tostring to avoid dropdown opening lag
+                m.ToString();
+                // return monitors connecte to system connected monitors
+                if (m.Connected)
+                {
+                    return true;
+                }
+                disconnected.Add(m);
+                return false;
+            }).ToList();
 
-            //select light mode in combobox, this will fire selection changed
-            ComboBoxModeSelection.SelectedItem = ComboBoxModeSelectionLightTheme;
+            disconnected.ForEach(m =>
+            {
+                m.MonitorString = $"{AdmProperties.Resources.DisplayMonitorDisconnected} - {m.MonitorString}";
+            });
 
-            init = false;
+            monitors.Clear();
+            monitors.AddRange(connected);
+            monitors.AddRange(disconnected);
+            ComboBoxMonitorSelection.ItemsSource = monitors;
+            ComboBoxMonitorSelection.SelectedItem = monitors.FirstOrDefault();
+
+            ApiResponse response = ApiResponse.FromString(MessageHandler.Client.SendMessageAndGetReply(Command.GetRequestedTheme));
+            if (response.StatusCode == StatusCode.Ok)
+            {
+                Theme requestedTheme = Theme.Unknown;
+                bool success = Enum.TryParse(typeof(Theme), response.Message, true, out object parsedTheme);
+                if (success) requestedTheme = (Theme)parsedTheme;
+                if (requestedTheme == Theme.Light)
+                {
+                    ComboBoxModeSelection.SelectedItem = ComboBoxModeSelectionLightTheme;
+                }
+                else if (requestedTheme == Theme.Dark)
+                {
+                    ComboBoxModeSelection.SelectedItem = ComboBoxModeSelectionDarkTheme;
+                }
+                else
+                {
+                    ComboBoxModeSelection.SelectedItem = ComboBoxModeSelectionLightTheme;
+                }
+            }
+            else
+            {
+                ComboBoxModeSelection.SelectedItem = ComboBoxModeSelectionLightTheme;
+                //select light mode in combobox, this will fire selection changed
+            }
+
+            initializing = false;
         }
 
         private void ToggleSwitchWallpaper_Toggled(object sender, RoutedEventArgs e)
         {
+            if (initializing) return;
             if ((sender as ModernWpf.Controls.ToggleSwitch).IsOn)
             {
                 builder.Config.WallpaperSwitch.Enabled = true;
-                if (!init) Dispatcher.BeginInvoke(new NoArgDelegate(RequestThemeSwitch), null);
+                if (!initializing) Dispatcher.BeginInvoke(new NoArgDelegate(RequestThemeSwitch), null);
                 ChangeUiEnabledStatus(true);
             }
             else
@@ -159,8 +204,10 @@ namespace AutoDarkModeApp.Pages
             ComboBoxModeSelection.IsEnabled = isEnabled;
             ComboBoxWallpaperTypeSelection.IsEnabled = isEnabled;
             ComboBoxMonitorSelection.IsEnabled = isEnabled;
+            ComboBoxWallpaperPositionSelection.IsEnabled = isEnabled;
             ButtonFilePicker.IsEnabled = isEnabled;
             CleanMonitorButton.IsEnabled = isEnabled;
+
         }
 
         private void ShowErrorMessage(Exception ex, string location)
@@ -268,6 +315,16 @@ namespace AutoDarkModeApp.Pages
                 ComboBoxMonitorSelection_SelectionChanged(this, null);
                 GridMonitorSelect.Visibility = Visibility.Visible;
                 CleanMonitorButton.Visibility = Visibility.Visible;
+                GridWallpaperPosition.Visibility = Visibility.Visible;
+                switch (builder.Config.WallpaperSwitch.Component.Position)
+                {
+                    case WallpaperPosition.Stretch:
+                        ComboBoxWallpaperPositionSelection.SelectedIndex = 2;
+                        break;
+                    case WallpaperPosition.Fit:
+                        ComboBoxWallpaperPositionSelection.SelectedIndex = 1;
+                        break;
+                }
             }
             else if ((sender as ComboBox).SelectedItem == ComboBoxBackgroundSelectionSolidColor)
             {
@@ -276,6 +333,7 @@ namespace AutoDarkModeApp.Pages
                 WallpaperHeader.Visibility = Visibility.Collapsed;
                 SolidColorPicker.Visibility = Visibility.Visible;
                 CleanMonitorButton.Visibility = Visibility.Collapsed;
+                GridWallpaperPosition.Visibility = Visibility.Collapsed;
                 if (ComboBoxModeSelection.SelectedItem == ComboBoxModeSelectionLightTheme)
                 {
                     HexColorTextBox.Text = builder.Config.WallpaperSwitch.Component.SolidColors.Light;
@@ -296,13 +354,14 @@ namespace AutoDarkModeApp.Pages
                 }
 
             }
-            else if ((sender as ComboBox).SelectedItem == ComboBoxBackgroundSelectionSpotlight) 
+            else if ((sender as ComboBox).SelectedItem == ComboBoxBackgroundSelectionSpotlight)
             {
                 GridMonitorSelect.Visibility = Visibility.Collapsed;
                 GridWallpaper.Visibility = Visibility.Collapsed;
                 WallpaperHeader.Visibility = Visibility.Collapsed;
                 SolidColorPicker.Visibility = Visibility.Collapsed;
                 CleanMonitorButton.Visibility = Visibility.Collapsed;
+                GridWallpaperPosition.Visibility = Visibility.Collapsed;
             }
             if (e is NoSaveEvent nse)
             {
@@ -318,6 +377,7 @@ namespace AutoDarkModeApp.Pages
             GridWallpaper.Visibility = Visibility.Visible;
             WallpaperHeader.Visibility = Visibility.Visible;
             CleanMonitorButton.Visibility = Visibility.Collapsed;
+            GridWallpaperPosition.Visibility = Visibility.Collapsed;
 
             if (SelectedLight)
             {
@@ -348,7 +408,7 @@ namespace AutoDarkModeApp.Pages
         private void SaveWallpaperTypeSelection(bool noSave)
         {
             // only save if sender is own combobox
-            if (noSave || init)
+            if (noSave || initializing)
             {
                 return;
             }
@@ -413,7 +473,7 @@ namespace AutoDarkModeApp.Pages
         {
             OpenFileDialog ofd = new()
             {
-                Filter = AdmProperties.Resources.dbPictures + "|*.png; *.jpg; *.jpeg; *.bmp",
+                Filter = AdmProperties.Resources.dbPictures + "|*.jpg; *.jpeg; *.bmp; *.dib; *.png; *.jff; *.jpe; *.gif; *.tif; *.tiff; *.wdp; *.heic; *.heif; *.heics; *.heifs; *.hif; *.avci; *.avcs; *.avif; *.avifs; *.jxr; *.jxl",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
             };
             bool? result = ofd.ShowDialog();
@@ -580,11 +640,40 @@ namespace AutoDarkModeApp.Pages
 
         private void CleanMonitorButton_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter || e.Key == Key.Space)
+            if (e.Key == Key.Enter || e.Key == Key.Space)
             {
                 CleanMonitorButton_PreviewMouseDown(this, null);
             }
         }
+
+        private void ComboBoxWallpaperPositionSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (ComboBoxWallpaperPositionSelection.SelectedIndex)
+            {
+                case 0:
+                    builder.Config.WallpaperSwitch.Component.Position = WallpaperPosition.Fill;
+                    break;
+                case 1:
+                    builder.Config.WallpaperSwitch.Component.Position = WallpaperPosition.Fit;
+                    break;
+                case 2:
+                    builder.Config.WallpaperSwitch.Component.Position = WallpaperPosition.Stretch;
+                    break;
+            }
+            try
+            {
+                if (!initializing)
+                {
+                    builder.Save();
+                    RequestThemeSwitch();
+                }                
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex, "wallpaper position selection changed");
+            }
+        }
+
     }
 
     class NoSaveEvent : EventArgs

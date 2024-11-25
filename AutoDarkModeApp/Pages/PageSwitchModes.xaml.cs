@@ -14,9 +14,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
+using AutoDarkModeApp.Controls;
 using AutoDarkModeLib;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,6 +38,7 @@ namespace AutoDarkModeApp.Pages
     {
         private readonly bool init = true;
         readonly AdmConfigBuilder builder = AdmConfigBuilder.Instance();
+        private PageSwitchModesViewModel ViewModel = new();
 
         public PageSwitchModes()
         {
@@ -103,9 +110,16 @@ namespace AutoDarkModeApp.Pages
 
 
             ToggleHotkeys.IsOn = builder.Config.Hotkeys.Enabled;
-            TextBlockHotkeyEditHint.Visibility = ToggleHotkeys.IsOn ? Visibility.Visible : Visibility.Hidden;
 
+            SimpleStackPanelProcessBlockList.Visibility =
+                builder.Config.ProcessBlockList.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            BlockListOptionsSeparator.Visibility =
+                builder.Config.ProcessBlockList.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            CheckBoxBlockList.IsChecked = builder.Config.ProcessBlockList.Enabled;
+            ItemsControlProcessBlockList.ItemsSource = builder.Config.ProcessBlockList.ProcessNames;
+            DataContext = ViewModel;
             init = false;
+
         }
 
         private void CheckBoxBatteryDarkMode_Click(object sender, RoutedEventArgs e)
@@ -289,7 +303,6 @@ namespace AutoDarkModeApp.Pages
 
         private void ToggleHotkeys_Toggled(object sender, RoutedEventArgs e)
         {
-            TextBlockHotkeyEditHint.Visibility = ToggleHotkeys.IsOn ? Visibility.Visible : Visibility.Hidden;
             if (ToggleHotkeys.IsOn) GridHotkeys.IsEnabled = false;
             else GridHotkeys.IsEnabled = true;
             if (init) return;
@@ -488,6 +501,104 @@ namespace AutoDarkModeApp.Pages
             catch (Exception ex)
             {
                 ShowErrorMessage(ex, "HotkeyCheckboxToggleAutomaticThemeSwitchNotification_Click");
+            }
+        }
+
+        private void SwitchModesAddSelectedProcess_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (ComboBoxProcessBlockList.SelectedItem is not string processName ||
+                builder.Config.ProcessBlockList.ProcessNames.Contains(processName)) return;
+
+            builder.Config.ProcessBlockList.ProcessNames.Add(processName);
+            try
+            {
+                builder.Save();
+                ItemsControlProcessBlockList.Items.Refresh();
+                ComboBoxProcessBlockList.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex, "SwitchModesAddSelectedProcess_OnClick");
+            }
+        }
+
+        private void SwitchModesRemoveProcess_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button { Tag: string entry })
+            {
+                var result = builder.Config.ProcessBlockList.ProcessNames.Remove(entry);
+                if (result)
+                {
+                    ItemsControlProcessBlockList.Items.Refresh();
+                    builder.Save();
+                }
+            }
+        }
+
+        private void CheckBoxProcessBlockList_Click(object sender, RoutedEventArgs e)
+        {
+            builder.Config.ProcessBlockList.Enabled = !builder.Config.ProcessBlockList.Enabled;
+            CheckBoxBlockList.IsChecked = builder.Config.ProcessBlockList.Enabled;
+            BlockListOptionsSeparator.Visibility =
+                builder.Config.ProcessBlockList.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            SimpleStackPanelProcessBlockList.Visibility =
+                builder.Config.ProcessBlockList.Enabled ? Visibility.Visible : Visibility.Collapsed;
+            builder.Save();
+        }
+
+        private void ComboBoxProcessBlockList_DropDownOpened(object sender, EventArgs e)
+        {
+            var processes = Process.GetProcesses();
+            Task.Run(() => BuildProcessList(processes));
+        }
+
+        private void BuildProcessList(Process[] processes)
+        {
+            bool isEmpty = ViewModel.FilteredProcesses.Count == 0;
+            SortedSet<string> filteredProcesses = new();
+            foreach (var process in processes)
+            {
+                try
+                {
+                    if (process.MainWindowHandle == -0) continue;
+
+                    // No point in showing a process' name in the dropdown if it's already being excluded out
+                    if (!builder.Config.ProcessBlockList.ProcessNames.Contains(process.ProcessName))
+                    {
+                        if (isEmpty)
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                if (!ViewModel.FilteredProcesses.Contains(process.ProcessName))
+                                {
+                                    ViewModel.FilteredProcesses.Add(process.ProcessName);
+                                    var sorted = ViewModel.FilteredProcesses.OrderBy(i => i);
+                                    ViewModel.FilteredProcesses = new(sorted);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            filteredProcesses.Add(process.ProcessName);
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(() => ShowErrorMessage(ex, "RefreshProcessComboBox"));
+                }
+            }
+            if (!isEmpty)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ViewModel.FilteredProcesses.Clear();
+                    foreach (var process in filteredProcesses)
+                    {
+                        ViewModel.FilteredProcesses.Add(process);
+                    }
+                });
             }
         }
     }

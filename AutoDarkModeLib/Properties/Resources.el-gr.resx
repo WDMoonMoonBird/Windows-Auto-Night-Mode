@@ -420,13 +420,13 @@
     <value>Προσαρμοσμένες ώρες</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>Από τη δύση μέχρι την ανατολή του ηλίου</value>
+    <value>Από τη δύση έως την ανατολή του ηλίου (υπηρεσία τοποθεσίας)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Βήμα</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Χρήση φίλτρου χρώματος (στέλνει το συνδυασμό Win + Ctrl + C)</value>
+    <value>Φίλτρο χρώματος (αποστολή Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Χρήση διεργασίας σύνδεσης αντί για καταχώριση εκκίνησης</value>
@@ -500,7 +500,7 @@
     <value>Επαναφορά</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Ενεργοποίηση σκοτεινής λειτουργίας όταν η συσκευή είναι αποσυνδεδεμένη από την πρίζα</value>
+    <value>Switch to dark mode when device is unplugged</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Προεπιλεγμένη τιμή για το ρυθμιστικό εξοικονόμησης ενέργειας</value>
@@ -563,16 +563,13 @@
     <value>Απόκρυψη εικονιδίου περιοχής ειδοποήσεων (δεν συνιστάται)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>Αυτή η δυνατότητα είναι απενεργοποιημένη όταν είναι ενεργοποιημένη η λειτουργία θέματος.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>Αυτή η δυνατότητα είναι απενεργοποιημένη όταν είναι ενεργοποιημένη η λειτουργία ταπετσαρίας.</value>
+    <value>Αυτή η δυνατότητα είναι απενεργοποιημένη ενώ τα Windows διαχειρίζονται το θέμα σας.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Προσφέρει περισσότερες δυνατότητες, αλλά πρέπει να ρυθμίσετε ένα αρχείο Windows .theme. Προσαρμόστε την ταπετσαρία της επιφάνειας εργασίας σας ανά οθόνη, ορίστε μια παρουσίαση, αλλάξτε τον δείκτη του ποντικιού σας, ορίστε ένα χρώμα έμφασης και μεμονωμένους ήχους.</value>
+    <value>Επιλέξτε ένα διαφορετικό θέμα των Windows για σκοτεινή και φωτεινή λειτουργία αντίστοιχα. Επιτρέπει την πλήρη προσαρμογή του θέματος, αλλά απαιτεί από εσάς να ρυθμίσετε μόνοι σας τα αρχεία .theme.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Προσφέρει λιγότερες δυνατότητες, αλλά είναι πιο εύκολο να ρυθμιστεί. Προσαρμόστε την ταπετσαρία της επιφάνειας εργασίας σας για όλες τις οθόνες, μεμονωμένες οθόνες ή ορίστε ένα χρώμα φόντου.</value>
+    <value>Προσαρμόστε την ταπετσαρία της επιφάνειας εργασίας σας για όλες τις οθόνες, μεμονωμένες οθόνες, ορίστε ένα χρώμα φόντου ή ενεργοποιήστε το spotlight.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>Ελέγχουμε για νέες εκδόσεις του Auto Dark Mode στο παρασκήνιο. Οταν είναι διαθέσιμη μια ενημέρωση, θα σας ειδοποιήσουμε μέσω αναδυόμενης ειδοποίησης (toast)</value>
@@ -819,7 +816,7 @@
     <value>Διακοπή επιβολής Θέματος</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
-    <value>Ενεργοποίηση πλήκτρων συντόμευσης σε όλο το σύστημα</value>
+    <value>Ενεργοποίηση πλήκτρων συντόμευσης</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
     <value>Επιβολή &amp;Σκοτεινής Λειτουργίας</value>
@@ -910,7 +907,7 @@
     <value>Η συνέχιση θα λειτουργήσει μόνο για αναβολές που έχουν χρόνο λήξης</value>
   </data>
   <data name="TimePageTextBlockPostponeInfoHeader" xml:space="preserve">
-    <value>Πληροφορίες</value>
+    <value>Διαχείριση αναβολής</value>
   </data>
   <data name="ToggleTheme" xml:space="preserve">
     <value>Ενεργοποίηση/απενεργοποίηση θέματος</value>
@@ -1135,5 +1132,134 @@
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Χρώμα έμφασης</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Επιλέξτε ένα χρώμα έμφασης</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Προσαρμόστε τον συνδυασμό χρωμάτων του συστήματος των Windows σύμφωνα με τις προτιμήσεις σας.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Ενημέρωση χρωματισμού</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Αυτή η δυνατότητα είναι απενεργοποιημένη ενώ το Auto Dark Mode διαχειρίζεται το θέμα σας.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Σύνδεσμου\ι</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Τεκμηρίωση για προσαρμοσμένα scripts</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Αποθετήριο χρήστη προσαρμοσμένου script</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Γέμισμα</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Προσαρμογή</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Τέντωμα</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Choose a fit for your desktop imageΕπιλέξτε ένα ταίριασμα για την εικόνα ταπετσαρίας σας</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Αποσυνδέθηκε</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Πάντα ανανέωση του DWM κατά την εναλλαγή θέματος</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Προσπαθεί να μειώσει την εμφάνιση λανθασμένων χρωμάτων διεπαφής χρήστη στην εξερεύνηση των Windows, στη γραμμή εργασιών και στο μενού έναρξης. Εάν το αντιμετωπίζετε συχνά ή σας ενοχλεί, δοκιμάστε να ενεργοποιήσετε αυτήν τη ρύθμιση.
+
+Αυτό μπορεί να προκαλέσει μικρή έως μέτρια καθυστέρηση σε ορισμένα συστήματα κατά τη διάρκεια της αλλαγής θέματος παρόμοια με αυτή που συνέβαινε στα Windows 10.
+Σε σπάνιες περιπτώσεις, τα Windows ενδέχεται να εκπέμπουν έναν ήχο μπιπ όταν μετακινείται το ποντίκι κατά τη διάρκεια της ανανέωσης του DWM.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Επιβολή ανανέωσης DWM;</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Εντάξει</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Ενεργοποίηση αλλαγής δείκτη ποντικιού</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Ανοιγμα ρυθμίσεων δείκτη ποντικιού</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Επιλογή σκοτεινού δείκτη</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Επιλογή φωτεινού δείκτη</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Δείκτες ποντικιού</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Διαμορφώστε διαφορετικούς δείκτες ποντικιού για φωτεινή και σκοτεινή λειτουργία.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Επιλέξτε δείκτες ποντικιού</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Να επιτρέπεται στο Auto Dark Mode να διαχειρίζεται το θέμα μου</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Να επιτρέπεται στα Windows να διαχειρίζονται το θέμα μου</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Μπορείτε να ορίσετε νέα σχήματα δείκτη στις ρυθμίσεις των Windows και στη συνέχεια να τα επιλέξετε εδώ.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Ανοιγμα κελύφους (shell)</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Ανοιγμα αρχείου καταγραφής προγράμματος αναβάθμισης</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Ενεργοποίηση εναλλαγής χρώματος έμφασης</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Εναλλαγή πληκτρολογίου αφής και εισόδου</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Αυτόματα</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Χειροκίνητα</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Αφαίρεση</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Δεν θα γίνεται εναλλαγή κατά τη διάρκεια εκτέλεσης των ακόλουθων διαδικασιών</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Να μην γίνεται εναλλαγή όταν εκτελούνται συγκεκριμένες διαδικασίες</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Περιηγηθείτε σε εφαρμογές που υποστηρίζουν το Auto Dark Mode</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Το Auto Dark Mode δεν υποστηρίζεται από προεπιλογή από κάθε τρίτη εφαρμογή. Στη σελίδα wiki μας παρέχουμε μια επιμελημένη λίστα με υποστηριζόμενες εφαρμογές.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Προτεινόμενες εφαρμογές</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Εναλλακτικά μπορείτε να κάνετε δωρεά μέσω του GitHub Sponsors, το οποίο υποστηρίζει και επαναλαμβανόμενες μηνιαίες δωρεές.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Προσπάθεια επιδιόρθωσης θέματος</value>
   </data>
 </root>

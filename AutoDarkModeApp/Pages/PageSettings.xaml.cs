@@ -31,6 +31,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Management;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 
 namespace AutoDarkModeApp.Pages
 {
@@ -40,12 +41,14 @@ namespace AutoDarkModeApp.Pages
     public partial class PageSettings : Page
     {
         readonly string curLanguage = Settings.Default.Language;
+        string selectedLanguage = Settings.Default.Language;
         readonly AdmConfigBuilder builder = AdmConfigBuilder.Instance();
         private readonly bool init = true;
         readonly Updater updater = new();
         private readonly string BetaVersionQueryURL = @"https://raw.githubusercontent.com/AutoDarkMode/AutoDarkModeVersion/master/version-beta.yaml";
         private delegate void DispatcherDelegate();
         private const int fakeResponsiveUIDelay = 800;
+        private readonly ManagementEventWatcher autostartWatcher;
 
         public PageSettings()
         {
@@ -61,6 +64,12 @@ namespace AutoDarkModeApp.Pages
             InitializeComponent();
             UiHandler();
 
+            if (Environment.OSVersion.Version.Build >= (int)WindowsBuilds.Win11_RC)
+            {
+                FontIconLinkConfig.FontFamily = new("Segoe Fluent Icons");
+                FontIconLinkConfigFolder.FontFamily = new("Segoe Fluent Icons");
+            }
+
             try
             {
                 string sidString = SID.ToString();
@@ -68,7 +77,7 @@ namespace AutoDarkModeApp.Pages
                     $"'{sidString}\\\\" +
                     @"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run' AND ValueName='AutoDarkMode'";
                 WqlEventQuery query = new WqlEventQuery(queryString);
-                ManagementEventWatcher autostartWatcher = new ManagementEventWatcher(query);
+                autostartWatcher = new ManagementEventWatcher(query);
                 autostartWatcher.EventArrived += new EventArrivedEventHandler(HandleAutostartEnabledEvent);
                 autostartWatcher.Start();
             }
@@ -86,6 +95,16 @@ namespace AutoDarkModeApp.Pages
             init = false;
         }
 
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                autostartWatcher.Stop();
+                autostartWatcher.Dispose();
+            }
+            catch { }            
+        }
+
         private static SecurityIdentifier SID
         {
             get
@@ -101,7 +120,7 @@ namespace AutoDarkModeApp.Pages
             if (PowerManager.BatteryStatus == BatteryStatus.NotPresent || Environment.OSVersion.Version.Build >= (int)WindowsBuilds.MinBuildForNewFeatures)
             {
                 CheckBoxEnergySaverMitigation.Visibility = Visibility.Collapsed;
-                SeparatorEnergySaverMitigation.Visibility = Visibility.Collapsed;
+                CardEnergySaverMitigation.Visibility = Visibility.Collapsed;
             }
 
             //language ui
@@ -116,18 +135,16 @@ namespace AutoDarkModeApp.Pages
             CheckBoxAlterTime.IsChecked = Settings.Default.AlterTime;
             CheckBoxLogonTask.IsChecked = builder.Config.Tunable.UseLogonTask;
             CheckBoxHideTrayIcon.IsChecked = !builder.Config.Tunable.ShowTrayIcon;
-            CheckBoxColourFilter.IsChecked = builder.Config.ColorFilterSwitch.Enabled;
             CheckBoxWin10AllowLockscreenSwitch.IsChecked = builder.Config.Events.Win10AllowLockscreenSwitch;
+            CheckBoxAlwaysDwmRefresh.IsChecked = builder.Config.Tunable.AlwaysFullDwmRefresh;
 
             if (Environment.OSVersion.Version.Build >= (int)WindowsBuilds.Win11_RC)
             {
-                CheckBoxWin10AllowLockscreenSwitch.Visibility = Visibility.Collapsed;
-                SeparatorWin10AllowLockscreenSwitch.Visibility = Visibility.Collapsed;
+                CardWin10AllowLockscreenSwitch.Visibility = Visibility.Collapsed;
             }
             else
             {
-                CheckBoxWin10AllowLockscreenSwitch.Visibility = Visibility.Visible;
-                SeparatorWin10AllowLockscreenSwitch.Visibility = Visibility.Visible;
+                CardWin10AllowLockscreenSwitch.Visibility = Visibility.Visible;
             }
 
             CheckBoxDebugMode.IsChecked = builder.Config.Tunable.Debug;
@@ -135,7 +152,7 @@ namespace AutoDarkModeApp.Pages
             if (!builder.Config.Tunable.Debug)
             {
                 CheckBoxTraceMode.Visibility = Visibility.Collapsed;
-                SeparatorTraceMode.Visibility = Visibility.Collapsed;
+                CardTraceMode.Visibility = Visibility.Collapsed;
             }
 
             //battery slider / energy saver mitigation
@@ -282,30 +299,22 @@ namespace AutoDarkModeApp.Pages
         {
             if (!init)
             {
-                string selectedLanguage = ComboBoxLanguageSelection.SelectedValue.ToString().Replace("_", "-");
+                selectedLanguage = ComboBoxLanguageSelection.SelectedValue.ToString().Replace("_", "-");
                 if (selectedLanguage != curLanguage)
                 {
-                    SetLanguage(selectedLanguage);
-                    Translator.Text = AdmProperties.Resources.lblTranslator;
+                    Translator.Text = AdmProperties.Resources.ResourceManager.GetString("lblTranslator", new(selectedLanguage));
                     DockPanelLanguageRestart.Visibility = Visibility.Visible;
-                    TextBlockLanguageRestart.Text = AdmProperties.Resources.restartNeeded;
-                    ButtonRestart.Content = AdmProperties.Resources.restart;
+                    TextBlockLanguageRestart.Text = AdmProperties.Resources.ResourceManager.GetString("restartNeeded", new(selectedLanguage));
+                    ButtonRestart.Content = AdmProperties.Resources.ResourceManager.GetString("restart", new(selectedLanguage));
                     Settings.Default.LanguageChanged = true;
-                    builder.Config.Tunable.UICulture = selectedLanguage;
-                    try
-                    {
-                        builder.Save();
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowErrorMessage(ex, "comboboxlanguageselection_builder_save");
-                    }
+
                 }
                 else
                 {
-                    SetLanguage(selectedLanguage);
-                    DockPanelLanguageRestart.Visibility = Visibility.Visible;
                     Translator.Text = AdmProperties.Resources.lblTranslator;
+                    DockPanelLanguageRestart.Visibility = Visibility.Collapsed;
+                    TextBlockLanguageRestart.Text = AdmProperties.Resources.restartNeeded;
+                    ButtonRestart.Content = AdmProperties.Resources.restart;
                     Settings.Default.LanguageChanged = false;
                 }
             }
@@ -322,6 +331,17 @@ namespace AutoDarkModeApp.Pages
         {
             try
             {
+                SetLanguage(selectedLanguage);
+                builder.Config.Tunable.UICulture = selectedLanguage;
+                try
+                {
+                    builder.Save();
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorMessage(ex, "comboboxlanguageselection_builder_save");
+                }
+
                 MessageHandler.Client.SendMessageAndGetReply(Command.Restart);
                 Settings.Default.Save();
                 Process.Start(new ProcessStartInfo(Helper.ExecutionPathApp)
@@ -347,27 +367,6 @@ namespace AutoDarkModeApp.Pages
             {
                 Settings.Default.AlterTime = false;
             }
-        }
-
-        private async void CheckBoxColourFilter_Click(object sender, RoutedEventArgs e)
-        {
-            if (CheckBoxColourFilter.IsChecked.Value)
-            {
-                builder.Config.ColorFilterSwitch.Enabled = true;
-            }
-            else
-            {
-                builder.Config.ColorFilterSwitch.Enabled = false;
-            }
-            try
-            {
-                builder.Save();
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage(ex, "CheckBoxColourFilter_Click");
-            }
-            _ = await MessageHandler.Client.SendMessageAndGetReplyAsync(Command.RequestSwitch);
         }
 
         private void ShowErrorMessage(Exception ex, string location)
@@ -430,7 +429,7 @@ namespace AutoDarkModeApp.Pages
             {
                 builder.Config.Tunable.Debug = true;
                 CheckBoxTraceMode.Visibility = Visibility.Visible;
-                SeparatorTraceMode.Visibility = Visibility.Visible;
+                CardTraceMode.Visibility = Visibility.Visible;
             }
             else
             {
@@ -438,7 +437,7 @@ namespace AutoDarkModeApp.Pages
                 builder.Config.Tunable.Trace = false;
                 CheckBoxTraceMode.IsChecked = false;
                 CheckBoxTraceMode.Visibility = Visibility.Collapsed;
-                SeparatorTraceMode.Visibility = Visibility.Collapsed;
+                CardTraceMode.Visibility = Visibility.Collapsed;
             }
             try
             {
@@ -587,7 +586,7 @@ namespace AutoDarkModeApp.Pages
             }
             try
             {
-                builder.Save();
+                if (!init) builder.Save();
             }
             catch (Exception ex)
             {
@@ -708,6 +707,10 @@ namespace AutoDarkModeApp.Pages
                 builder.Config.Updater.VersionQueryUrl = BetaVersionQueryURL;
                 builder.Config.Updater.CheckOnStart = true;
                 ButtonSearchUpdate.IsEnabled = true;
+                builder.Config.Tunable.Debug = true;
+                CheckBoxTraceMode.Visibility = Visibility.Visible;
+                CardTraceMode.Visibility = Visibility.Visible;
+                CheckBoxDebugMode.IsChecked = true;
             }
             try
             {
@@ -878,5 +881,39 @@ namespace AutoDarkModeApp.Pages
             }
         }
 
+        private void CheckBoxAlwaysRefreshDwm_Click(object sender, RoutedEventArgs e)
+        {
+            MsgBox confirm = new(AdmProperties.Resources.SettingsPageCheckBoxAlwaysRefreshDwmExplanation, 
+                AdmProperties.Resources.SettingsPageCheckBoxAlwaysRefreshDwmHeader, 
+                "info", 
+                "okcancel")
+            {
+                Owner = Window.GetWindow(this)
+            };
+            if (CheckBoxAlwaysDwmRefresh.IsChecked == true)
+            {
+                bool? result = confirm.ShowDialog();
+                if (result.HasValue && result.Value)
+                {
+                    builder.Config.Tunable.AlwaysFullDwmRefresh = true;
+                }
+                else
+                {
+                    CheckBoxAlwaysDwmRefresh.IsChecked = false;
+                }
+            }         
+            else
+            {
+                builder.Config.Tunable.AlwaysFullDwmRefresh = false;
+            }
+            try
+            {
+                builder.Save();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex, "CheckBoxAlwaysDwmRefresh");
+            }
+        }
     }
 }

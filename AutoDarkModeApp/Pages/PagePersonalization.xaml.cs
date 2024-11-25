@@ -14,12 +14,12 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #endregion
-
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AutoDarkModeApp.Handlers;
 using AutoDarkModeLib;
 using ModernWpf.Media.Animation;
 using AdmProperties = AutoDarkModeLib.Properties;
@@ -44,19 +44,34 @@ namespace AutoDarkModeApp.Pages
             }
             InitializeComponent();
 
-            if (builder.Config.WindowsThemeMode.Enabled & !builder.Config.WallpaperSwitch.Enabled)
+            if (builder.Config.WindowsThemeMode.Enabled)
             {
                 SetThemePickerEnabled();
             }
 
-            if (builder.Config.WallpaperSwitch.Enabled & !builder.Config.WindowsThemeMode.Enabled)
+            if (builder.Config.WallpaperSwitch.Enabled || builder.Config.ColorizationSwitch.Enabled || builder.Config.CursorSwitch.Enabled)
             {
-                SetWallpaperPickerEnabled();
+                SelectAdmCustomizeEnabled();
             }
-            if (!builder.Config.WallpaperSwitch.Enabled & !builder.Config.WindowsThemeMode.Enabled)
+            if (!builder.Config.WallpaperSwitch.Enabled && !builder.Config.WindowsThemeMode.Enabled && !builder.Config.ColorizationSwitch.Enabled && !builder.Config.CursorSwitch.Enabled)
             {
                 WallpaperDisabledMessage.Visibility = Visibility.Collapsed;
+                ColorizationDisabledMessage.Visibility = Visibility.Collapsed;
+                CursorsDisabledMessage.Visibility = Visibility.Collapsed;
                 ThemeDisabledMessage.Visibility = Visibility.Collapsed;
+            }
+
+            if (Environment.OSVersion.Version.Build >= (int)WindowsBuilds.Win11_RC)
+            {
+                FontIconColorization.FontFamily = new("Segoe Fluent Icons");
+                FontIconTheme.FontFamily = new("Segoe Fluent Icons");
+                FontIconWallpaper.FontFamily = new("Segoe Fluent Icons");
+            }
+
+            if (Environment.OSVersion.Version.Build < (int)WindowsBuilds.MinBuildForNewFeatures)
+            {
+                ColorizationPickerCard.Visibility = Visibility.Collapsed;
+                CursorsPickerCard.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -65,14 +80,52 @@ namespace AutoDarkModeApp.Pages
             WallpaperDisabledMessage.Visibility = Visibility.Visible;
             WallpaperPickerCard.IsEnabled = false;
 
+            ColorizationDisabledMessage.Visibility = Visibility.Visible;
+            ColorizationPickerCard.IsEnabled = false;
+
+            CursorsPickerCard.Visibility = Visibility.Visible;
+            CursorsPickerCard.IsEnabled = false;
+
             ThemeDisabledMessage.Visibility = Visibility.Collapsed;
             ThemePickerCard.IsEnabled = true;
+
+            if (builder.Config.ColorizationSwitch.Enabled)
+            {
+                builder.Config.ColorizationSwitch.Enabled = false;
+                try
+                {
+                    builder.Save();
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageBoxes.ShowErrorMessage(ex, Window.GetWindow(this), "PersonalizationPage_SetThemePickerEnabled");
+                }
+            }
+
+            if (builder.Config.WallpaperSwitch.Enabled)
+            {
+                builder.Config.WallpaperSwitch.Enabled = false;
+                try
+                {
+                    builder.Save();
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessageBoxes.ShowErrorMessage(ex, Window.GetWindow(this), "PersonalizationPage_SetThemePickerEnabled");
+                }
+            }
         }
 
-        private void SetWallpaperPickerEnabled ()
+        private void SelectAdmCustomizeEnabled()
         {
+            CursorsDisabledMessage.Visibility = Visibility.Collapsed;
+            CursorsPickerCard.IsEnabled = true;
+
             WallpaperDisabledMessage.Visibility = Visibility.Collapsed;
             WallpaperPickerCard.IsEnabled = true;
+
+            ColorizationDisabledMessage.Visibility = Visibility.Collapsed;
+            ColorizationPickerCard.IsEnabled = true;
 
             ThemeDisabledMessage.Visibility = Visibility.Visible;
             ThemePickerCard.IsEnabled = false;
@@ -88,7 +141,7 @@ namespace AutoDarkModeApp.Pages
 
         private void HyperlinkWallpaper_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Enter || e.Key == Key.Space)
+            if (e.Key == Key.Enter || e.Key == Key.Space)
             {
                 WallpaperPickerCard_MouseDown(this, null);
             }
@@ -123,6 +176,17 @@ namespace AutoDarkModeApp.Pages
         private void ThemePickerCard_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Frame.Navigate(typeof(PageThemePicker), null, new DrillInNavigationTransitionInfo());
+        }
+
+        private void ColorizationPickerCard_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Frame.Navigate(typeof(PageColorization), null, new DrillInNavigationTransitionInfo());
+
+        }
+
+        private void CursorsPickerCard_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Frame.Navigate(typeof(PageCursors), null, new DrillInNavigationTransitionInfo());
         }
     }
 }

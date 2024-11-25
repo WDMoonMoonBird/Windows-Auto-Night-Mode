@@ -148,7 +148,7 @@
     <value>Ciemny motyw</value>
   </data>
   <data name="lblEdge" xml:space="preserve">
-    <value>Edge (starsza wersja):</value>
+    <value>Edge (starsza wersja)</value>
   </data>
   <data name="lblLight" xml:space="preserve">
     <value>Jasny</value>
@@ -178,7 +178,7 @@
     <value>Zapisano zmiany!</value>
   </data>
   <data name="msgClickApply" xml:space="preserve">
-    <value>Kliknij 'Zastosuj', aby zapisać zmiany.</value>
+    <value>Twoje zmiany zostaną zapisane automatycznie.</value>
   </data>
   <data name="msgDownloadUpd" xml:space="preserve">
     <value>Pobierz aktualizację</value>
@@ -193,10 +193,10 @@
     <value>Brak aktualizacji.</value>
   </data>
   <data name="msgSearchLoc" xml:space="preserve">
-    <value>Szukanie lokalizacji...</value>
+    <value>Pozyskiwanie twojej lokalizacji…</value>
   </data>
   <data name="msgSearchUpd" xml:space="preserve">
-    <value>Szukanie aktualizacji...</value>
+    <value>Szukanie aktualizacji…</value>
   </data>
   <data name="msgThemeError" xml:space="preserve">
     <value>Uwaga: Nie można wczytać obecnego motywu.</value>
@@ -345,8 +345,9 @@ Kliknij "Tak", aby otworzyć nowe okno przeglądarki.
     <value>Zmień po obudzeniu z InstantGo (niezalecane)</value>
   </data>
   <data name="cbConnectedStandbyTooltip" xml:space="preserve">
-    <value>Urządzenia mobilne, takie jak Microsoft Surface, używają nowego rodzaju trybu uśpienia.
-Ta opcja włącza automatyczną zmianę motywu po obudzeniu komputera, jednak powoduje szybsze zużycie baterii.</value>
+    <value>Urządzenia mobilne, takie jak Microsoft Surface, korzystają z nowego rodzaju trybu czuwania.
+Włączenie tej opcji sprawia, że Auto Dark Mode natychmiast przełącza motyw po wybudzeniu komputera.
+Ale zmniejsza też żywotność baterii, więc włączaj ją TYLKO w razie potrzeby!</value>
   </data>
   <data name="msgBatterySaver" xml:space="preserve">
     <value>Z powodu błędu Windowsa zmiana koloru paska zadań w trybie oszczędzania baterii nie działa poprawnie. W przypadku błędów zalecamy wyłączenie tego trybu.</value>
@@ -419,13 +420,13 @@ Możesz je dopasować indywidualnie w danej kompozycji.</value>
     <value>Ustaw własne godziny</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>Od wschodu do zachodu słońca</value>
+    <value>Od zachodu do wschodu słońca (usługa lokalizacji)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Krok</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Użyj szarego filtru kolorów (Win + Ctrl + C)</value>
+    <value>Filtr kolorów (wysyła Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Użyj harmonogramu systemu Windows zamiast autostartu</value>
@@ -466,26 +467,20 @@ Możesz je dopasować indywidualnie w danej kompozycji.</value>
   <data name="donationDescription" xml:space="preserve">
     <value>Witaj! Dzięki, że używasz Auto Dark Mode! Jak Ci się podoba?
 
-Ta aplikacja sprawia każdy Twój dzień łatwiejszy i dba o Twoje oczy.
-Równocześnie jest całkowicie darmowa, bez reklam i nie szpieguje Twoich danych, a kod źródłowy jest otwarty i publiczny.
+Ta aplikacja sprawia każdy Twój dzień łatwiejszy i dba o Twoje oczy. Równocześnie jest całkowicie darmowa, bez reklam, nie zbiera Twoich danych, a kod źródłowy jest otwarty i publiczny.
 Dlatego niestety nie zarabiam ani grosza na tym projekcie.
 
-Jeżeli chcesz, możesz wesprzeć mnie dobrowolną darowizną.
-Nawet najmniejsza kwota sprawia, że skaczę szczęśliwy po mieszkaniu.
-Podaruj tyle, na ile cenisz moją pracę.</value>
+Jeżeli chcesz, możesz wesprzeć mnie dobrowolną darowizną. Nawet najmniejsza kwota sprawia, że skaczę szczęśliwy po mieszkaniu. Podaruj tyle, na ile cenisz moją pracę.</value>
   </data>
   <data name="ThemeApplyError2" xml:space="preserve">
-    <value>Nastąpił błąd podczas stosowania motywu. Być może motyw został usunięty lub przeniesiony. 
-Z tego powodu zmiana motywu została tymczasowo wyłączona. 
-Aby zreaktywować ją, otwórz Auto Dark Mode i skonfiguruj: {0}.</value>
+    <value>Nastąpił błąd podczas stosowania motywu. Być może motyw został usunięty lub przeniesiony. Z tego powodu zmiana motywu została tymczasowo wyłączona. Aby zreaktywować ją, otwórz Auto Dark Mode i skonfiguruj: {0}.</value>
   </data>
   <data name="ErrorApplyRestart" xml:space="preserve">
     <value>Aplikacja napotkała błąd:
 {0}
 
 Spróbujemy naprawić problem, uruchamiając część aplikacji jako administrator.
-Auto Dark Mode zostanie zrestartowany, po czym będzie konieczna ponowna konfiguracja ustawień.
-Przepraszamy za to!
+Auto Dark Mode zostanie zrestartowany, po czym będzie konieczna ponowna konfiguracja ustawień. Przepraszamy za to!
 
 Uwaga: NIGDY nie uruchamiaj Auto Dark Mode jako administrator samodzielnie!</value>
   </data>
@@ -505,7 +500,7 @@ Uwaga: NIGDY nie uruchamiaj Auto Dark Mode jako administrator samodzielnie!</val
     <value>Resetuj</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Przełącz na ciemny motyw w przypadku zasilania z baterii</value>
+    <value>Przełącz w tryb ciemny po odłączeniu zasilania</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Domyślna wartość trybu oszczędzania energii</value>
@@ -535,7 +530,7 @@ Uwaga: NIGDY nie uruchamiaj Auto Dark Mode jako administrator samodzielnie!</val
     <value>Dane lokalizacji</value>
   </data>
   <data name="rbLocationGeo" xml:space="preserve">
-    <value>Od wschodu do zachodu słońca (współrzędne geograficzne)</value>
+    <value>Od zachodu do wschodu słońca (współrzędne geograficzne)</value>
   </data>
   <data name="tbGetCoordinates" xml:space="preserve">
     <value>Znajdź współrzędne dla Twojej lokalizacji</value>
@@ -553,7 +548,7 @@ Uwaga: NIGDY nie uruchamiaj Auto Dark Mode jako administrator samodzielnie!</val
     <value>Konfiguracja</value>
   </data>
   <data name="lblOffice" xml:space="preserve">
-    <value>Microsoft Office (starsza wersja):</value>
+    <value>Microsoft Office (starsza wersja)</value>
   </data>
   <data name="lblPickTheme" xml:space="preserve">
     <value>Wybierz motyw</value>
@@ -568,20 +563,16 @@ Uwaga: NIGDY nie uruchamiaj Auto Dark Mode jako administrator samodzielnie!</val
     <value>Ukryj ikonę na pasku zadań (niezalecane)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>Ta opcja jest wyłączona, ponieważ wybrano tryb zmiany motywu.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>Ta opcja jest wyłączona, ponieważ wybrano tryb zmiany tła.</value>
+    <value>Ta funkcja jest niedostępna kiedy Windows zarządza Twoim motywem.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Więcej funkcji, jednak konieczne jest skonfigurowanie pliku motywu .theme. Pozwala na zastosowanie tła pulpitu, pokazu slajdów, zmiany kursora myszki, koloru paska zadań i dźwięków systemu.</value>
+    <value>Zaznacz różne motywy dla motywu ciemnego i jasnego. Pozwala na pełne dostosowanie, jednak wymaga skonfigurowania plików .theme na własną rękę.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Mniej funkcji, za to prostsza konfiguracja. Zastosuj tapetę na pulpit poszczególnych lub wszystkich ekranów albo wybierz kolor tła.</value>
+    <value>Dostosuj tapetę dla wszystkich monitorów, dowolnych monitorów, ustaw kolor tła lub włącz spotlight.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
-    <value>Aplikacja automatycznie sprawdza dostępność aktualizacji w tle.
-Jeśli będzie dostępna aktualizacja, otrzymasz powiadomienie.</value>
+    <value>Aplikacja automatycznie sprawdza dostępność aktualizacji w tle. Jeśli będzie dostępna aktualizacja, otrzymasz powiadomienie</value>
   </data>
   <data name="UpdatesCheckBoxAutoInstall" xml:space="preserve">
     <value>Automatycznie pobieraj i instaluj nowe wersje</value>
@@ -686,7 +677,7 @@ Jeśli będzie dostępna aktualizacja, otrzymasz powiadomienie.</value>
     <value>Długość</value>
   </data>
   <data name="StartupLaunchingServiceText" xml:space="preserve">
-    <value>Proszę czekać, usługa systemu nie została jeszcze uruchomiona...</value>
+    <value>Proszę czekać, usługa systemu nie została jeszcze uruchomiona…</value>
   </data>
   <data name="StartupLaunchingServiceTitle" xml:space="preserve">
     <value>Uruchamianie usługi</value>
@@ -756,7 +747,7 @@ Jeśli będzie dostępna aktualizacja, otrzymasz powiadomienie.</value>
     <value>Kliknij 'Zastosuj', aby zapisać zmiany.</value>
   </data>
   <data name="AppsTextBlockAdaptiveTaskbarAccent" xml:space="preserve">
-    <value>Użyj koloru paska zadań dla motywu:</value>
+    <value>Użyj koloru paska zadań dla motywu</value>
   </data>
   <data name="AppSystemComboBoxItemAccentOnly" xml:space="preserve">
     <value>Tylko kolor paska zadań</value>
@@ -853,7 +844,7 @@ Czy chcesz kontynuować?</value>
     <value>Liczba minut, po której system jest uznawany jako bezczynny</value>
   </data>
   <data name="AppsCheckBoxDWMPrevalence" xml:space="preserve">
-    <value>Accent Color for title bars and window borders only during</value>
+    <value>Kolor akcentu dla pasków tytułu i ramek okien dla motywu</value>
   </data>
   <data name="AboutVersionInfoCopied" xml:space="preserve">
     <value>Informacje o wersji skopiowano do schowka</value>
@@ -1134,12 +1125,141 @@ Czy chcesz kontynuować?</value>
     <value>Automatyczne przełączanie motywu</value>
   </data>
   <data name="TrayMenuItemToggleTheme" xml:space="preserve">
-    <value>Przełącz motyw</value>
+    <value>Przełącz mo&amp;tyw</value>
   </data>
   <data name="ThemePickerTheme11Spotlight" xml:space="preserve">
     <value>Spotlight</value>
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Kolor akcentu</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Wybierz kolor akcentu</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Dostosuj kolor akcentu systemu Windows do swoich upodobań.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Aktualizacja kolorystyki</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Ta funkcja jest wyłączona, gdy Auto Dark Mode zarządza twoim motywem.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Linki</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Dokumentacja dla skryptów niestandardowych</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Repozytorium ze skryptami użytkowników</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Wypełnij</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Dopasuj</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Rozciągnij</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Wybierz dopasowanie dla obrazu pulpitu</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Odłączony</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Zawsze odświeżaj DWM przy zmianie motywu</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Próbuje ograniczyć występowanie złych kolorów UI w eksploratorze, pasku zadań i menu start. Jeśli zdarza się to często spróbuj włączyć to ustawienie.
+
+Może to spowodować delikatne lub średnie opóźnienie przy zmianie motywu w niektórych systemach, podobnie jak to się działo w Windows 10. 
+W rzadkich przypadkach, Windows może wyemitować dźwięk "beep" jeśli mysz zostanie poruszona podczas odświeżania DWM.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Wymusić odświeżenie DWM?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Włącz zmianę kursora myszy</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Otwórz ustawienia wskaźnika systemu Windows</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Wybierz kursor w motywie ciemnym</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Wybierz kursor w motywie jasnym</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Kursory</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Skonfiguruj różne kursory myszy dla ciemnego i jasnego motywu.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Wybierz kursory myszy</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Pozwól aplikacji Auto Dark Mode zarządzać moim motywem</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Pozwól systemowi Windows zarządzać moim motywem</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Możesz ustawić nowe schematy kursora w ustawieniach Windows, a następnie wybrać je tutaj.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Otwórz powłokę</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Otwórz dziennik aktualizacji</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Włącz zmianę koloru akcentu</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Przełącz klawiaturę ekranową i wprowadzanie</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Automatycznie</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Ręcznie</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Procesy blokujące zmianę</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Nie przełączaj, gdy określone procesy są uruchomione</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Przeglądaj aplikacje, które działają z Auto Dark Mode</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Nie wszystkie aplikacje innych firm domyślnie obsługują automatyczny ciemny motyw. Na naszej stronie wiki znajduje się lista obsługiwanych aplikacji.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Polecane aplikacje</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Alternatywnie możesz przekazać darowiznę poprzez GitHuba, który obsługuje również regularne comiesięczne wpłaty.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Spróbuj naprawić motyw</value>
   </data>
 </root>

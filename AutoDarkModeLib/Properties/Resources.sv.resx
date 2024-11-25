@@ -118,224 +118,224 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>Settings</value>
+    <value>Inställningar</value>
   </data>
   <data name="applyButton" xml:space="preserve">
-    <value>Apply</value>
+    <value>Tillämpa</value>
   </data>
   <data name="autoCheckBox" xml:space="preserve">
-    <value>Enable automatic theme switching</value>
+    <value>Aktivera automatiskt temabyte</value>
   </data>
   <data name="cmbAlwDark" xml:space="preserve">
-    <value>Always dark</value>
+    <value>Alltid mörk</value>
   </data>
   <data name="cmbAlwWhite" xml:space="preserve">
-    <value>Always light</value>
+    <value>Alltid ljust</value>
   </data>
   <data name="debugModeCheckBox" xml:space="preserve">
-    <value>Enable features for Windows 1903</value>
+    <value>Aktivera funktioner för Windows 1903</value>
   </data>
   <data name="lblApps" xml:space="preserve">
-    <value>Apps</value>
+    <value>Appar</value>
   </data>
   <data name="lblCustomStart" xml:space="preserve">
-    <value>Custom start time</value>
+    <value>Anpassad starttid</value>
   </data>
   <data name="lblDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Mörk</value>
   </data>
   <data name="lblDarkTheme" xml:space="preserve">
-    <value>Dark theme</value>
+    <value>Mörkt tema</value>
   </data>
   <data name="lblEdge" xml:space="preserve">
     <value>Edge (Legacy)</value>
   </data>
   <data name="lblLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Ljust</value>
   </data>
   <data name="lblLightTheme" xml:space="preserve">
-    <value>Light theme</value>
+    <value>Ljust tema</value>
   </data>
   <data name="lblSettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Inställningar</value>
   </data>
   <data name="lblSwitchTheme" xml:space="preserve">
-    <value>Switch current theme</value>
+    <value>Byt aktuellt tema</value>
   </data>
   <data name="lblSystem" xml:space="preserve">
-    <value>System</value>
+    <value>Systemet</value>
   </data>
   <data name="lblThirdParty" xml:space="preserve">
-    <value>Used third party software</value>
+    <value>Använd programvara från tredje part</value>
   </data>
   <data name="lblUpdates" xml:space="preserve">
-    <value>Updates</value>
+    <value>Uppdateringar</value>
   </data>
   <data name="locationCheckBox" xml:space="preserve">
-    <value>Use Location Service</value>
+    <value>Använd platstjänst</value>
   </data>
   <data name="msgChangesSaved" xml:space="preserve">
-    <value>Your changes have been saved!</value>
+    <value>Dina ändringar har sparats!</value>
   </data>
   <data name="msgClickApply" xml:space="preserve">
-    <value>Your changes will be saved automatically.</value>
+    <value>Dina ändringar kommer att sparas automatiskt.</value>
   </data>
   <data name="msgDownloadUpd" xml:space="preserve">
-    <value>Download update</value>
+    <value>Ladda ner uppdatering</value>
   </data>
   <data name="msgErrorOcc" xml:space="preserve">
-    <value>error occurred :(</value>
+    <value>ett fel inträffade :(</value>
   </data>
   <data name="msgLocPerm" xml:space="preserve">
-    <value>This app needs access to your location</value>
+    <value>Den här appen behöver åtkomst till din plats</value>
   </data>
   <data name="msgNoUpd" xml:space="preserve">
-    <value>No new updates are available.</value>
+    <value>Inga nya uppdateringar är tillgängliga.</value>
   </data>
   <data name="msgSearchLoc" xml:space="preserve">
-    <value>Getting your location…</value>
+    <value>Hämtar din plats…</value>
   </data>
   <data name="msgSearchUpd" xml:space="preserve">
-    <value>Looking for updates…</value>
+    <value>Letar efter uppdateringar…</value>
   </data>
   <data name="msgThemeError" xml:space="preserve">
-    <value>Warning: We couldn't read your current theme.</value>
+    <value>Varning: Vi kunde inte läsa ditt aktuella tema.</value>
   </data>
   <data name="msgUpdateAvail" xml:space="preserve">
-    <value>A new update is available!</value>
+    <value>En ny uppdatering är tillgänglig!</value>
   </data>
   <data name="msgUpdaterText" xml:space="preserve">
-    <value>Thank you for using Auto Dark Mode!
+    <value>Tack för att du använder Auto Dark Mode!
 
-A new version is available on GitHub with fixes and enhancements.
-Do you want to install it?
+En ny version är tillgänglig på GitHub med korrigeringar och förbättringar.
+Vill du installera den?
 
-Currently installed version: {0}, new version: {1}</value>
+Installerad version: {0}, ny version: {1}</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Auto Dark Mode</value>
   </data>
   <data name="updateButton" xml:space="preserve">
-    <value>Check for updates</value>
+    <value>Kolla efter uppdateringar</value>
   </data>
   <data name="updateInfoText" xml:space="preserve">
-    <value>We check for updates at every program start.</value>
+    <value>Vi letar efter uppdateringar vid varje programstart.</value>
   </data>
   <data name="userFeedback" xml:space="preserve">
-    <value>Welcome</value>
+    <value>Välkommen</value>
   </data>
   <data name="welcomeText" xml:space="preserve">
-    <value>Change settings here to modify the automatic theme switch behavior.</value>
+    <value>Ändra inställningar här för att ändra beteendet för automatisk temabyte.</value>
   </data>
   <data name="lblTranslator" xml:space="preserve">
-    <value>Translator: Armin Osaj &amp; Samuel Schiegg</value>
+    <value>Översättare: Armin Osaj &amp; Samuel Schiegg</value>
   </data>
   <data name="lblCity" xml:space="preserve">
-    <value>City</value>
+    <value>Stad</value>
   </data>
   <data name="lblPosition" xml:space="preserve">
-    <value>Position</value>
+    <value>Plats</value>
   </data>
   <data name="restartNeeded" xml:space="preserve">
-    <value>App restart required to see changes</value>
+    <value>Omstart av appen krävs för att se ändringar</value>
   </data>
   <data name="lblLanguage" xml:space="preserve">
-    <value>Language:</value>
+    <value>Språk:</value>
   </data>
   <data name="cmbAccentColor" xml:space="preserve">
-    <value>Accent Color for Taskbar</value>
+    <value>Accentfärg för Aktivitetsfältet</value>
   </data>
   <data name="cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Avbryt</value>
   </data>
   <data name="dbCurrently" xml:space="preserve">
-    <value>Currently:</value>
+    <value>För närvarande:</value>
   </data>
   <data name="dbDark" xml:space="preserve">
-    <value>Wallpaper for dark theme</value>
+    <value>Bakgrundsbild för mörkt läge</value>
   </data>
   <data name="dbDel" xml:space="preserve">
-    <value>Delete/Disable</value>
+    <value>Ta bort/Avaktivera</value>
   </data>
   <data name="dbFilePicker" xml:space="preserve">
-    <value>Pick file</value>
+    <value>Välj fil</value>
   </data>
   <data name="dbLight" xml:space="preserve">
-    <value>Wallpaper for light theme</value>
+    <value>Bakgrundsbild för ljust läge</value>
   </data>
   <data name="dbMainHeader" xml:space="preserve">
-    <value>Desktop Background</value>
+    <value>Bakgrundsbild</value>
   </data>
   <data name="dbPictures" xml:space="preserve">
-    <value>Pictures</value>
+    <value>Bilder</value>
   </data>
   <data name="dbSaveToolTip" xml:space="preserve">
-    <value>Please select two wallpapers</value>
+    <value>Vänligen välj två bakgrundbilder</value>
   </data>
   <data name="dbSelectImage" xml:space="preserve">
-    <value>Please select an image</value>
+    <value>Vänligen välj en bild</value>
   </data>
   <data name="dbTitle" xml:space="preserve">
-    <value>Configure Desktop Background</value>
+    <value>Konfigurera bakgrundsbild</value>
   </data>
   <data name="dbUseCurrent" xml:space="preserve">
-    <value>use current background</value>
+    <value>använd nuvarande bakgrund</value>
   </data>
   <data name="disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Inaktiverad</value>
   </data>
   <data name="enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Aktiverad</value>
   </data>
   <data name="or" xml:space="preserve">
-    <value>or</value>
+    <value>eller</value>
   </data>
   <data name="save" xml:space="preserve">
-    <value>Save</value>
+    <value>Spara</value>
   </data>
   <data name="dbErrorText" xml:space="preserve">
-    <value>Maybe your picture file is corrupted or the path doesn't exist.</value>
+    <value>Antingen är filen trasig, eller så finns inte filsökvägen.</value>
   </data>
   <data name="dbPreviewError" xml:space="preserve">
-    <value>We couldn't generate a preview of your image, sorry!</value>
+    <value>Det gick tyvärr inte att förhandsgranska din bild!</value>
   </data>
   <data name="dbSavedError" xml:space="preserve">
-    <value>We couldn't save your settings, sorry!</value>
+    <value>Det gick tyvärr inte att spara dina inställningar!</value>
   </data>
   <data name="errorOcurredTitle" xml:space="preserve">
-    <value>An error has occured</value>
+    <value>Ett fel har inträffat</value>
   </data>
   <data name="cbAccentColor" xml:space="preserve">
-    <value>Only visible in dark mode.
-If you run into issues: please increase the switching delay in settings.</value>
+    <value>Endast synlig i mörkt läge.
+Om du får problem: vänligen öka bytesfördröjning under inställningar.</value>
   </data>
   <data name="info" xml:space="preserve">
     <value>Info</value>
   </data>
   <data name="cb12HourTime" xml:space="preserve">
-    <value>12 hour clock</value>
+    <value>12-timmarsklocka</value>
   </data>
   <data name="msgClose" xml:space="preserve">
-    <value>Close</value>
+    <value>Stäng</value>
   </data>
   <data name="msgNo" xml:space="preserve">
-    <value>No</value>
+    <value>Nej</value>
   </data>
   <data name="MsgYes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Ja</value>
   </data>
   <data name="cbBackgroundUpdate" xml:space="preserve">
-    <value>Automatic update check</value>
+    <value>Kontrollera uppdateringar automatiskt</value>
   </data>
   <data name="ErrorMessageBox" xml:space="preserve">
-    <value>There was an issue with the UI.
+    <value>Ett problem har uppstått med användargränssnittet.
 
-Please ensure:
-- the service is running
-- your config.yaml file is correct
+Vänligen tillse att:
+- tjänsten körs
+- din config.yaml är korrekt
 
-Would you like to create an issue on the Auto Dark Mode repository?
-Click "Yes" to open a new browser window.
+Vill du skapa ett issue på Auto Dark Mode's repository?
+Klicka på "Ja" för att öppna ett nytt webbläsarfönster.
 </value>
   </data>
   <data name="errorNumberInput" xml:space="preserve">
@@ -350,7 +350,7 @@ Enabling this option makes sure that Auto Dark Mode immediately switches the the
 But it also reduces the battery life, so ONLY activate if necessary!</value>
   </data>
   <data name="msgBatterySaver" xml:space="preserve">
-    <value>Due to a Windows bug, the taskbar doesn't properly switch its color in battery saver mode. Please turn off battery saver if you run into issues.</value>
+    <value>På grund av en bugg i Windows, så byts inte färgen på aktivitetsfältet ordentligt. Vänligen stäng av batterisparläge om problem uppstår.</value>
   </data>
   <data name="lblOffset" xml:space="preserve">
     <value>Offset</value>
@@ -363,13 +363,13 @@ But it also reduces the battery life, so ONLY activate if necessary!</value>
 You can set them up individually in your Windows Theme.</value>
   </data>
   <data name="NavbarApps" xml:space="preserve">
-    <value>Apps</value>
+    <value>Appar</value>
   </data>
   <data name="NavbarSettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Inställningar</value>
   </data>
   <data name="NavbarTime" xml:space="preserve">
-    <value>Time</value>
+    <value>Tid</value>
   </data>
   <data name="OpenPath" xml:space="preserve">
     <value>Open Folder</value>
@@ -420,13 +420,13 @@ You can set them up individually in your Windows Theme.</value>
     <value>Set custom hours</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>From sunset to sunrise</value>
+    <value>From sunset to sunrise (location service)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>Step</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>Use color filter (sends Win + Ctrl + C)</value>
+    <value>Color filter (sends Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>Use logon task instead of startup entry</value>
@@ -500,7 +500,7 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>Reset</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>Enable dark mode when device is unplugged</value>
+    <value>Switch to dark mode when device is unplugged</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>Default value for energy saver slider</value>
@@ -563,16 +563,13 @@ Sidenote: NEVER run Auto Dark Mode as administrator manually!</value>
     <value>Hide tray icon (not recommended)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>This feature is disabled while theme mode is enabled.</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>This feature is disabled while wallpaper mode is enabled.</value>
+    <value>This feature is disabled while Windows manages your theme.</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>Offers more features, but you need to set up a windows .theme file. Customize your desktop wallpaper per monitor, set a slideshow, change your mouse cursor, set an accent color and individual sounds.</value>
+    <value>Select a different Windows theme for dark and light mode respectively. Allows full theme customization, but requires you to set up .theme files on your own.</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>Offers less features, but is easier to set up. Customize your desktop wallpaper for all monitors, individual monitors or set a background color.</value>
+    <value>Customize your desktop wallpaper for all monitors, individual monitors, set a background color or enable spotlight.</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>We check for new versions of Auto Dark Mode in the background. When an update is available, we will notify you via toast notification</value>
@@ -1122,7 +1119,7 @@ Do you really want to continue?</value>
     <value>Image path</value>
   </data>
   <data name="TrayMenuItemClose" xml:space="preserve">
-    <value>Close</value>
+    <value>Stäng</value>
   </data>
   <data name="TrayMenuItemAutomaticThemeSwitch" xml:space="preserve">
     <value>Automatic theme switch</value>
@@ -1135,5 +1132,134 @@ Do you really want to continue?</value>
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>Accent color</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>Pick an accent color</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Customize the Windows system color scheme to your liking.</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>Update colorization</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>This feature is disabled while Auto Dark Mode manages your theme.</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>Documentation for custom scripts</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>Custom script user repository</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>Stretch</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>Choose a fit for your desktop image</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>Disconnected</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>Always refresh DWM on theme switch</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>Attempts to reduce the occurrence of wrong UI colors in the explorer, taskbar and start menu. If you experience this often or are bothered by it, try enabling this setting.
+
+This may introduce slight to moderate lag on some systems during theme switch similar to how it happened in Windows 10. 
+On rare occasions, Windows may emit a beeping sound when the mouse is moved during DWM refreshes.</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>Force DWM refresh?</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>Enable mouse cursor switch</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Open Windows pointer settings</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>Select dark cursor</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>Select light cursor</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>Muspekare</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>Konfigurera olika muspekare för mörkt och ljust läge.</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>Välj muspekare</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Låt Auto Dark Mode hantera mitt tema</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Låt Windows hantera mitt tema</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Du kan definiera nya markörscheman i Windows-inställningarna och sedan välja dem här efteråt.</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>Öppna kommandoprompt</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>Öppna uppdateringsloggen</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>Aktivera accentfärgomkopplare</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>Byt pektangentbord och inmatning</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>Automatisk</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Manuell</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>Lägg till</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>Blocking Processes</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>Don't switch while certain processes are running</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Browse apps with Auto Dark Mode support</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>Not every third party app supports Auto Dark Mode by default. On our wiki page we provide a curated list with supported apps.</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>Recommended apps</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>Alternatively you can donate via GitHub Sponsors, which also supports recurring monthly donations.</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>Try to fix the theme</value>
   </data>
 </root>

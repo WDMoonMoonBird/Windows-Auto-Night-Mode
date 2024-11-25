@@ -29,8 +29,7 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
     class AccentColorSwitch : BaseComponent<SystemSwitchSettings>
     {
         public override bool ThemeHandlerCompatibility => true;
-        public override bool NeedsDwmRefresh => true;
-
+        public override DwmRefreshType NeedsDwmRefresh => DwmRefreshType.Standard;
         public override bool Enabled
         {
             get { return Settings.Component.DWMPrevalenceSwitch; }
@@ -40,7 +39,7 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
 
         public AccentColorSwitch() : base() { }
 
-        public override void EnableHook()
+        protected override void EnableHook()
         {
             try
             {
@@ -50,12 +49,11 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
             {
                 Logger.Error(ex, "couldn't retrieve DWM prevalence state: ");
             }
-            base.EnableHook();
         }
 
-        public override bool ComponentNeedsUpdate(Theme newTheme)
+        protected override bool ComponentNeedsUpdate(SwitchEventArgs e)
         {
-            if (newTheme == Theme.Dark)
+            if (e.Theme == Theme.Dark)
             {
                 if (Settings.Component.DWMPrevalenceEnableTheme == Theme.Dark && !currentDWMColorActive)
                 {
@@ -66,7 +64,7 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
                     return true;
                 }
             }
-            else if (newTheme == Theme.Light)
+            else if (e.Theme == Theme.Light)
             {
                 if (Settings.Component.DWMPrevalenceEnableTheme == Theme.Light && !currentDWMColorActive)
                 {
@@ -80,17 +78,17 @@ namespace AutoDarkModeSvc.SwitchComponents.Base
             return false;
         }
 
-        protected override void HandleSwitch(Theme newTheme, SwitchEventArgs e)
+        protected override void HandleSwitch(SwitchEventArgs e)
         {
             try
             {
                 bool previousSetting = currentDWMColorActive;
-                if (newTheme == Theme.Dark && Settings.Component.DWMPrevalenceEnableTheme == Theme.Dark)
+                if (e.Theme == Theme.Dark && Settings.Component.DWMPrevalenceEnableTheme == Theme.Dark)
                 {
                     RegistryHandler.SetDWMPrevalence(1);
                     currentDWMColorActive = true;
                 }
-                else if (newTheme == Theme.Light && Settings.Component.DWMPrevalenceEnableTheme == Theme.Light)
+                else if (e.Theme == Theme.Light && Settings.Component.DWMPrevalenceEnableTheme == Theme.Light)
                 {
                     RegistryHandler.SetDWMPrevalence(1);
                     currentDWMColorActive = true;

@@ -300,7 +300,7 @@
     <value>画像のプレビューを生成できません。</value>
   </data>
   <data name="dbSavedError" xml:space="preserve">
-    <value>設定が保存できませんでした。</value>
+    <value>設定を保存できませんでした。</value>
   </data>
   <data name="errorOcurredTitle" xml:space="preserve">
     <value>エラーが発生しました</value>
@@ -420,13 +420,13 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
     <value>時間を指定</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>日の出から日没まで</value>
+    <value>日の出から日没まで (位置情報)</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>ステップ</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>色のフィルターを使用 (Win + Ctrl + C)</value>
+    <value>カラーフィルター (Win + Ctrl + C を送信)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>スタートアップには登録せずログイン時のタスクとして実行</value>
@@ -500,7 +500,7 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
     <value>初期化</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>端末の電源プラグを抜いたらダークモードを有効化</value>
+    <value>端末の電源プラグを抜いたらダークモードに切り替える</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>バッテリー節約機能のスライダーの初期値</value>
@@ -554,7 +554,7 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
     <value>テーマの選択</value>
   </data>
   <data name="lblPickWallpaper" xml:space="preserve">
-    <value>壁紙の選択</value>
+    <value>壁紙を選択</value>
   </data>
   <data name="rbDisabled" xml:space="preserve">
     <value>無効</value>
@@ -563,16 +563,13 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
     <value>トレイアイコンを非表示 (非推奨)</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>テーマモードが有効の間、この機能は無効です。</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>壁紙モードが有効の間、この機能は無効です。</value>
+    <value>Windows がテーマを管理している間、この機能は無効です。</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>より多くの機能がありますが、Windows の .theme ファイルを設定する必要があります。モニターごとに、壁紙やスライドショー、マウスカーソル、アクセントカラーや個別のサウンドを設定できます。</value>
+    <value>ダークおよびライトモード用に異なる Windows テーマを選択します。テーマを完全にカスタマイズできますが .theme ファイルを自分で設定する必要があります。</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>機能は少ないですが設定が簡単です。すべてのモニターや、個々のモニターの壁紙を指定したり、背景色を設定できます。</value>
+    <value>モニターすべてまたは個別に、デスクトップの壁紙、背景色、スポットライトを設定します。</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>Auto Dark Mode の最新版をバックグラウンドで確認します。最新版が利用可能なら、ポップアップ通知でお知らせします</value>
@@ -644,7 +641,7 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
     <value>16進の色コード</value>
   </data>
   <data name="WallpaperToggleSwitch" xml:space="preserve">
-    <value>壁紙の有効を切り替え</value>
+    <value>壁紙の有効化</value>
   </data>
   <data name="SwitchModesCheckBoxGPUMonitoring" xml:space="preserve">
     <value>ビデオゲーム中は切り替えない</value>
@@ -819,7 +816,7 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
     <value>テーマの変更を中止する</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
-    <value>システム全体でホットキーを有効にする</value>
+    <value>ホットキーを使用</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
     <value>ダークテーマに変更(&amp;D)</value>
@@ -1135,5 +1132,134 @@ Auto Dark Mode のリポジトリに issue (問題) を投稿しますか？
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>アクセントカラー</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>アクセントカラーを選択</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>Windows の色の設定を好みに変更します。</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>今すぐ色を反映</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>Auto Dark Mode がテーマを管理している間、この機能は無効です。</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>リンク</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>カスタムスクリプトの解説文書</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>様々なカスタムスクリプトの倉庫</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>維持して拡大</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>維持して満たす</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>自由に伸ばす</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>デスクトップ画像に合うものを選択</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>切断済み</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>テーマ切替時に常に DWM を再描画</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>エクスプローラー、タスクバー、スタートメニュー内の間違ったUIの色の発生を抑えようと試みます。この現象がよく起きたり気になるなら、有効にしてみてください。
+
+設定により Windows 10 で起きていたのと同様に、一部のシステムでのテーマ切り替え時に、極小から中等度の遅延が起こることがあります。
+まれに、DWM の再描画中にマウスを動かすと、Windows からビープ音が鳴ることがあります。</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>強制的に DWM を再描画しますか？</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>マウスカーソルの切替を有効化</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>Windows のポインターの設定を開く</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>ダーク用のカーソルを選択</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>ライト用のカーソルを選択</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>カーソル</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>ダークおよびライトモード用に異なるマウスカーソルを選択します。</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>マウスカーソルを選択</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>Auto Dark Mode がテーマを管理</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>Windows がテーマを管理</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>Windows の設定から新たにカーソルのデザインを設定すると、ここで選択可能になります。</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>シェルを開く</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>更新ツールの履歴を開く</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>アクセントカラーの切替を有効化</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>入力、タッチキーボードでも切替</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>手動</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>追加</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>除去</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>阻止するプロセス</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>指定のプロセスの実行中は切り替えない</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>Auto Dark Mode 対応のアプリを見る</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>第三者作のすべてのアプリが Auto Dark Mode に対応するわけではありません。ウィキに対応アプリをまとめました。</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>おすすめアプリ</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>GitHub Sponsors からも寄付できます。定期的な毎月の寄付にも対応します。</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>テーマ適用を再試行</value>
   </data>
 </root>

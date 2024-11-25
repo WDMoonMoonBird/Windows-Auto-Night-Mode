@@ -3,28 +3,29 @@
 #[macro_use]
 extern crate lazy_static;
 
-use crate::extensions::{get_service_path, get_update_data_dir};
-use windows::core::PCWSTR;
-use windows::Win32::Foundation::{HWND};
-use windows::Win32::UI::WindowsAndMessaging::SHOW_WINDOW_CMD;
-use windows::Win32::System::Console::{ATTACH_PARENT_PROCESS, AttachConsole};
-use windows::Win32::UI::Shell::ShellExecuteW;
+use crate::extensions::{get_adm_app_dir, get_service_path, get_update_data_dir};
+use crate::io_v3::{clean_update_files, move_to_temp, patch, rollback};
 use comms::send_message_and_get_reply;
 use extensions::get_working_dir;
 use log::{debug, warn};
 use log::{error, info};
-use windows::w;
 use std::error::Error;
-use std::path::PathBuf;
 use std::process::Command;
 use std::rc::Rc;
-use std::{env, fmt, fs};
+use std::{env, fmt};
 use sysinfo::{ProcessExt, SystemExt};
-use sysinfo::{Signal, System};
+use sysinfo::{System, UserExt};
+use windows::core::PCWSTR;
+use windows::w;
+use windows::Win32::Foundation::HWND;
+use windows::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
+use windows::Win32::UI::Shell::ShellExecuteW;
+use windows::Win32::UI::WindowsAndMessaging::SHOW_WINDOW_CMD;
 
 mod comms;
 mod extensions;
-mod io;
+mod io_v2;
+mod io_v3;
 mod license;
 mod regedit;
 
@@ -68,7 +69,9 @@ where
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    unsafe { AttachConsole(ATTACH_PARENT_PROCESS); }
+    unsafe {
+        AttachConsole(ATTACH_PARENT_PROCESS);
+    }
     if !setup_logger().is_ok() {
         print!("failed to setup logger");
     }
@@ -99,7 +102,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     info!("restart app: {}, restart shell: {}", restart_app, restart_shell);
 
     let username = whoami::username();
-    let _curver = io::get_file_version(get_service_path())
+    let _curver = io_v2::get_file_version(get_service_path())
         .and_then(|ver| {
             info!("currently installed version: {}", ver);
             Ok(ver)
@@ -109,45 +112,40 @@ fn main() -> Result<(), Box<dyn Error>> {
             Err(e)
         });
 
-    let temp_dir = get_update_data_dir().join("tmp");
+    let update_data_dir = get_update_data_dir();
+    let temp_dir = &update_data_dir.join("tmp");
 
-    shutdown_service(&username).map_err(|op| {
+    shutdown_running_instances(&username).map_err(|op| {
+        error!("update process failed, restarting auto dark mode");
         try_relaunch(restart_shell, restart_app, &username, false);
         op
     })?;
 
+    info!("moving current installation to temp directory");
     move_to_temp(&temp_dir).map_err(|op| {
-        if op.severe {
-            std::process::exit(-1);
-        }
-        error!("moving files to temp failed, attempting rollback");
-        if let Err(_) = rollback(&temp_dir) {
-            error!("rollback failed, this is non-recoverable, please reinstall auto dark mode");
+        error!("{}", op);
+        try_relaunch(restart_shell, restart_app, &username, false);
+        op
+    })?;
+
+    info!("patching auto dark mode");
+    patch(&update_data_dir, &get_adm_app_dir()).map_err(|op| {
+        error!("patching failed, attempting rollback: {}", op);
+        if let Err(e) = rollback(&temp_dir) {
+            error!("rollback failed, this is non-recoverable, please reinstall auto dark mode: {e}");
             std::process::exit(-1);
         } else {
+            info!("rollback successful, no update has been performed, restarting auto dark mode");
             try_relaunch(restart_shell, restart_app, &username, false);
         }
         op
     })?;
 
-    patch(&get_update_data_dir().join("unpacked")).map_err(|op| {
-        error!("patching failed, attempting rollback with cleanup: {}", op);
-        if let Err(e) = io::clean_adm_dir() {
-            error!("{}", e);
-            error!("preparing rollback failed, this is non-recoverable, please reinstall auto dark mode");
-            std::process::exit(-1);
-        }
-        if let Err(_) = rollback(&temp_dir) {
-            error!("rollback failed, this is non-recoverable, please reinstall auto dark mode");
-            std::process::exit(-1);
-        } else {
-            try_relaunch(restart_shell, restart_app, &username, false);
-        }
-        op
-    })?;
+    info!("removing temporary update files");
+    clean_update_files(&update_data_dir);
 
     let mut patch_success_msg = "patch_complete".to_string();
-    if let Ok(current_version) = io::get_file_version(get_service_path()) {
+    if let Ok(current_version) = io_v2::get_file_version(get_service_path()) {
         patch_success_msg.push_str(&format!(", installed version: {}", current_version).to_string());
         info!("updating setup version string");
         if let Err(e) = regedit::update_inno_installer_string(&username, &current_version.to_string()) {
@@ -166,84 +164,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn move_to_temp(temp_dir: &PathBuf) -> Result<(), OpError> {
-    info!("moving current installation to temp directory");
-    let source = get_working_dir();
-    let files = io::get_adm_files(&source)?;
-    if !files.contains(&get_service_path()) {
-        let msg = "service executable not found in working directory, aborting patch";
-        error!("{}", msg);
-        return Err(OpError::new(msg, true));
-    }
-    io::move_files(&source, temp_dir, files).map_err(|e| {
-        error!("{}", e);
-        e
-    })?;
-    Ok(())
-}
-
-fn rollback(temp_dir: &PathBuf) -> Result<(), OpError> {
-    info!("rolling back files");
-    let files = io::get_files_recurse(&temp_dir, |_| true);
-    let target = get_working_dir();
-    if let Err(mut e) = io::move_files(&temp_dir, &target, files) {
-        error!("{}", e);
-        e.severe = true;
-        return Err(e);
-    }
-
-    match io::get_dirs(&temp_dir, |_| true) {
-        Ok(dirs) => {
-            let mut error = false;
-            for dir in dirs {
-                if let Err(e) = fs::remove_dir(&dir) {
-                    warn!("could not remove temp subdirectory {}: {}", dir.display(), e);
-                    error = true;
-                }
-            }
-            if !error {
-                if let Err(e) = fs::remove_dir(temp_dir) {
-                    warn!("could not delete temp directory after rollback: {}", e);
-                }
-            }
-        }
-        Err(e) => {
-           warn!("could not retrieve directories to clean after rollback {}", e);
-        }
-    }
-    info!("rollback successful, no update has been performed, restarting auto dark mode");
-    Ok(())
-}
-
-
-fn patch(update_dir: &PathBuf) -> Result<(), OpError> {
-    info!("patching auto dark mode");
-    let files = io::get_files_recurse(&update_dir, |_| true);
-    if files.len() == 0 {
-        return Err(OpError::new("no files found in update directory", true));
-    }
-    let target = get_working_dir();
-    if let Err(mut e) = io::move_files(&update_dir, &target, files) {
-        error!("{}", e);
-        e.severe = true;
-        return Err(e);
-    }
-    info!("removing old files");
-    if let Err(e) = fs::remove_dir_all(get_update_data_dir()) {
-        warn!("could not remove old update files, manual investigation required: {}", e);
-    }
-    Ok(())
-
-}
-
-fn shutdown_service(channel: &str) -> Result<(), Box<dyn Error>> {
-    info!("shutting down service");
+fn shutdown_running_instances(channel: &str) -> Result<(), Box<dyn Error>> {
+    info!("stopping service gracefully");
     let mut api_shutdown_confirmed = false;
     if let Err(e) = send_message_and_get_reply("--exit", 3000, channel) {
         if e.is_timeout {
             api_shutdown_confirmed = true;
         } else {
-            warn!("could not cleanly shut down service");
+            warn!("could not cleanly stop service: {}", e);
             return Err(e.into());
         }
     }
@@ -257,36 +185,77 @@ fn shutdown_service(channel: &str) -> Result<(), Box<dyn Error>> {
             }
         }
     }
-    let mut s = System::new();
-    s.refresh_processes();
-    let mut p_service = s.process_by_name("AutoDarkModeSvc");
-    let mut p_app = s.process_by_name("AutoDarkModeApp");
-    let mut p_shell = s.process_by_name("AutoDarkModeShell");
-    let mut shutdown_failed = false;
-    if let Some(p) = p_service.pop() {
-        warn!("service still running, force stopping");
-        shutdown_failed = shutdown_failed || !p.kill(Signal::Kill);
-    }
 
-    //todo kill all processes in the list and don't check for shutdown failed (resiliency for multi user updates)
-    if let Some(p) = p_app.pop() {
-        info!("stopping app");
-        shutdown_failed = shutdown_failed || !p.kill(Signal::Kill);
-    }
-    if let Some(p) = p_shell.pop() {
-        info!("stopping shell");
-        shutdown_failed = shutdown_failed || !p.kill(Signal::Kill);
-    }
-    if shutdown_failed {
-        let msg = "other auto dark mode components still running, skipping update".to_string();
-        warn!("{}", &msg);
-        return Err(Box::new(OpError {
-            message: msg,
-            severe: true,
-        }));
-    }
-    info!("service shutdown confirmed");
+    let retries = 3;
+    shutdown_with_retries("AutoDarkModeSvc", "service", retries)?;
+    shutdown_with_retries("AutoDarkModeApp", "app", retries)?;
+    shutdown_with_retries("AutoDarkModeShell", "shell", retries)?;
+
+    info!("adm has exited successfully");
     Ok(())
+}
+
+/// Attempts to shut down the given process name for the current user
+///
+/// Returns true if the process was found and a signal was sent, false otherwise
+fn shutdown_with_retries(process_name: &str, process_description: &str, retries: u8) -> Result<(), OpError> {
+    let mut success = false;
+    for i in 0..retries {
+        if !shutdown_process(process_name, process_description) {
+            success = true;
+            break;
+        } else {
+            debug!(
+                "waiting for {} to stop, attempt {} out of {}",
+                process_description,
+                i + 1,
+                retries
+            );
+        }
+        std::thread::sleep(std::time::Duration::from_millis(1000));
+    }
+    if !success {
+        let msg = format!("could not stop {}, skipping update", process_description);
+        return Err(OpError::new(msg.as_str(), false));
+    }
+    Ok(())
+}
+
+/// Attempts to shut down the given process name for the current user
+///
+/// Returns true if the process was found and a signal was sent, false otherwise
+fn shutdown_process(process_name: &str, process_description: &str) -> bool {
+    let mut s = System::new();
+    let username: String = whoami::username();
+    s.refresh_processes();
+    s.refresh_users_list();
+    let mut p = s.processes_by_name(process_name);
+    while let Some(p) = p.next() {
+        let user_id;
+        match p.user_id() {
+            Some(id) => user_id = id,
+            None => {
+                info!("{} found running for unknown user, no action required", process_description);
+                continue;
+            }
+        };
+        if let Some(user) = s.get_user_by_id(user_id) {
+            if user.name() == username {
+                info!("stopping {} for current user", process_description);
+                p.kill();
+                return true;
+            } else {
+                info!(
+                    "{} found running for different user {}, no action required",
+                    process_description,
+                    user.name()
+                )
+            }
+        } else {
+            warn!("could not map user id {} to a user name", user_id.to_string());
+        }
+    }
+    false
 }
 
 fn try_relaunch(restart_shell: bool, restart_app: bool, channel: &str, patch_success: bool) {
@@ -298,9 +267,13 @@ fn try_relaunch(restart_shell: bool, restart_app: bool, channel: &str, patch_suc
     }
 }
 
-#[allow(non_snake_case)]
 fn relaunch(restart_shell: bool, restart_app: bool, channel: &str, patch_success: bool) -> Result<(), Box<dyn Error>> {
     info!("starting service");
+    if let Err(e) = env::set_current_dir(get_adm_app_dir()) {
+        error!("could not set working directory to app dir: {}", e);
+        warn!("subsequent update calls without restarting adm will fail");
+    };
+    debug!("new cwd: {}", get_adm_app_dir().display());
     let service_path = Rc::new(extensions::get_service_path());
     Command::new(&*Rc::clone(&service_path)).spawn().map_err(|e| {
         Box::new(OpError {
@@ -329,7 +302,7 @@ fn relaunch(restart_shell: bool, restart_app: bool, channel: &str, patch_success
     }
     if restart_shell {
         let shell_path_buf = extensions::get_shell_path();
-        let shell_path =  windows::core::HSTRING::from(shell_path_buf.as_os_str().to_os_string());
+        let shell_path = windows::core::HSTRING::from(shell_path_buf.as_os_str().to_os_string());
         info!("relaunching shell");
         debug!("shell path {}", shell_path_buf.display());
         let result = unsafe {
@@ -413,4 +386,32 @@ fn setup_logger() -> Result<(), fern::InitError> {
         .chain(fern::log_file(log_path)?)
         .apply()?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use std::error::Error;
+
+    use crate::setup_logger;
+
+    use super::*;
+
+    #[test]
+    fn test_adm_shutdown() -> Result<(), Box<dyn Error>> {
+        setup_logger()?;
+        let username = whoami::username();
+        //shutdown_running_instances(&username)?;
+        shutdown_with_retries("AutoDarkModeSvc", "service", 5)?;
+        shutdown_with_retries("AutoDarkModeApp", "app", 5)?;
+        shutdown_with_retries("AutoDarkModeShell", "shell", 5)?;
+        Ok(())
+    }
+
+    #[test]
+    fn try_relaunch_adm() -> Result<(), Box<dyn Error>> {
+        setup_logger()?;
+        let username = whoami::username();
+        try_relaunch(true, true, &username, true);
+        Ok(())
+    }
 }

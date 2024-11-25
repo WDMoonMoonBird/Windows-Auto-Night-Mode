@@ -207,10 +207,10 @@
   <data name="msgUpdaterText" xml:space="preserve">
     <value>感谢您使用 Auto Dark Mode！
 
-GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
+GitHub 上发布的新版本包含一些漏洞修复和改进。
 您想安装新版本吗？
 
-当前版本: {0}, 最新版本: {1}</value>
+当前版本：{0}，新版本：{1}</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Auto Dark Mode</value>
@@ -342,7 +342,7 @@ GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
     <value>错误：您的输入无效</value>
   </data>
   <data name="cbConnectedStandby" xml:space="preserve">
-    <value>Connected Standby 状态下仍然切换主题（不推荐）</value>
+    <value>新式待机状态下仍然切换主题（不推荐）</value>
   </data>
   <data name="cbConnectedStandbyTooltip" xml:space="preserve">
     <value>Microsoft Surface 等移动设备正在使用一种新型待机模式。
@@ -420,13 +420,13 @@ GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
     <value>自定义时间</value>
   </data>
   <data name="rbLocation" xml:space="preserve">
-    <value>日出至日落</value>
+    <value>从日落到日出（位置服务）</value>
   </data>
   <data name="ThemeTutorialStep" xml:space="preserve">
     <value>步骤</value>
   </data>
   <data name="cbSettingsColourFilter" xml:space="preserve">
-    <value>使用灰度滤镜（发送 Win + Ctrl + C）</value>
+    <value>Color filter (sends Win + Ctrl + C)</value>
   </data>
   <data name="cbSettingsLogonTask" xml:space="preserve">
     <value>使用登录任务而非启动项</value>
@@ -500,7 +500,7 @@ GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
     <value>重置</value>
   </data>
   <data name="cbSettingsBatteryDarkMode" xml:space="preserve">
-    <value>未充电时启用深色模式</value>
+    <value>未充电时切换至深色模式</value>
   </data>
   <data name="SettingsBatterySlider" xml:space="preserve">
     <value>节电模式滑动条的默认值</value>
@@ -563,16 +563,13 @@ GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
     <value>隐藏托盘图标（不推荐）</value>
   </data>
   <data name="tbFeatureDisabledWhileThemeMode" xml:space="preserve">
-    <value>启用主题模式时无法开启本功能。</value>
-  </data>
-  <data name="tbFeatureDisabledWhileWallpaperMode" xml:space="preserve">
-    <value>启用壁纸模式时无法开启本功能。</value>
+    <value>当 Windows 管理您的主题时，此功能不可用。</value>
   </data>
   <data name="tbPickTheme" xml:space="preserve">
-    <value>功能更多，但需要创建 Windows 的 .theme 文件。该模式下您可以自定义各个显示器的壁纸、将壁纸设置为“幻灯片放映”、更改鼠标光标样式、设置主题色并修改各个声音。</value>
+    <value>分别为深色和浅色模式选择不同的 Windows 主题。允许完全自定义主题，但需要您自行设置 .theme 文件。</value>
   </data>
   <data name="tbPickWallpaper" xml:space="preserve">
-    <value>功能较少，但设置方便。该模式下您可以自定义所有显示器或各个显示器的壁纸，或者设置纯色背景。</value>
+    <value>为所有显示器或单个显示器自定义您的桌面壁纸，设置背景颜色或启用 Spotlight。</value>
   </data>
   <data name="tbUpdates" xml:space="preserve">
     <value>我们在后台检查新版 Auto Dark Mode，并通过桌面通知提醒您更新新版本</value>
@@ -819,7 +816,7 @@ GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
     <value>停止强制使用主题</value>
   </data>
   <data name="SwitchModesToggleHeaderHotkey" xml:space="preserve">
-    <value>启用系统级快捷键</value>
+    <value>启用快捷键</value>
   </data>
   <data name="TrayMenuItemForceDarkTheme" xml:space="preserve">
     <value>强制深色主题(&amp;D)</value>
@@ -1135,5 +1132,134 @@ GitHub 上发布了新版本，修复了一些漏洞并增加了新功能。
   </data>
   <data name="WallpaperComboBoxItemSpotlight" xml:space="preserve">
     <value>Windows spotlight</value>
+  </data>
+  <data name="ColorizationTextBlockHeader" xml:space="preserve">
+    <value>主题色</value>
+  </data>
+  <data name="ColorizationPick" xml:space="preserve">
+    <value>选择主题色</value>
+  </data>
+  <data name="ColorizationTextBlockDescription" xml:space="preserve">
+    <value>根据您的喜好自定义 Windows 系统颜色方案。</value>
+  </data>
+  <data name="ColorizationTextBlockUpdate" xml:space="preserve">
+    <value>更新颜色</value>
+  </data>
+  <data name="tbFeatureDisabledWhileManagedMode" xml:space="preserve">
+    <value>当 Auto Dark Mode 管理您的主题时，此功能不可用。</value>
+  </data>
+  <data name="Links" xml:space="preserve">
+    <value>链接</value>
+  </data>
+  <data name="PageScriptsCardDocumentationTextBlock" xml:space="preserve">
+    <value>自定义脚本的文档</value>
+  </data>
+  <data name="PageScriptsCardUserRepositoryTextBlock" xml:space="preserve">
+    <value>自定义脚本的用户仓库</value>
+  </data>
+  <data name="WallpaperComboBoxItemFill" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="WallpaperComboBoxItemFit" xml:space="preserve">
+    <value>适应</value>
+  </data>
+  <data name="WallpaperComboBoxItemStretch" xml:space="preserve">
+    <value>拉伸</value>
+  </data>
+  <data name="WallpaperTextBlockPosition" xml:space="preserve">
+    <value>为您的桌面图片选择一种适应方式</value>
+  </data>
+  <data name="DisplayMonitorDisconnected" xml:space="preserve">
+    <value>已断开</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwm" xml:space="preserve">
+    <value>在切换主题时始终刷新 DWM</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmExplanation" xml:space="preserve">
+    <value>尝试减少文件管理器、任务栏和开始菜单中错误 UI 颜色出现的频率。如果你经常遇到这个问题或者被其困扰，请试着启用这个设置。
+
+这可能会在某些系统上引入轻到中度的主题切换延迟，类似于 Windows 10 上发生的情况。
+在极少数情况下，当鼠标在 DWM 刷新期间移动时，Windows 可能会发出蜂鸣声。</value>
+  </data>
+  <data name="SettingsPageCheckBoxAlwaysRefreshDwmHeader" xml:space="preserve">
+    <value>强制 DWM 刷新吗？</value>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>好</value>
+  </data>
+  <data name="CursorsPageEnable" xml:space="preserve">
+    <value>启用鼠标光标切换</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettings" xml:space="preserve">
+    <value>打开 Windows 指针设置</value>
+  </data>
+  <data name="CursorsPageSelectDark" xml:space="preserve">
+    <value>选择深色光标</value>
+  </data>
+  <data name="CursorsPageSelectLight" xml:space="preserve">
+    <value>选择浅色光标</value>
+  </data>
+  <data name="CursorsPageTitle" xml:space="preserve">
+    <value>光标</value>
+  </data>
+  <data name="PersonalizationPageCursorDescription" xml:space="preserve">
+    <value>为深色和浅色模式配置不同的鼠标光标。</value>
+  </data>
+  <data name="PersonalizationPageCursorTitle" xml:space="preserve">
+    <value>选择鼠标光标</value>
+  </data>
+  <data name="PersonalizationPageManagedMode" xml:space="preserve">
+    <value>让 Auto Dark Mode 管理我的主题</value>
+  </data>
+  <data name="PersonalizationPageUnmanagedMode" xml:space="preserve">
+    <value>让 Windows 管理我的主题</value>
+  </data>
+  <data name="CursorsPageOpenPointerSettingsDescription" xml:space="preserve">
+    <value>您可以在 Windows 设置中指定新的光标方案，然后在此处进行选择。</value>
+  </data>
+  <data name="AboutHyperLinkOpenShell" xml:space="preserve">
+    <value>打开 shell</value>
+  </data>
+  <data name="AboutHyperLinkOpenUpdaterLog" xml:space="preserve">
+    <value>打开更新程序日志</value>
+  </data>
+  <data name="ColorizationEnableSwitch" xml:space="preserve">
+    <value>启用主题色切换</value>
+  </data>
+  <data name="AppsLabelTouchKeyboard" xml:space="preserve">
+    <value>切换触摸键盘和输入</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>手动</value>
+  </data>
+  <data name="SwitchModesButtonAddProcess" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="SwitchModesButtonRemoveProcess" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="SwitchModesExpanderHeaderBlockedProcesses" xml:space="preserve">
+    <value>阻塞进程</value>
+  </data>
+  <data name="SwitchModesCheckBoxProcessBlockList" xml:space="preserve">
+    <value>当某些进程运行时不进行切换</value>
+  </data>
+  <data name="RecommendedAppsButton" xml:space="preserve">
+    <value>浏览支持 Auto Dark Mode 的应用程序</value>
+  </data>
+  <data name="RecommendedAppsDescription" xml:space="preserve">
+    <value>不是每个第三方应用程序都默认支持 Auto Dark Mode。我们的 Wiki 页面上提供了支持的应用程序的精选列表。</value>
+  </data>
+  <data name="RecommendedAppsTitle" xml:space="preserve">
+    <value>推荐应用程序</value>
+  </data>
+  <data name="DonationGitHubSponsorsDescription" xml:space="preserve">
+    <value>您也可以通过 GitHub Sponsors 捐助，其同样支持每月持续捐助。</value>
+  </data>
+  <data name="TrayMenuItemTryFixTheme" xml:space="preserve">
+    <value>尝试修复主题</value>
   </data>
 </root>

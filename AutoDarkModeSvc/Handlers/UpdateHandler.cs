@@ -30,6 +30,10 @@ using System.Text;
 using System.Threading.Tasks;
 using HttpClientProgress;
 using System.Net.Http.Headers;
+using System.Linq;
+using System.Threading;
+using Windows.Media.Protection.PlayReady;
+using System.Runtime.InteropServices;
 
 namespace AutoDarkModeSvc.Handlers
 {
@@ -37,14 +41,17 @@ namespace AutoDarkModeSvc.Handlers
     {
         private const string defaultVersionQueryUrl = "https://raw.githubusercontent.com/AutoDarkMode/AutoDarkModeVersion/master/version.yaml";
         private const string defaultDownloadBaseUrl = "https://github.com";
-        private static readonly Version minUpdaterVersion = new("2.0");
-        private static readonly Version maxUpdaterVersion = new("2.99");
+        private static readonly Version minUpdaterVersion = new("3.0");
+        private static readonly Version maxUpdaterVersion = new("3.99");
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public static ApiResponse UpstreamResponse { get; private set; } = new();
         public static UpdateInfo UpstreamVersion { get; private set; } = new();
+        public static bool IsARMUpgrade { get; private set; }
         private static readonly AdmConfigBuilder builder = AdmConfigBuilder.Instance();
         private static readonly Version currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
         private static readonly NumberFormatInfo nfi = new();
+        private static readonly string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+
         public static bool Updating
         {
             get; [MethodImpl(MethodImplOptions.Synchronized)]
@@ -66,6 +73,7 @@ namespace AutoDarkModeSvc.Handlers
         /// Details carries a yaml serialized UpdateInfo object</returns>
         public static ApiResponse CheckNewVersion()
         {
+            IsARMUpgrade = false;
             ApiResponse response = new();
             try
             {
@@ -87,7 +95,7 @@ namespace AutoDarkModeSvc.Handlers
                         Message = "Update with custom URLs. Use at your own risk!",
                         Tag = "420.69",
                         AutoUpdateAvailable = true,
-                        UpdaterVersion = "2.0",
+                        UpdaterVersion = "3.0",
                         ChangelogUrl = "https://github.com/AutoDarkMode/Windows-Auto-Night-Mode"
                     };
                     Logger.Info($"new custom version available");
@@ -112,6 +120,18 @@ namespace AutoDarkModeSvc.Handlers
                     response.Message = $"Version: {currentVersion}";
                     response.Details = data;
                     UpstreamResponse = response;
+                    return response;
+                }
+                else if (RuntimeInformation.OSArchitecture == Architecture.Arm64 
+                    && RuntimeInformation.ProcessArchitecture != Architecture.Arm64
+                    && currentVersion.CompareTo(newVersion) == 0 && UpstreamVersion.PathFileArm != null)
+                {
+                    Logger.Info($"upgrade to arm version available");
+                    response.StatusCode = StatusCode.New;
+                    response.Message = $"Version: {currentVersion} (ARM64)";
+                    response.Details = data;
+                    UpstreamResponse = response;
+                    IsARMUpgrade = true;
                     return response;
                 }
                 else
@@ -182,8 +202,9 @@ namespace AutoDarkModeSvc.Handlers
                 NoCache = true,
                 MaxAge = TimeSpan.FromSeconds(1),
                 MaxStale = false,
-                NoStore = true
+                NoStore = true,
             };
+            client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
             Task<string> downloadString = client.GetStringAsync(GetUpdateUrl());
             downloadString.Wait();
             return downloadString.Result;
@@ -210,15 +231,6 @@ namespace AutoDarkModeSvc.Handlers
 
             if (UpstreamResponse.StatusCode == StatusCode.New || UpstreamResponse.StatusCode == StatusCode.Downgrade)
             {
-                Version newVersion = new(UpstreamVersion.Tag);
-                if (newVersion.Major != currentVersion.Major && newVersion.Major != 420)
-                {
-                    return new ApiResponse
-                    {
-                        StatusCode = StatusCode.Disabled,
-                        Message = "major version upgrade pending, manual update required"
-                    };
-                }
                 try
                 {
                     Version updaterVersion = new(UpstreamVersion.UpdaterVersion);
@@ -270,6 +282,7 @@ namespace AutoDarkModeSvc.Handlers
             }
             EndBlockingProcesses(out bool shellRestart, out bool appRestart);
 
+            /*
             string futureUpdaterDir = Path.Combine(Helper.ExecutionDir, "UpdaterFuture");
             string futureUpdaterExecutablePath = Path.Combine(futureUpdaterDir, Helper.UpdaterExecutableName);
             try
@@ -285,20 +298,23 @@ namespace AutoDarkModeSvc.Handlers
                 Updating = false;
                 return false;
             }
+            */
 
             Logger.Info("downgrade preparation complete");
 
             if (shellRestart || appRestart)
             {
-                List<string> arguments = new();
-                arguments.Add("--notify");
-                arguments.Add(shellRestart.ToString());
-                arguments.Add(appRestart.ToString());
-                Process.Start(futureUpdaterExecutablePath, arguments);
+                ProcessStartInfo startInfo = new();
+                startInfo.ArgumentList.Add("--notify");
+                startInfo.ArgumentList.Add(shellRestart.ToString());
+                startInfo.ArgumentList.Add(appRestart.ToString());
+                startInfo.FileName = Helper.ExecutionPathUpdater;
+                startInfo.WorkingDirectory = Helper.ExecutionDirUpdater;
+                Process.Start(startInfo);
             }
             else
             {
-                Process.Start(futureUpdaterExecutablePath);
+                Process.Start(Helper.ExecutionPathUpdater);
             }
             return false;
         }
@@ -343,18 +359,22 @@ namespace AutoDarkModeSvc.Handlers
 
             Updating = false;
 
-            // NEVER SET WORKING DIRECTORY TO THE UPDATER DIRECTORY
             if (shellRestart || appRestart)
             {
-                List<string> arguments = new();
-                arguments.Add("--notify");
-                arguments.Add(shellRestart.ToString());
-                arguments.Add(appRestart.ToString());
-                Process.Start(Helper.ExecutionPathUpdater, arguments);
+                ProcessStartInfo startInfo = new();
+                startInfo.ArgumentList.Add("--notify");
+                startInfo.ArgumentList.Add(shellRestart.ToString());
+                startInfo.ArgumentList.Add(appRestart.ToString());
+                startInfo.FileName = Helper.ExecutionPathUpdater;
+                startInfo.WorkingDirectory = Helper.ExecutionDirUpdater;
+                Process.Start(startInfo);
             }
             else
             {
-                Process.Start(Helper.ExecutionPathUpdater);
+                ProcessStartInfo startInfo = new();
+                startInfo.FileName = Helper.ExecutionPathUpdater;
+                startInfo.WorkingDirectory = Helper.ExecutionDirUpdater;
+                Process.Start(startInfo);
             }
         }
 
@@ -404,7 +424,7 @@ namespace AutoDarkModeSvc.Handlers
                 baseUrlHash = builder.Config.Updater.HashCustomUrl;
                 useCustomUrls = true;
             }
-            string downloadPath = Path.Combine(Helper.UpdateDataDir, "Update.zip");
+            string downloadPath = Path.Combine(Helper.UpdateDataDir, "update.zip");
             try
             {
                 // show toast if UI components were open to inform the user that the program is being updated
@@ -416,6 +436,7 @@ namespace AutoDarkModeSvc.Handlers
                 //download zip file file
                 Logger.Info("downloading update data");
                 using HttpClient client = new();
+                client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
                 try
                 {
                     client.GetStringAsync(UpstreamVersion.ChangelogUrl).Wait();
@@ -446,7 +467,8 @@ namespace AutoDarkModeSvc.Handlers
 
                 using (var file = new FileStream(downloadPath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    Task.Run(async () => await client.DownloadDataAsync(UpstreamVersion.GetUpdateUrl(baseZipUrl, useCustomUrls), file, progress)).Wait();
+                    Task zipDownloadTask = client.DownloadDataAsync(UpstreamVersion.GetUpdateUrl(baseZipUrl, useCustomUrls), file, progress);
+                    zipDownloadTask.Wait();
                 }
 
                 // calculate hash of downloaded file, abort if hash mismatches
@@ -488,17 +510,19 @@ namespace AutoDarkModeSvc.Handlers
             return true;
         }
 
-        private static void EndBlockingProcesses(out bool shellRestart, out bool appRestart)
+        public static void EndBlockingProcesses(out bool shellRestart, out bool appRestart)
         {
             shellRestart = false;
             appRestart = false;
             Process[] pShell = Array.Empty<Process>();
             Process[] pApp = Array.Empty<Process>();
+
             // kill auto dark mode app and shell if they were running to avoid file move/delete issues
+            var currentSessionID = Process.GetCurrentProcess().SessionId;
             try
             {
-                pShell = Process.GetProcessesByName("AutoDarkModeShell");
-                pApp = Process.GetProcessesByName("AutoDarkModeApp");
+                pShell = Process.GetProcessesByName("AutoDarkModeShell").Where(p => p.SessionId == currentSessionID).ToArray();
+                pApp = Process.GetProcessesByName("AutoDarkModeApp").Where(p => p.SessionId == currentSessionID).ToArray();
 
                 if (pShell.Length != 0)
                 {
@@ -510,10 +534,55 @@ namespace AutoDarkModeSvc.Handlers
                     pApp[0].Kill();
                     appRestart = true;
                 }
+
+                bool shellExited = false;
+                bool appExited = false;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    try
+                    {
+                        Thread.Sleep(500);
+                        Process[] pShellConfirm = Process.GetProcessesByName("AutoDarkModeShell").Where(p => p.SessionId == currentSessionID).ToArray();
+                        Process[] pAppConfirm = Process.GetProcessesByName("AutoDarkModeApp").Where(p => p.SessionId == currentSessionID).ToArray();
+                        if (pShellConfirm.Length == 0 && pAppConfirm.Length == 0)
+                        {
+                            shellExited = true;
+                            appExited = true;
+                            if (shellRestart || appRestart) Logger.Debug("other auto dark mode components have been stopped");
+                            break;
+                        }
+                        if (pShellConfirm.Length == 0)
+                        {
+                            appExited = true;
+                        }
+                        if (pAppConfirm.Length == 0)
+                        {
+                            shellExited = true;
+                        }
+                        foreach (Process p in pShellConfirm)
+                        {
+                            p.Dispose();
+                        }
+                        foreach (Process p in pAppConfirm)
+                        {
+                            p.Dispose();
+                        }
+                        Logger.Debug($"end blocking processes attempt: {i+1}/5");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn(ex, "could not verify if other auto dark mode components have been stopped:");
+                    }
+                    if (!shellExited || !appExited)
+                    {
+                        Logger.Warn("other auto dark mode components still running after grace period");
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Logger.Warn(ex, "other auto dark mode components still running, skipping update");
+                Logger.Warn(ex, "other auto dark mode components still running: ");
             }
             finally
             {
@@ -533,7 +602,7 @@ namespace AutoDarkModeSvc.Handlers
             string tempDir = Path.Combine(Helper.ExecutionDir, "Temp");
             if (Directory.Exists(tempDir))
             {
-                Logger.Warn($"Temp directory {tempDir} already exists, cleaning");
+                Logger.Warn($"emp directory {tempDir} already exists, cleaning");
                 try
                 {
                     Directory.Delete(tempDir, true);
